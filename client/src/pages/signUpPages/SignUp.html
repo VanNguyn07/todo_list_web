@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up Page</title>
+    <link rel="stylesheet" href="./SignUp.css">
+    <link rel="stylesheet" href="./ResponsiveSignUp.css">
+    <!-- Thêm link Font Awesome vào head -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="../../assets/images/sign-up.png">
+</head>
+<body>
+    <div class="containerDark">
+        <div><h1>Simple Sign Up Screen</h1></div>
+        <form id="form">
+            <div class="formInterface">
+                <div class="specLogoNew">
+                <div class="imgSpec">
+                    <img src="https://tb-static.uber.com/prod/image-proc/processed_images/c5a0d37ae7b51be22093ec988638feb0/3ac2b39ad528f8c8c5dc77c59abb683d.jpeg" alt="Logo"
+                         class="logo">
+                </div>
+
+                <div class="title">
+                    <div id="spec"><p>SPEC'S</p></div>
+                    <div id="projector"><p>PROJECTOR</p></div>
+                </div>
+                
+            </div>
+
+            <div class="contentLeft">
+                <div class="art">
+                <img src="../../assets/images/astronaut.png" alt="icon" class="icon">
+                </div>
+            </div>
+            <div id="text">
+                <p>Welcome aboard my friend
+                <br><span id="subText">just a couple of clicks and we start</span></p>
+            </div>
+            
+
+            <div class="pager">
+                    <div id="circle1">
+                        <div id="subCircle1"></div>
+                    </div>
+                    <div id="circle2"></div>
+                    <div id="circle3"></div>
+                </div>
+            </div>
+            
+            <div class="formSignUp">
+                <div id="Welcome"><p>Welcome</p></div>
+
+                <div class="input-stack">
+                    <div class="input-UserName">
+                        <input type="text" name="inputUserName" id="inputUserName" placeholder="User Name">
+                        <i class="fa-solid fa-user"></i>
+                        <div id="userNameError" class="input-error userName">User Name can not empty!</div>
+                    </div>
+
+                    <div class="input-email">
+                        <input type="email" id="inputEmail" placeholder="Email" >
+                        <i class="fa-solid fa-envelope"></i>
+                        <div id="emailError" class="input-error email">Email can not empty!</div>
+                    </div>
+
+                    <div class="input-password">
+                        <input type="password" id="inputPassword" placeholder="Password" >
+                        <i class="fa-solid fa-lock"></i>
+                        <div id="passwordError" class="input-error password">Password can not empty!</div>
+                    </div>
+                
+                    <div class="input-confirmPass">
+                        <input type="password" id="confirmPassword" placeholder="Confirm Password">
+                        <i class="fa-solid fa-square-check"></i>
+                        <div id="confirmPassError1" class="input-error confirmPass">Please confirm your password!</div>
+                        <div id="confirmPassError2" class="input-error confirmPass">Confirm password incorrect!</div>   
+                    </div>
+
+                </div>
+                
+                <div class="checkbox">
+                    <input type="checkbox" id="checkbox" name="checkbox" required>
+                    <label for="checkbox">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+                </div>
+
+                <div class="button-create">
+                    <button type="submit" id="buttonCreate">Create Account 
+                        <i class="fa-solid fa-user-plus" id="userPlus"></i>
+                    </button> 
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- Script -->
+     <script src="./SignUp.js"></script>
+</body>
+</html>
