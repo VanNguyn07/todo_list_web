@@ -205,6 +205,7 @@ position: relative;
    flex-direction: column;
    gap: 10px;
 }
+
 #button-LogIn {
    width: 330px;
    height: 40px;
@@ -221,16 +222,18 @@ position: relative;
    transition: all 0.4s ease;
 }
 
-#button-LogIn:active{
-   transform: scale(0.98);
-   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
 #button-LogIn:hover {
    background-color: transparent;
    color: #6F74DD;
-   transform: translateY(-3px);
+   transform: translateY(-4px);
 }
+
+#button-LogIn:active{
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+   transform: scale(0.95);
+}
+
+
 .button-GoogleAndGitHub {
    display: flex;
    justify-content: center;
@@ -250,20 +253,20 @@ position: relative;
    border-radius: 25px;
    border: 2px solid #828282;
    cursor: pointer;
-    transition: all 0.4s ease;
+   transition: all 0.4s ease;
 }
 
 #button-Google:hover {
     background: linear-gradient(45deg, #4285F4, #34A853, #FBBC05, #EA4335);
-    transform: translateY(-3px);
+    transform: translateY(-4px);
 }
 #button-GitHub:hover {
     background: linear-gradient(45deg, #24292E, #6F74DD);
-    transform: translateY(-3px);
+    transform: translateY(-4px);
 }
 
 #button-Google:active, #button-GitHub:active {
-    transform: scale(0.98);/* thu nhỏ khi nhấn */ 
+    transform: scale(0.95);/* thu nhỏ khi nhấn */ 
 }
 .iconsGG, .iconsGitHub{
    display: flex;
@@ -306,19 +309,20 @@ position: relative;
    cursor: pointer;
    border-radius: 25px;
    border: 2px solid #828282;
-    transition: all 0.4s ease;
-}
-
-#button-SignUp:active {
-   transform: scale(0.98);
-   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+   transition: all 0.4s ease;
 }
 
 #button-SignUp:hover {
    background-color: #00227B;
    color: #F3F4FC;
-   transform: translateY(-3px);
+   transform: translateY(-4px);
 }
+
+#button-SignUp:active {
+   transform: scale(0.95);
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 
 #divider {
    font-size: 16px;
@@ -347,4 +351,6 @@ position: relative;
 input.errorUserNameAndEmail {
    border-color: #ff4d4d;
   animation: shake 0.3s ease;
+  /* cho animation chạy đầy đủ, không giữ transform cuối */
+    animation-fill-mode: none;
 }

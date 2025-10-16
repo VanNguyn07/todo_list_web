@@ -8,9 +8,10 @@
     <link rel="stylesheet" href="./ResponsiveSignIn.css">
     <!-- Thêm link Font Awesome vào head -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="icon" type="image/png" href="../../assets/images/sign-in.png">
 </head>
-<body>
+<body class="animate__animated animate__fadeInDown " >
     <div class="containerDark">
         <div><h1>Simple Sign In Screen</h1></div>
         <form id="form">
@@ -62,7 +63,7 @@
                         <input type="password" id="inputPassword" placeholder="Password" >
                         <i class="fa-solid fa-lock"></i>
                         <div id="passwordError" class="input-error password">Password can not empty!</div>
-                        <div id="passwordError1" class="input-error password">Your User Name or Password incorrect!</div>
+                        <div id="passwordErrorIncorrect" class="input-error password">Your User Name or Password incorrect!</div>
                     </div>
                 
                     <div id="forgot-password">
@@ -99,5 +100,6 @@
     </div>
     <!-- Script -->
      <script src="./SignIn.js"></script>
+     <script src="../transitionPages/transition.js"></script>
 </body>
 </html>

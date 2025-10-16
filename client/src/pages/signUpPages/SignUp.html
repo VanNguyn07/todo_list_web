@@ -8,9 +8,10 @@
     <link rel="stylesheet" href="./ResponsiveSignUp.css">
     <!-- Thêm link Font Awesome vào head -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="icon" type="image/png" href="../../assets/images/sign-up.png">
 </head>
-<body>
+<body class="animate__animated animate__fadeInDown " >
     <div class="containerDark">
         <div><h1>Simple Sign Up Screen</h1></div>
         <form id="form">
@@ -62,6 +63,7 @@
                         <input type="email" id="inputEmail" placeholder="Email" >
                         <i class="fa-solid fa-envelope"></i>
                         <div id="emailError" class="input-error email">Email can not empty!</div>
+                        <div id="emailErrorFormat" class="input-error email">Email is in incorrect format!</div>
                     </div>
 
                     <div class="input-password">

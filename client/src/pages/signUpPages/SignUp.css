@@ -277,18 +277,41 @@ outline: 2px solid #6F74DD;
     letter-spacing: 0.5px;
     transition: all 0.4s ease;
 }
-.button-create button:active {
-    transform: scale(0.98);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
 
 .button-create button:hover {
    background-color: transparent;
    color: #6F74DD;
-   transform: translateY(-3px);
+   transform: translateY(-4px);
 }
+
+
+.button-create button:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 
 #userPlus {
    font-size: 14px;
    margin-left: 10px;
 }
+
+/* Hiệu ứng rung */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+/* lớp errorUserName đc tạo bằng js  */
+input.errorUserNameAndEmail {
+   border-color: #ff4d4d;
+  animation: shake 0.3s ease;
+  /* cho animation chạy đầy đủ, không giữ transform cuối */
+    animation-fill-mode: none;
+}
+  :root { --t: 360ms; }
+  @media (prefers-reduced-motion: reduce) { :root { --t: 0ms; } }
+  body { transition: opacity var(--t) ease; opacity: 1; }
+  body.pt-hidden { opacity: 0; }    /* dùng cho fade-in */
+  body.pt-exit   { opacity: 0; }    /* dùng cho fade-out */

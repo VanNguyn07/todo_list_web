@@ -6,7 +6,7 @@ const inputPasswordElement = document.getElementById("inputPassword");
 // Lấy ra elements error của trang
 const userNameErrorElement = document.getElementById("userNameError");
 const errorPasswordElement = document.getElementById("passwordError");
-const errorPassword1Element = document.getElementById("passwordError1");
+const errorPassword1Element = document.getElementById("passwordErrorIncorrect");
 
 // Lấy ra button GG và GitHub
 const buttonGGElement = document.getElementById("button-Google");
@@ -27,6 +27,14 @@ const urlGGSignIn = "https://accounts.google.com/o/oauth2/v2/auth" +
         "&scope=email%20profile%20openid" +
         "&access_type=online";
 
+function shakeInput(prop){
+    prop.classList.add("errorUserNameAndEmail")
+    // Xóa hiệu ứng sau khi animation chạy xong để có thể lặp lại
+        setTimeout(() => {
+        prop.classList.remove("errorUserNameAndEmail");
+        }, 300); // 300ms trùng với thời gian animation
+}
+
 // lắng nghe sự kiện submit của form
 form.addEventListener("submit", function(event){
     // ngăn chặn hành động sự kiện load lại trang
@@ -36,6 +44,7 @@ form.addEventListener("submit", function(event){
     // validate(xác thực) dữ liệu đầu vào 
     if(!inputUserNameElement.value){
         userNameErrorElement.style.display = "block";
+        shakeInput(inputUserNameElement);
         valid = false;
     }else {
         userNameErrorElement.style.display = "none";
@@ -43,6 +52,7 @@ form.addEventListener("submit", function(event){
     
     if(!inputPasswordElement.value){
         errorPasswordElement.style.display = "block";
+        shakeInput(inputPasswordElement);
         valid = false;
     } else {
         errorPasswordElement.style.display = "none";
@@ -57,11 +67,14 @@ form.addEventListener("submit", function(event){
         } else {
             // Nếu không khớp, hiển thị lỗi
             errorPassword1Element.style.display = "block";
+            shakeInput(inputUserNameElement);
+            shakeInput(inputPasswordElement);
         }
     } else {
         errorPassword1Element.style.display = "none"; // Ẩn lỗi nếu có lỗi khác
     }
-})
+});
+
 
 // Lắng nghe sự kiện click của button GG
 buttonGGElement.addEventListener("click", function(){
@@ -75,5 +88,5 @@ buttonGitHubElement.addEventListener("click", function(){
 
 // Lắng nghe sự kiện click của button Sign Up
 buttonSignUpElement.addEventListener("click", function(){
-    window.location.href = "../signUpPages/SignUp.html";
+    window.transitionTo("../signUpPages/SignUp.html")
 })
