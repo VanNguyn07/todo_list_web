@@ -13,6 +13,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     // Dùng ?? '' để tránh lỗi nếu không có dữ liệu
     $username = trim($_POST['inputUserName']);
     $password = trim($_POST['inputPassword']);
+    $gender = trim($_POST['gender']);
 
     // --- BẮT BUỘC: Thêm validation phía server ---
     if(empty($username) || empty($password)){
@@ -22,7 +23,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
         // Gọi Model để chèn dữ liệu và LẤY KẾT QUẢ trả về
-        $isSuccess = $userModelSignUp->insertDataIntoDatabase($username, $hashed_password);
+        $isSuccess = $userModelSignUp->insertDataIntoDatabase($username, $hashed_password, $gender);
         
         // --- LOGIC: Kiểm tra kết quả từ Model ---
         if ($isSuccess) {
@@ -32,7 +33,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             $response['redirectUrl'] = '/todolist/todo_list_web/client/src/pages/signInPages/SignIn.html';
         } else {
             $response['success'] = false;
-            $response['message'] = 'username already exists!';
+            $response['message'] = 'Username already exists!';
         }
     }
 } else {

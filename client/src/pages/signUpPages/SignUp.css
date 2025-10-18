@@ -303,9 +303,9 @@ input[type="radio"]:checked + i {
 }
 
 /* lớp errorUserName đc tạo bằng js  */
-input.errorUserNameAndEmail {
+input.shakeError {
    border-color: #ff4d4d;
   animation: shake 0.3s ease;
   /* cho animation chạy đầy đủ, không giữ transform cuối */
-    animation-fill-mode: none;
+   animation-fill-mode: none;
 }

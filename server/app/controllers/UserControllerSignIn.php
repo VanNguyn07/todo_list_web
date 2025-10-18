@@ -14,24 +14,33 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     $username = trim($_POST['inputUserName']);
     $password = trim($_POST['inputPassword']);
+    $gender = trim($_POST['gender']);
 
-    if(empty($username) || empty($password)){
+    if(empty($username) || empty($password) || empty($gender)){
         $response['message'] = 'Please enter full field!';
     }else {
         // Gọi Model để tìm user
         $user = $userModelSignIn->findByUserName($username);
         
-        if($user && password_verify($password, $user['password'])){
-            // Đăng nhập thành công
+        if(!$user){
+            // Lỗi 1: Không tìm thấy user
+            $response['message'] = 'Username does not exist!';
+            $response['field'] = 'username';
+        } else if(!password_verify($password, $user['password'])) {
+            // Lỗi 2: User có, nhưng sai mật khẩu
+            $response['message'] = 'Your passwors incorrect!';
+            $response['field'] = 'password';
+        } else if($user['gender'] !== $gender){
+            $response['message'] = 'Incorrect gender selection!';
+            $response['field'] = 'gender';
+        } else {
+            // KHÔNG LỖI: Tất cả đều đúng -> Đăng nhập thành công
+            $response['success'] = true;
+            $response['redirectUrl'] = 'https://vocabenglish.id.vn/';
+            
             $_SESSION["loggedin"] = true;
             $_SESSION["id"] = $user['id'];
             $_SESSION["username"] = $user['username'];
-
-            $response['success'] = true;// Báo thành công
-            $response['redirectUrl'] = 'https://vocabenglish.id.vn/';
-        }else {
-        $response['message'] = 'Username or Password incorrect!';
-        
         }
     }
 } else {

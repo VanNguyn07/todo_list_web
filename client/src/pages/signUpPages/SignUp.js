@@ -12,10 +12,10 @@ const confirmPassword1ErrorElement = document.getElementById("confirmPassError1"
 const confirmPassword2ErrorElement = document.getElementById("confirmPassError2");
 
 function shakeInput(prop){
-    prop.classList.add("errorUserNameAndEmail")
+    prop.classList.add("shakeError")
     // Xóa hiệu ứng sau khi animation chạy xong để có thể lặp lại
         setTimeout(() => {
-        prop.classList.remove("errorUserNameAndEmail");
+        prop.classList.remove("shakeError");
         }, 300); // 300ms trùng với thời gian animation
 }
 

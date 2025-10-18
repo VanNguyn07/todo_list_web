@@ -14,15 +14,15 @@ class UserModelSignUp {
      * @param string $hashed_password Mật khẩu ĐÃ ĐƯỢC BĂM.
      * @return bool Trả về true nếu thành công, false nếu thất bại.
      */
-    function insertDataIntoDatabase($username, $hashed_password) {
+    function insertDataIntoDatabase($username, $hashed_password, $gender) {
         // Câu lệnh SQL với placeholder (?)
-        $sql = "INSERT INTO " . $this->table_name . " (username, password) VALUES (?, ?)";
+        $sql = "INSERT INTO " . $this->table_name . " (username, password, gender) VALUES (?, ?, ?)";
         try {
             $prepareStmt = mysqli_prepare($this->connect, $sql);
 
             if ($prepareStmt) {
             // "ss" -> string, string
-            mysqli_stmt_bind_param($prepareStmt, "ss", $username, $hashed_password);
+            mysqli_stmt_bind_param($prepareStmt, "sss", $username, $hashed_password, $gender);
 
             // Thực thi và trả về kết quả (true/false)
                 if (mysqli_stmt_execute($prepareStmt)) {

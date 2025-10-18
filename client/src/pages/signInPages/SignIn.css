@@ -134,7 +134,7 @@ height: 10px;
    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 #Welcome p {
-   margin-bottom: 20px;
+   margin-bottom: 15px;
 }
 .formSignUp {
    width: 446px;
@@ -150,7 +150,7 @@ height: 10px;
    gap: 25px;
    justify-content: center;
    align-items: center;
-   margin-bottom: 28px;
+   margin-bottom: 25px;
 }
 
 .input-stack input{
@@ -354,21 +354,26 @@ position: relative;
 }
 
 /* lớp errorUserName đc tạo bằng js  */
-input.errorUserNameAndEmail {
+input.shakeError {
    border-color: #ff4d4d;
-  animation: shake 0.3s ease;
-  /* cho animation chạy đầy đủ, không giữ transform cuối */
-    animation-fill-mode: none;
+   animation: shake 0.3s ease;
+   animation-fill-mode: none;
 }
 
-.radioBox {
+#gender-group.shakeError, .female-Male.shakeError {
+  animation: shake 0.3s ease;
+  animation-fill-mode: none;
+   color: #ff4d4d;
+}
+
+#gender-group {
    font-size: 16px;
    display: flex;
    align-items: center;
    gap: 10px;
    margin-left: 55px;
    color: #828282;
-   margin-bottom: 20px;
+   margin-bottom: 10px;
 }
 
 input[type="radio"] {
@@ -378,4 +383,13 @@ input[type="radio"] {
 
 input[type="radio"]:checked + i {
       color: #6F74DD;
+}
+
+.gende-groupAndError {
+   display: inline-block;
+   margin-bottom: 25px;
+}
+
+#errorGender {
+   margin-left: 55px;
 }

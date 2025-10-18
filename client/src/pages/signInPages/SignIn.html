@@ -66,23 +66,27 @@
                         <div id="passwordErrorIncorrect" class="input-error password">Your User Name or Password incorrect!</div>
                     </div>
                 </div>
-                    <div class="radioBox">
+                <div class="gende-groupAndError">
+                    <div id="gender-group">
                         <i class="fa-solid fa-venus-mars"></i>
                             <label for="" id="gender">Gender</label>
+
                             <label>
-                                <input type="radio" name="gender" value="male"> Male
+                                <input type="radio" name="gender" value="male" class="female-Male ma" required> Male
                                 <i class="fa-solid fa-mars"></i>
                             </label>
                             
                             <label>
-                                <input type="radio" name="gender" value="female"> Female
+                                <input type="radio" name="gender" value="female" class="female-Male fe"> Female
                                 <i class="fa-solid fa-venus"></i>
                             </label>
                     </div>
+                     <div id="errorGender" class="input-error gender">Incorrect gender selection!</div>
+                </div>
 
-                    <div id="forgot-password">
-                        <a href="#">Forgot password?</a>
-                    </div>
+                <div id="forgot-password">
+                    <a href="#">Forgot password?</a>
+                </div>
                 <div class="button-stack">
                     <div class="containerLoginAndGG-GitHub">
                         <button type="submit" id="button-LogIn">Log in</button>

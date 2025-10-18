@@ -2,11 +2,13 @@
 const form = document.getElementById("form");
 const inputUserNameElement = document.getElementById("inputUserName");
 const inputPasswordElement = document.getElementById("inputPassword");
+const gender = document.getElementById('gender-group');
 
 // Lấy ra elements error của trang
 const userNameErrorElement = document.getElementById("userNameError");
 const errorPasswordElement = document.getElementById("passwordError");
 const errorPasswordIncorrectElement = document.getElementById("passwordErrorIncorrect");
+const errorGender = document.getElementById("errorGender");
 
 // Lấy ra button GG và GitHub
 const buttonGGElement = document.getElementById("button-Google");
@@ -24,10 +26,10 @@ const urlGGSignIn = "https://accounts.google.com/o/oauth2/v2/auth" +
         "&access_type=online";
 
 function shakeInput(prop){
-    prop.classList.add("errorUserNameAndEmail")
+    prop.classList.add("shakeError")
     // Xóa hiệu ứng sau khi animation chạy xong để có thể lặp lại
         setTimeout(() => {
-        prop.classList.remove("errorUserNameAndEmail");
+        prop.classList.remove("shakeError");
         }, 300); // 300ms trùng với thời gian animation
 }
 
@@ -52,6 +54,15 @@ form.addEventListener("submit", function(event){
         valid = false;
     } else {
         errorPasswordElement.style.display = "none";
+    }
+
+    const genderSelected = document.querySelector('input[name="gender"]:checked');
+    if(!genderSelected.value){
+        errorGender.style.display = "block";
+        shakeInput(gender);
+        valid = false;
+    }else {
+        errorGender.style.display = "none";
     }
 
     // nếu không có lỗi thì thực hiện đăng nhập
@@ -81,10 +92,29 @@ form.addEventListener("submit", function(event){
                 window.location.href = data.redirectUrl;
             }else {
                 // Nếu PHP báo thất bại, hiển thị thông báo lỗi
-                errorPasswordIncorrectElement.textContent = data.message;
-                errorPasswordIncorrectElement.style.display = "block";
-                shakeInput(inputUserNameElement);
-                shakeInput(inputPasswordElement);
+                // errorPasswordIncorrectElement.textContent = data.message;
+                // errorPasswordIncorrectElement.style.display = "block";
+
+                if (data.field === 'username') {
+                    userNameErrorElement.textContent = data.message;
+                    userNameErrorElement.style.display = "block";
+                    shakeInput(inputUserNameElement);
+
+                } else if (data.field === 'password') {
+                    errorPasswordElement.textContent = data.message;
+                    errorPasswordElement.style.display = "block";
+                    shakeInput(inputPasswordElement);
+
+                } else if (data.field === 'gender') {
+                    errorGender.textContent = data.message;
+                    errorGender.style.display = "block";
+                    shakeInput(gender);
+                    
+                } else {
+                    // Nếu PHP không trả về 'field' cụ thể, rung 2 cái chính
+                    shakeInput(inputUserNameElement);
+                    shakeInput(inputPasswordElement);
+                }
             }
         })
         .catch(error =>{
