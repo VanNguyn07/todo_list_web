@@ -133,6 +133,9 @@ height: 10px;
    text-align: center;
    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
+#Welcome p {
+   margin-bottom: 20px;
+}
 .formSignUp {
    width: 446px;
    background-color: #F3F4FC;
@@ -147,7 +150,7 @@ height: 10px;
    gap: 25px;
    justify-content: center;
    align-items: center;
-   margin-bottom: 30px;
+   margin-bottom: 28px;
 }
 
 .input-stack input{
@@ -180,8 +183,11 @@ position: relative;
    margin-right: 275px;
 
 }
+#forgot-password {
+   margin-bottom: 20px;
+}
 #forgot-password a{
-   margin-left: 170px;
+   margin-left: 210px;
    font-size: 16px;
    font-family: 'Courier New', Courier, monospace;
    font-weight: bold;
@@ -353,4 +359,23 @@ input.errorUserNameAndEmail {
   animation: shake 0.3s ease;
   /* cho animation chạy đầy đủ, không giữ transform cuối */
     animation-fill-mode: none;
+}
+
+.radioBox {
+   font-size: 16px;
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   margin-left: 55px;
+   color: #828282;
+   margin-bottom: 20px;
+}
+
+input[type="radio"] {
+   accent-color: #6F74DD;
+   cursor: pointer;
+}
+
+input[type="radio"]:checked + i {
+      color: #6F74DD;
 }

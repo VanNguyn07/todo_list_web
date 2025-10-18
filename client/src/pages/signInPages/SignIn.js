@@ -6,7 +6,7 @@ const inputPasswordElement = document.getElementById("inputPassword");
 // Lấy ra elements error của trang
 const userNameErrorElement = document.getElementById("userNameError");
 const errorPasswordElement = document.getElementById("passwordError");
-const errorPassword1Element = document.getElementById("passwordErrorIncorrect");
+const errorPasswordIncorrectElement = document.getElementById("passwordErrorIncorrect");
 
 // Lấy ra button GG và GitHub
 const buttonGGElement = document.getElementById("button-Google");
@@ -14,10 +14,6 @@ const buttonGitHubElement = document.getElementById("button-GitHub");
 
 //Lấy ra button registratioin 
 const buttonSignUpElement = document.getElementById("button-SignUp");
-
-//Lấy ra value từ localStorage
-const savedUserName = localStorage.getItem("username");    
-const savedPassword = localStorage.getItem("password");
 
 // Lấy URl của Sign In gg 
 const urlGGSignIn = "https://accounts.google.com/o/oauth2/v2/auth" +
@@ -60,19 +56,44 @@ form.addEventListener("submit", function(event){
 
     // nếu không có lỗi thì thực hiện đăng nhập
     if(valid){
-        // Kiểm tra email và password có khớp với dữ liệu đã lưu trong localStorage không
-        if(inputUserNameElement.value === savedUserName && inputPasswordElement.value === savedPassword){
-            // Nếu khớp, chuyển hướng đến trang chính
-            window.location.href = "https://vocabenglish.id.vn/";
-        } else {
-            // Nếu không khớp, hiển thị lỗi
-            errorPassword1Element.style.display = "block";
-            shakeInput(inputUserNameElement);
-            shakeInput(inputPasswordElement);
+        errorPasswordIncorrectElement.style.display = "none";
+        // Tạo đối tượng FormData để thu thập dữ liệu từ form
+        const formData = new FormData(form);
+        // Log formData để kiểm tra (optional, chỉ debug)
+        console.log('Sending data:', Object.fromEntries(formData));
+
+        // Sử dụng fetch để gửi request đến controller
+        fetch('../../../../server/app/controllers/UserControllerSignIn.php', {
+            method: 'POST',
+            body: formData  
+        })
+        .then(response => {
+            console.log('Response status:', response.status);  // Log status (nếu 404 thì đường dẫn sai)
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-    } else {
-        errorPassword1Element.style.display = "none"; // Ẩn lỗi nếu có lỗi khác
-    }
+        return response.json();  // Chuyển đổi phản hồi thành JSON
+        })
+        .then(data => { // Xử lý dữ liệu JSON nhận được
+            console.log('Received data:', data);  // Log data để xem PHP trả gì
+            if(data.success){
+                // Nếu PHP báo thành công, chuyển hướng trang
+                window.location.href = data.redirectUrl;
+            }else {
+                // Nếu PHP báo thất bại, hiển thị thông báo lỗi
+                errorPasswordIncorrectElement.textContent = data.message;
+                errorPasswordIncorrectElement.style.display = "block";
+                shakeInput(inputUserNameElement);
+                shakeInput(inputPasswordElement);
+            }
+        })
+        .catch(error =>{
+            // Xử lý các lỗi mạng hoặc server không phản hồi
+            console.error('Lỗi AJAX:', error);
+            errorPasswordIncorrectElement.textContent = 'Không thể kết nối đến máy chủ.';
+            errorPasswordIncorrectElement.style.display = 'block';
+        })
+    } 
 });
 
 
@@ -88,5 +109,5 @@ buttonGitHubElement.addEventListener("click", function(){
 
 // Lắng nghe sự kiện click của button Sign Up
 buttonSignUpElement.addEventListener("click", function(){
-    window.transitionTo("../signUpPages/SignUp.html")
+    window.location.href = '../signUpPages/SignUp.html'
 })

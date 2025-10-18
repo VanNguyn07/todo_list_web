@@ -239,23 +239,22 @@ outline: 2px solid #6F74DD;
    position: absolute;
 }
 
-.checkbox {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-left: 50px;
+.radioBox {
+   font-size: 16px;
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   margin-left: 70px;
+   color: #828282;
 }
 
-.checkbox input {
-    width: 15px;
-    height: 15px;
-    cursor: pointer;
+input[type="radio"] {
+   accent-color: #6F74DD;
+   cursor: pointer;
 }
-.checkbox a {
-    text-decoration: none;
-}
-.checkbox:hover a {
-    color: #0c18eb;
+
+input[type="radio"]:checked + i {
+      color: #6F74DD;
 }
 .button-create button{
     display: flex;
@@ -310,8 +309,3 @@ input.errorUserNameAndEmail {
   /* cho animation chạy đầy đủ, không giữ transform cuối */
     animation-fill-mode: none;
 }
-  :root { --t: 360ms; }
-  @media (prefers-reduced-motion: reduce) { :root { --t: 0ms; } }
-  body { transition: opacity var(--t) ease; opacity: 1; }
-  body.pt-hidden { opacity: 0; }    /* dùng cho fade-in */
-  body.pt-exit   { opacity: 0; }    /* dùng cho fade-out */

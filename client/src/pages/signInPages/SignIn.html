@@ -14,7 +14,7 @@
 <body class="animate__animated animate__fadeInDown " >
     <div class="containerDark">
         <div><h1>Simple Sign In Screen</h1></div>
-        <form id="form">
+        <form id="form" method="post">
             <div class="formInterface">
                 <div class="specLogoNew">
                 <div class="imgSpec">
@@ -60,17 +60,29 @@
                     </div>
 
                     <div class="input-password">
-                        <input type="password" id="inputPassword" placeholder="Password" >
+                        <input type="password" id="inputPassword" name="inputPassword" placeholder="Password" >
                         <i class="fa-solid fa-lock"></i>
                         <div id="passwordError" class="input-error password">Password can not empty!</div>
                         <div id="passwordErrorIncorrect" class="input-error password">Your User Name or Password incorrect!</div>
                     </div>
-                
+                </div>
+                    <div class="radioBox">
+                        <i class="fa-solid fa-venus-mars"></i>
+                            <label for="" id="gender">Gender</label>
+                            <label>
+                                <input type="radio" name="gender" value="male"> Male
+                                <i class="fa-solid fa-mars"></i>
+                            </label>
+                            
+                            <label>
+                                <input type="radio" name="gender" value="female"> Female
+                                <i class="fa-solid fa-venus"></i>
+                            </label>
+                    </div>
+
                     <div id="forgot-password">
                         <a href="#">Forgot password?</a>
                     </div>
-                </div>
-
                 <div class="button-stack">
                     <div class="containerLoginAndGG-GitHub">
                         <button type="submit" id="button-LogIn">Log in</button>
@@ -100,6 +112,5 @@
     </div>
     <!-- Script -->
      <script src="./SignIn.js"></script>
-     <script src="../transitionPages/transition.js"></script>
 </body>
 </html>

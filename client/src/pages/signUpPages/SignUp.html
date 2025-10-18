@@ -14,7 +14,7 @@
 <body class="animate__animated animate__fadeInDown " >
     <div class="containerDark">
         <div><h1>Simple Sign Up Screen</h1></div>
-        <form id="form">
+        <form id="form" method="post">
             <div class="formInterface">
                 <div class="specLogoNew">
                 <div class="imgSpec">
@@ -67,7 +67,7 @@
                     </div>
 
                     <div class="input-password">
-                        <input type="password" id="inputPassword" placeholder="Password" >
+                        <input type="password" id="inputPassword" name="inputPassword" placeholder="Password" >
                         <i class="fa-solid fa-lock"></i>
                         <div id="passwordError" class="input-error password">Password can not empty!</div>
                     </div>
@@ -81,9 +81,17 @@
 
                 </div>
                 
-                <div class="checkbox">
-                    <input type="checkbox" id="checkbox" name="checkbox" required>
-                    <label for="checkbox">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+                <div class="radioBox">
+                    <i class="fa-solid fa-venus-mars"></i>
+                    <label for="" id="gender">Gender</label>
+                    <label>
+                            <input type="radio" name="gender" value="male"> Male
+                            <i class="fa-solid fa-mars"></i>
+                    </label>
+                    <label>
+                            <input type="radio" name="gender" value="female"> Female
+                            <i class="fa-solid fa-venus"></i>
+                    </label>
                 </div>
 
                 <div class="button-create">

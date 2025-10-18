@@ -40,7 +40,7 @@ form.addEventListener("submit", function(event) {
         valid = false;
     } else {
         userNameErrorElement.style.display = "none";
-        localStorage.setItem("username", inputUserNameElement.value); // Lưu username vào localStorage  
+        // localStorage.setItem("username", inputUserNameElement.value); // Lưu username vào localStorage  
     }
 
     // Check Password
@@ -50,7 +50,7 @@ form.addEventListener("submit", function(event) {
         valid = false;
     } else {
         passwordErrorElement.style.display = "none";
-        localStorage.setItem("password", inputPasswordElement.value); // Lưu password vào localStorage
+        // localStorage.setItem("password", inputPasswordElement.value); // Lưu password vào localStorage
     }
 
     // Check email
@@ -78,9 +78,10 @@ form.addEventListener("submit", function(event) {
 
     // Check Confirm Password không khớp
     if(inputPasswordElement.value !== inputConfirmPasswordElement.value){
+        confirmPassword2ErrorElement.textContent = "Confirm password incorrect!"
         confirmPassword2ErrorElement.style.display = "block";
         shakeInput(inputPasswordElement);
-        shakeInput(inputEmailElement);
+        shakeInput(inputConfirmPasswordElement);
         valid = false;
     }else {
         confirmPassword2ErrorElement.style.display = "none";
@@ -88,6 +89,42 @@ form.addEventListener("submit", function(event) {
 
         // Nếu tất cả hợp lệ → chuyển trang
     if (valid) {
-        window.location.href = "../signInPages/SignIn.html";
+        // Tạo đối tượng FormData để thu thập dữ liệu từ form
+        const formData = new FormData(form);
+        // Log formData để kiểm tra (optional, chỉ debug)
+        console.log('Sending data:', Object.fromEntries(formData));
+
+        const API_URL = '../../../../server/app/controllers/UserControllerSignUp.php';
+        // Sử dụng fetch để gửi request đến controller
+        fetch(API_URL , {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            console.log('Response status:', response.status);  // Log status (nếu 404 thì đường dẫn sai)
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();  // Chuyển đổi phản hồi thành JSON
+        })
+        .then(data => { // Xử lý dữ liệu JSON nhận được
+            console.log('Received data:', data);  // Log data để xem PHP trả gì
+            if(data.success){
+                // Nếu PHP báo thxành công, chuyển hướng trang
+                alert(data.message); // Hiển thị thông báo thành công
+                window.location.href = data.redirectUrl;
+            }else {
+                // Nếu PHP báo thất bại, hiển thị thông báo lỗi
+                confirmPassword2ErrorElement.textContent = data.message;
+                confirmPassword2ErrorElement.style.display = "block";
+                shakeInput(inputUserNameElement);
+            }
+        })
+        .catch(error =>{
+            // Xử lý các lỗi mạng hoặc server không phản hồi
+            console.error('Lỗi AJAX:', error);
+            confirmPassword2ErrorElement.textContent = 'Không thể kết nối đến máy chủ.';
+            confirmPassword2ErrorElement.style.display = 'block';
+        })
     }
 });
