@@ -115,9 +115,15 @@ form.addEventListener("submit", function(event) {
                 window.location.href = data.redirectUrl;
             }else {
                 // Nếu PHP báo thất bại, hiển thị thông báo lỗi
-                confirmPassword2ErrorElement.textContent = data.message;
-                confirmPassword2ErrorElement.style.display = "block";
-                shakeInput(inputUserNameElement);
+                if(data.field === 'username'){
+                    userNameErrorElement.textContent = data.message;
+                    userNameErrorElement.style.display = "block";
+                    shakeInput(inputUserNameElement);
+                } else if(data.field === 'email'){
+                    emailErrorElement.textContent = data.message;
+                    emailErrorElement.style.display = "block";
+                    shakeInput(inputEmailElement);
+                }
             }
         })
         .catch(error =>{

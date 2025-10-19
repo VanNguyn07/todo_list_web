@@ -14,26 +14,37 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     $username = trim($_POST['inputUserName']);
     $password = trim($_POST['inputPassword']);
     $gender = trim($_POST['gender']);
+    $email = trim($_POST['inputEmail']);
 
     // --- BẮT BUỘC: Thêm validation phía server ---
-    if(empty($username) || empty($password)){
+    if(empty($username) || empty($password) || empty($email)){
         $response['message'] = 'Please enter full field!';
     } else {
-        // --- BẢO MẬT: Băm mật khẩu trước khi lưu ---
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-        // Gọi Model để chèn dữ liệu và LẤY KẾT QUẢ trả về
-        $isSuccess = $userModelSignUp->insertDataIntoDatabase($username, $hashed_password, $gender);
+        // $checkResult bây giờ là một CHUỖI (ví dụ: "ERR_USERNAME_EXISTS")
+        $checkResult = $userModelSignUp->checkUserAndEmailExists($username, $email);
         
         // --- LOGIC: Kiểm tra kết quả từ Model ---
-        if ($isSuccess) {
-            $response['success'] = true; // BÁO CHO JAVASCRIPT BIẾT LÀ ĐÃ THÀNH CÔNG
-            $response['message'] = 'Create your account successfully!';
-            // Đường dẫn đến trang đăng nhập
-            $response['redirectUrl'] = '/todolist/todo_list_web/client/src/pages/signInPages/SignIn.html';
-        } else {
+        if($checkResult === "ERR_USERNAME_EXISTS"){
+            // Lỗi: Trùng Username
             $response['success'] = false;
-            $response['message'] = 'Username already exists!';
+            $response['message'] = "Username already exists!";
+            $response['field'] = 'username';
+        } else if($checkResult === "ERR_EMAIL_EXISTS"){
+            // Lỗi: Trùng Email
+            $response['success'] = false;
+            $response['message'] = "Your email already exists!";
+            $response['field'] = 'email';
+        } else if($checkResult === "NOT_FOUND"){
+            //Không trùng, TIẾN HÀNH INSERT
+        // --- BẢO MẬT: Băm mật khẩu trước khi lưu ---
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $isSuccess = $userModelSignUp->insertDataIntoDatabase($username, $hashed_password, $gender, $email);
+
+            if($isSuccess){
+                $response['success'] = true;
+                $response['message'] = 'Create your account successfully!';
+                $response['redirectUrl'] = '/todolist/todo_list_web/client/src/pages/signInPages/SignIn.html';
+            }
         }
     }
 } else {

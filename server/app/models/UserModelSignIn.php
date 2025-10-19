@@ -28,11 +28,11 @@ class UserModelSignIn {
                 // Lấy kết quả
                 $result = mysqli_stmt_get_result($statement);
                 // Fetch dữ liệu thành một mảng
-                $user = mysqli_fetch_assoc($result);
+                $dataArray = mysqli_fetch_assoc($result);
                 // Đóng statement
                 mysqli_stmt_close($statement);
 
-                return $user; // Trả về mảng user hoặc false nếu không có dòng nào
+                return $dataArray; // Trả về mảng user hoặc false nếu không có dòng nào
             }
         }
         return null; // Trả về null nếu có lỗi

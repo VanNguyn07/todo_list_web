@@ -14,27 +14,50 @@ class UserModelSignUp {
      * @param string $hashed_password Mật khẩu ĐÃ ĐƯỢC BĂM.
      * @return bool Trả về true nếu thành công, false nếu thất bại.
      */
-    function insertDataIntoDatabase($username, $hashed_password, $gender) {
-        // Câu lệnh SQL với placeholder (?)
-        $sql = "INSERT INTO " . $this->table_name . " (username, password, gender) VALUES (?, ?, ?)";
-        try {
-            $prepareStmt = mysqli_prepare($this->connect, $sql);
+    // UserModelSignUp.php
 
-            if ($prepareStmt) {
-            // "ss" -> string, string
-            mysqli_stmt_bind_param($prepareStmt, "sss", $username, $hashed_password, $gender);
+    function checkUserAndEmailExists($username, $email){
+        $sql = "SELECT username, email FROM " . $this->table_name . " WHERE username = ? OR email = ? LIMIT 1";
+        $prepareStmt = mysqli_prepare($this->connect, $sql);
 
-            // Thực thi và trả về kết quả (true/false)
-                if (mysqli_stmt_execute($prepareStmt)) {
-                mysqli_stmt_close($prepareStmt);
-                return true; // Thành công
+        if($prepareStmt){
+            mysqli_stmt_bind_param($prepareStmt, "ss", $username, $email);
+            mysqli_stmt_execute($prepareStmt);
+
+            $result = mysqli_stmt_get_result($prepareStmt);
+            $dataArray = mysqli_fetch_assoc($result);
+            mysqli_stmt_close($prepareStmt);
+
+            if($dataArray){
+                // Nếu tìm thấy
+                if($dataArray['username'] === $username){
+                    return "ERR_USERNAME_EXISTS"; // Báo lỗi trùng username
+                }
+                if($dataArray['email'] === $email){
+                    return "ERR_EMAIL_EXISTS"; // Báo lỗi trùng email
                 }
             }
-        }catch(Exception $e){
-            if ($this->connect->errno == 1062) {
-                return false; // Trả về false nếu username đã tồn tại
+            return "NOT_FOUND";
+        }
+        // Lỗi prepare
+        return "ERR_GENERAL";
+    }
+
+
+    function insertDataIntoDatabase($username, $hashed_password, $gender, $email) {
+        $sql = "INSERT INTO " . $this->table_name . " (username, password, gender, email) VALUES (?, ?, ?, ?)";
+        $prepareStmt = mysqli_prepare($this->connect, $sql);
+
+        if ($prepareStmt) {
+            mysqli_stmt_bind_param($prepareStmt, "ssss", $username, $hashed_password, $gender, $email);
+
+            // 1. Thực thi
+            if (mysqli_stmt_execute($prepareStmt)) {
+                mysqli_stmt_close($prepareStmt);
+                return true;
             }
         }
+        return false; // Lỗi câu lệnh
     }
 }
 ?>
