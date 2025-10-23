@@ -92,9 +92,6 @@ form.addEventListener("submit", function(event){
                 window.location.href = data.redirectUrl;
             }else {
                 // Nếu PHP báo thất bại, hiển thị thông báo lỗi
-                // errorPasswordIncorrectElement.textContent = data.message;
-                // errorPasswordIncorrectElement.style.display = "block";
-
                 if (data.field === 'username') {
                     userNameErrorElement.textContent = data.message;
                     userNameErrorElement.style.display = "block";

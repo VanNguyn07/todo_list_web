@@ -1,7 +1,7 @@
 <?php 
 class UserModelSignUp {
     private $connect;
-    private $table_name = "users";
+    private $table_name = "accounts_user";
 
     public function __construct($database)
     {
