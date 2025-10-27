@@ -1,7 +1,7 @@
 const validateForm = document.getElementById('validateForm');
 const inputOtp = document.getElementById('otp');
 const btnValidate = document.getElementById('submitButton');
-const message = document.getElementById('message');
+const message = document.getElementById('message_display');
 
 function shakeInput(prop){
     prop.classList.add("shakeError")
@@ -44,7 +44,7 @@ validateForm.addEventListener("submit", function(event){
                 message.style.color = 'green';
                 setTimeout(()=>{
                     window.location.href = data.redirectUrl;
-                }, 2000)
+                }, 1500)
             }else {
                 message.textContent = data.message;
                 message.style.color = 'red';

@@ -2,7 +2,7 @@ const submitForm = document.getElementById('forgotForm');
 const inputEmail = document.getElementById('email');
 
 const btnSendOtpCode = document.getElementById('submitButton');
-const message = document.getElementById('message');
+const message = document.getElementById('message_display');
 
 function shakeInput(prop){
     prop.classList.add("shakeError")
@@ -48,7 +48,7 @@ submitForm.addEventListener("submit", function(event){
                 // 2. Tự động chuyển trang sau 2 giây
                 setTimeout(()=>{
                     window.location.href = data.redirectUrl;
-                }, 2000);
+                }, 1500);
             } else {
                 message.textContent = data.message;
                 message.style.color = 'red';

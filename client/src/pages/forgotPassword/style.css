@@ -1,0 +1,112 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: antiquewhite;
+}
+
+form {
+    background-color: aliceblue;
+    box-shadow: 3px 3px 10px rgb(40, 26, 26);
+    border-radius: 15px;
+    padding: 15px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 30px;
+}
+
+p {
+    font-size: 18px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+
+/* style for forgot pass */
+.content-forgot-pass {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+input {
+    height: 25px;
+    width: 200px;
+    padding-left: 5px;
+    border-radius: 10px;
+}
+
+input:focus {
+    border: none;
+    outline: 2px solid rgb(89, 123, 204);
+}
+
+button {
+    border-radius: 10px;
+    padding: 3px;
+    cursor: pointer;
+    /* margin-bottom: 15px; */
+}
+
+button:active {
+    transform: scale(0.95);
+}   
+
+/* style for reset password */
+.content-reset-pass {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.newPassword label{
+    margin-right: 30px
+}
+
+.confirmPassword label {
+    margin-right: 6px;
+}
+
+#btnUpdatePassword {
+    margin-bottom: 15px;
+}
+
+/* style for vefity OTP */
+#otp {
+    width: 65px;
+    font-size: 14px;
+}
+
+.content-verify {
+    display: flex;
+    gap: 16px;
+}
+
+
+/* Hiệu ứng rung */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+/* lớp errorUserName đc tạo bằng js  */
+input.shakeError {
+   border-color: #ff4d4d;
+  animation: shake 0.3s ease;
+  /* cho animation chạy đầy đủ, không giữ transform cuối */
+   animation-fill-mode: none;
+}

@@ -2,7 +2,7 @@ const resetPassForm = document.getElementById('resetPasswordForm');
 const inputNewPassword = document.getElementById('new_password');
 const inputConfirmPassword = document.getElementById('confirm_password');
 const btnUpdatePassword = document.getElementById('btnUpdatePassword');
-const message = document.getElementById('message');
+const message = document.getElementById('message_display');
 
 function shakeInput(prop){
     prop.classList.add("shakeError")
@@ -25,12 +25,13 @@ resetPassForm.addEventListener("submit", function(event){
     } else if(!inputConfirmPassword.value){
         message.textContent = "Please confirm your new password! ";
         message.style.color = 'red';
-        shakeInput(inputNewPassword);
+        shakeInput(inputConfirmPassword);
         valid = false;
     } else if(inputNewPassword.value !== inputConfirmPassword.value){
         message.textContent = "Confirm new password incorrect!";
         message.style.color = 'red';
         shakeInput(inputNewPassword);
+        shakeInput(inputConfirmPassword);
         valid = false;
     }
 
@@ -55,7 +56,7 @@ resetPassForm.addEventListener("submit", function(event){
                 message.style.color = 'green';
                 setTimeout(()=>{
                     window.location.href = data.redirectUrl;
-                }, 2000)
+                }, 1500)
             }else {
                 message.textContent = data.message;
                 message.style.color = 'red';

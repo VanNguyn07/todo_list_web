@@ -15,7 +15,7 @@ class PasswordResetController {
         $email_receiver = $_POST['email'] ?? '';
 
         if(empty($email_receiver)){
-            $this->response['message'] = 'Vui lòng nhập địa chỉ email.';
+            $this->response['message'] = 'Please enter your email!.';
             // Sửa: Phải echo trước khi exit
             echo json_encode($this->response);
             exit();
@@ -41,15 +41,15 @@ class PasswordResetController {
                 $_SESSION['reset_email'] = $email_receiver;
 
                 $this->response['success'] = true;
-                $this->response['message'] = 'Đã gửi mã OTP thành công. Vui lòng kiểm tra email của bạn.';
+                $this->response['message'] = 'OTP code has been sent successfully. Please check your email!';
                 $this->response['redirectUrl'] = '/todoList/todo_list_web/client/src/pages/forgotPassword/ValidatePassword.html';
 
             }catch (Exception $e){
                 $this->response['message'] = 'Lỗi khi gửi email. Vui lòng thử lại sau.';
             }
         } else {
-            $this->response['success'] = true;
-            $this->response['message'] = 'Nếu email của bạn tồn tại trong hệ thống, một mã OTP đã được gửi.';
+            $this->response['success'] = false;
+            $this->response['message'] = 'If your email exist in system, a OTP code has been sent!';
         }
         
         // Sửa: Thêm echo và exit ở cuối hàm
@@ -75,11 +75,11 @@ class PasswordResetController {
             $this->userModelResetPass->clearOtpAfterUsed($email);
 
             $this->response['success'] = true;
-            $this->response['message'] = 'Xác thực thành công!';
+            $this->response['message'] = 'Verify OTP code successfully!';
             $this->response['redirectUrl'] = '/todoList/todo_list_web/client/src/pages/forgotPassword/ResetPassword.html';
         } else {
             $this->response['success'] = false;
-            $this->response['message'] = 'Mã OTP không chính xác hoặc đã hết hạn.';
+            $this->response['message'] = 'OTP code incorrect or expired!';
         }
         
         // Sửa: Thêm echo và exit ở cuối hàm
@@ -103,7 +103,7 @@ class PasswordResetController {
         if($newPassword !== $confirmPasswprd){
             // Sửa: Đây là lỗi, success phải là false
             $this->response['success'] = false; 
-            $this->response['message'] = 'Mật khẩu xác nhận không khớp.';
+            $this->response['message'] = 'Confirm password incorrect!';
             // Sửa: Phải echo trước khi exit
             echo json_encode($this->response);
             exit();
@@ -114,7 +114,7 @@ class PasswordResetController {
             unset($_SESSION['reset_email']);
             unset($_SESSION['is_verified']);
             $this->response['success'] = true;
-            $this->response['message'] = 'Cập nhật mật khẩu thành công!';
+            $this->response['message'] = 'Update your new password successfully!';
             $this->response['redirectUrl'] = '/todoList/todo_list_web/client/src/pages/signInPages/SignIn.html';
         }
 
