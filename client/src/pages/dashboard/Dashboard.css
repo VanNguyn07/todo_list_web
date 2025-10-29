@@ -1,0 +1,13 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#dashboard-page {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    background-color: rgb(206, 222, 236);
+    /* height: 100vh; */
+}

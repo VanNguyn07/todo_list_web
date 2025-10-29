@@ -1,0 +1,85 @@
+/* Giao diện chung cho tất cả các nút */
+.my-button {
+  padding: 10px 10px;
+  width: 45px;
+  height: 45px;
+  border-radius: 13px;
+  border: 2px solid transparent;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  margin: 5px;
+  transition: background-color 0.2s;
+  display: flex;
+  justify-content: center; 
+  align-items: center;     
+}
+
+/* Nút chính (màu xanh) */
+.my-button.button-primary {
+  background-color: #007bff;
+  color: white;
+}
+.my-button.button-primary:hover {
+  background-color: #b30000;
+}
+
+.social-icons a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+
+.social-icons i {
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.social-icons i:hover {
+  transform: scale(1.2);
+}
+
+.social-icons a {
+  color: #1e293b;
+}
+
+
+/* Facebook: Gradient xanh */
+.fa-facebook-f:hover {
+  background: linear-gradient(135deg, #1877f2, #2681cc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Instagram: Gradient 5 màu */
+.fa-instagram:hover {
+  background: linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);
+  background-size: 300% 300%;
+  animation: gradientMove 3s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* GitHub: xám đen */
+.fa-github:hover {
+  color: #6e7681;
+}
+
+/* LinkedIn: Gradient xanh lam */
+.fa-linkedin-in:hover {
+  background: linear-gradient(135deg, #0077b5, #00a0dc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+.btn-Facebook, .btn-Ig, .btn-Github, .btn-Linkedin{
+  border-radius: 50%;
+  font-size: 25px;
+}

@@ -1,0 +1,14 @@
+
+.textHeader {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 30px;
+    color: #F3F4FC;
+    font-weight: bold;
+    font-style: solid;
+    text-align: center;
+    text-shadow: 10px 10px 5px rgba(0, 0, 0, 0.2);
+}
+
+.textSubHeader {
+    color: blue;
+}
