@@ -1,13 +1,12 @@
 import React from "react"; 
 import './Button.css';
 
-function Button({children, onClick, className}){
+function Button({children, className}){
 
-    const combinedClassName = `my-button ${className || ''}`;
 
     return (
         <>
-        <button className={combinedClassName} onClick={onClick}>
+        <button className={className}>
             {/* content of button  */}
             {children}
         </button>

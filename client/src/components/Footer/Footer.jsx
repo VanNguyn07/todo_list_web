@@ -1,9 +1,9 @@
 import React from 'react';
 import './Footer.css';
 
-function Footer({children}) {
+function Footer({children, className}) {
     return(
-        <footer>
+        <footer className={className}>
             {children}
         </footer>
     );

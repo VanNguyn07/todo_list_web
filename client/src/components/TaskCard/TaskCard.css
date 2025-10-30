@@ -1,0 +1,116 @@
+
+.subcontainer-task {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+}
+    
+.content-task-one {
+    grid-column: span 2 / span 2;
+    grid-row: span 2 / span 2;
+    display: flex;
+}
+
+.content-task-two {
+    grid-column: span 2 / span 2;
+    grid-row: span 2 / span 2;
+    grid-column-start: 3;
+    display: flex;
+}
+
+.content-task-three {
+    grid-column: span 2 / span 2;
+    grid-row: span 2 / span 2;
+    grid-row-start: 3;
+    display: flex;
+}
+
+.content-task-four{
+    grid-column: span 2 / span 2;
+    grid-row: span 2 / span 2;
+    grid-column-start: 3;
+    grid-row-start: 3;
+    display: flex;
+}
+
+.content-task-one, .content-task-two,
+.content-task-three, .content-task-four {
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: #ecc897;
+    padding: 20px 30px 0px 20px;
+    margin: 0px 20px 20px 0px;
+}
+
+.content-left h2 {
+    margin-bottom: 10px;
+}
+
+.content-left p {
+    margin-bottom: 20px;
+    margin-left: 20px;
+}
+
+.content-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+
+.content-right .btn-task{
+    width: 45px;       
+    height: 45px;    
+    border-radius: 50%;  
+    border: none;
+    background-color: transparent; /* Nền trong suốt mặc định */
+    color: #888;       /* Màu icon xám nhạt */
+    cursor: pointer;
+    display: flex;     /* Dùng flex để căn icon vào giữa */
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out; /* Hiệu ứng mượt mà */
+}
+
+
+.content-right .btn-task i {
+    font-size: 28px; 
+}
+
+/* Nút "Hoàn thành" (Check Circle) */
+.content-right .fa-check-circle {
+    color: #4CAF50; 
+}
+.content-right .fa-check-circle:hover {
+    transform: scale(1.1); 
+    filter: brightness(1.1); 
+}
+
+
+.content-right .fa-pen-to-square {
+    color: #2196F3; 
+}
+.content-right .fa-pen-to-square:hover {
+    transform: scale(1.1);
+    filter: brightness(1.1);
+}
+
+
+.content-right .fa-trash {
+    color: #F44336; 
+}
+.content-right .fa-trash:hover {
+    transform: scale(1.1);
+    filter: brightness(1.1);
+}
+
+
+.content-right .btn-task:hover {
+    background-color: rgba(0, 0, 0, 0.05); 
+
+}
+.content-right .btn-task:active {
+    background-color: rgba(0, 0, 0, 0.142);
+    transform: scale(0.95); 
+}

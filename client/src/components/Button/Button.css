@@ -1,0 +1,83 @@
+/* Button for social media */
+.social-icons .social-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  margin: 0 8px;
+  background-color: transparent;
+  border: 2px solid black;
+  box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.1);
+  font-size: 26px;
+}
+
+.social-icons a {
+  color: #1e293b;
+}
+
+.btn-Facebook:hover{
+  background: linear-gradient(135deg, #1877f2, #2681cc);
+  border: none;
+}
+
+.btn-Ig:hover {
+  background: linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf);
+  border: none;
+}
+
+.btn-Github:hover  {
+  background-color: rgb(72, 70, 70);
+  border: none;
+}
+
+.btn-Linkedin:hover {
+  background: linear-gradient(135deg, #0A66C2, #0077b5);
+  border: none;
+}
+
+.btn-Facebook:hover i, .btn-Ig:hover i, .btn-Github:hover i, .btn-Linkedin:hover i {
+  color: aliceblue;
+}
+
+.social-icons .social-btn {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+.social-icons .social-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* button add task */
+.add-task-btn {
+  border: 1px solid #52b34c;
+  width: 60px;
+  height: 50px;
+  border-radius: 15px;
+  cursor: pointer;
+  background: linear-gradient(145deg, #4CAF50, #388E3C);
+  color: #ffffff;
+  transition: all 0.2s ease-in-out;
+}
+
+.add-task-btn:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  border: none;
+  outline: green;
+  background-color: #6fe966;
+  transform: translateY(-3px);
+}
+
+.add-task-btn:active {
+  transform: translateY(1px) scale(0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.add-task-btn i {
+    font-size: 23px; 
+}
