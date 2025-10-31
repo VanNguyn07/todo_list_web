@@ -1,5 +1,5 @@
 .custom-textarea {
-  border: 1.5px solid black;
+  border: 1.5px solid gray;
   background-color: #e6e9f0; 
   padding: 13px 18px;
   border-radius: 10px;
@@ -9,11 +9,12 @@
 
 .custom-textarea:focus {
   box-shadow: 0 0 0 2px #5d9c59; 
-  border: none;
+  border-color:  transparent;
   outline: #5d9c59;
 }
 
 .task-detail-input {
-    width: 450px;
+    width: 434px;
     font-size: 16px;
+    margin-right: 21px;
 }

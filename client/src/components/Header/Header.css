@@ -1,14 +1,32 @@
-
-.textHeader {
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 30px;
-    color: #F3F4FC;
-    font-weight: bold;
-    font-style: solid;
-    text-align: center;
-    text-shadow: 10px 10px 5px rgba(0, 0, 0, 0.2);
+.header-page {
+    width: 100%;
+    height: 95px;
 }
 
-.textSubHeader {
-    color: blue;
+.content-header {
+    width: 100%;
+    height: 70px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    background-color: #e5d4ba;
+    box-shadow: 0px 5px 15px rgb(97, 95, 95);
+}
+
+.logo-header-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-left: 21px;
+}
+
+.logo-header-page h1 {
+    font-family: cursive;
+    color: #e0b880;
+}
+.container-btn-header {
+    margin-right: 21px;
 }

@@ -1,11 +1,11 @@
 import React from "react";
+import Logo from "../../assets/images/logo.png";
 import './Header.css';
 
 function Header({children, className}){
     
-    const combinedText = `textHeader ${className || '' }`;
     return(
-        <header className={combinedText}>
+        <header className={className}>
             {children}
         </header>
     );

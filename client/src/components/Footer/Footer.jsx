@@ -1,9 +1,9 @@
 import React from 'react';
 import './Footer.css';
 
-function Footer({children, className}) {
+function Footer({children, className, onClick}) {
     return(
-        <footer className={className}>
+        <footer className={className} onClick={onClick}>
             {children}
         </footer>
     );

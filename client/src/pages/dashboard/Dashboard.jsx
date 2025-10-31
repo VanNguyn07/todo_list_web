@@ -6,6 +6,7 @@ import Header from "../../components/Header/Header";
 import Input from "../../components/Input/Input";
 import TaskCard from "../../components/TaskCard/TaskCard";
 import Textarea from "../../components/Textarea/Textarea";
+import Logo from "../../assets/images/logo.png";
 import "./Dashboard.css";
 
 
@@ -15,13 +16,111 @@ function Dashboard() {
         <>
         <div id="dashboard-page" className="animate__animated animate__fadeInDown ">
             <Header>
-                <h1>Hello..., Start planning today!</h1> <br />
+                <div className="header-page">
+                    <div className="content-header">
+                        <div className="logo-header-page">
+                            <img src={Logo} alt="Logo" />
+                            <h1>Todo List</h1>
+                        </div>
+                        <div className="container-navbar-header">
+                            <div className="container-btn-header">
+                                <Button className="btn-modern btn-dark-light">
+                                    <label class="switch">
+                                    <input id="input" type="checkbox" checked="" />
+                                    <div class="slider round">
+                                        <div class="sun-moon">
+                                        <svg id="moon-dot-1" class="moon-dot" viewBox="0 0 100 100">
+                                            <circle cx="50" cy="50" r="50"></circle>
+                                        </svg>
+                                        <svg id="moon-dot-2" class="moon-dot" viewBox="0 0 100 100">
+                                            <circle cx="50" cy="50" r="50"></circle>
+                                        </svg>
+                                        <svg id="moon-dot-3" class="moon-dot" viewBox="0 0 100 100">
+                                            <circle cx="50" cy="50" r="50"></circle>
+                                        </svg>
+                                        <svg id="light-ray-1" class="light-ray" viewBox="0 0 100 100">
+                                            <circle cx="50" cy="50" r="50"></circle>
+                                        </svg>
+                                        <svg id="light-ray-2" class="light-ray" viewBox="0 0 100 100">
+                                            <circle cx="50" cy="50" r="50"></circle>
+                                        </svg>
+                                        <svg id="light-ray-3" class="light-ray" viewBox="0 0 100 100">
+                                            <circle cx="50" cy="50" r="50"></circle>
+                                        </svg>
+
+                                        <svg id="cloud-1" class="cloud-dark" viewBox="0 0 100 100">
+                                            <circle cx="50" cy="50" r="50"></circle>
+                                        </svg>
+                                        <svg id="cloud-2" class="cloud-dark" viewBox="0 0 100 100">
+                                            <circle cx="50" cy="50" r="50"></circle>
+                                        </svg>
+                                        <svg id="cloud-3" class="cloud-dark" viewBox="0 0 100 100">
+                                            <circle cx="50" cy="50" r="50"></circle>
+                                        </svg>
+                                        <svg id="cloud-4" class="cloud-light" viewBox="0 0 100 100">
+                                            <circle cx="50" cy="50" r="50"></circle>
+                                        </svg>
+                                        <svg id="cloud-5" class="cloud-light" viewBox="0 0 100 100">
+                                            <circle cx="50" cy="50" r="50"></circle>
+                                        </svg>
+                                        <svg id="cloud-6" class="cloud-light" viewBox="0 0 100 100">
+                                            <circle cx="50" cy="50" r="50"></circle>
+                                        </svg>
+                                        </div>
+                                        <div class="stars">
+                                        <svg id="star-1" class="star" viewBox="0 0 20 20">
+                                            <path
+                                            d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"
+                                            ></path>
+                                        </svg>
+                                        <svg id="star-2" class="star" viewBox="0 0 20 20">
+                                            <path
+                                            d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"
+                                            ></path>
+                                        </svg>
+                                        <svg id="star-3" class="star" viewBox="0 0 20 20">
+                                            <path
+                                            d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"
+                                            ></path>
+                                        </svg>
+                                        <svg id="star-4" class="star" viewBox="0 0 20 20">
+                                            <path
+                                            d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"
+                                            ></path>
+                                        </svg>
+                                        </div>
+                                    </div>
+                                    </label>
+                                </Button>
+
+                            
+                                    <Button className="btn-modern btn-contract">
+                                        <i className="fa-solid fa-file-signature"></i>
+                                        <span>Contract</span>
+                                    </Button>
+
+                                    <Button className="btn-modern btn-aboutme">
+                                        <i className="fa-solid fa-circle-info"></i>
+                                        <span>About us</span>
+                                    </Button>
+
+                                    <Button className="btn-modern btn-user">
+                                        <i className="fa-solid fa-user"></i>
+                                    </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </Header>
 
             <Body>
                 <div class="parent">
                     <div class="div1">1</div>
-                    <div class="div2">2</div>
+
+                    <div className="text-hello-user">
+                        <h1>Hello..., Start your planning today</h1>
+                    </div>
+
                     <div className="container-add-filter-task">
                         <div className="form-enter-task">
                             <Input 

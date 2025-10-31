@@ -3,7 +3,8 @@
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
-    gap: 15px;
+    gap: 8px;
+    border: 1px solid red;
 }
     
 .div1 {
@@ -11,10 +12,18 @@
     border: 1px solid black;
 }
 
-.div2 {
+.text-hello-user {
     grid-column: span 3 / span 3;
-    /* grid-row: span 2 / span 2; */
-    border: 1px solid black;
+    /* border: 1px solid black; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.text-hello-user h1 {
+    color: aliceblue;
+    font-family: cursive;
+    word-spacing: -2px;
 }
 
 .container-add-filter-task{
