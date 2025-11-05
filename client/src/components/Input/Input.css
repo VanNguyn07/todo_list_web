@@ -87,3 +87,31 @@
     left: 15px;
     transform: translateY(-50%);
 }
+
+/* input search and button for search everything */
+.search-and-button-evt {
+    display: inline-flex;
+    margin-right: 290px;
+}
+.search-everything {
+    position: relative;
+    flex-grow: 1;
+}
+
+.input-search-evt {
+    height: 40px;
+    margin: 0px 30px 0px 30px;
+    padding-left: 45px;
+}
+
+.search-everything i {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    color: #6b6a6a;
+    font-size: 20px;
+    position: absolute;
+    top: 50%;
+    left: 45px;
+    transform: translateY(-50%);
+}

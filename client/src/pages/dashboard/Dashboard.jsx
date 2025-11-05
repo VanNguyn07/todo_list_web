@@ -7,6 +7,7 @@ import Input from "../../components/Input/Input";
 import TaskCard from "../../components/TaskCard/TaskCard";
 import Textarea from "../../components/Textarea/Textarea";
 import Logo from "../../assets/images/logo.png";
+import Pomodoro from "../../components/Pomodoro/Pomodoro";
 import "./Dashboard.css";
 
 
@@ -14,16 +15,77 @@ function Dashboard() {
 
     return(
         <>
-        <div id="dashboard-page" className="animate__animated animate__fadeInDown ">
+        <div id="dashboard-page" className=" animate__animated animate__fadeIn ">
             <Header>
+                <nav className="sidebar-nav">
+                    <div className="logo-header-page">
+                        <img src={Logo} alt="Logo" />
+                        <h1>Todo List</h1>
+                    </div>
+                        <Button className="btn-sidebar btn-home active">
+                            <i class="fa-solid fa-house"></i>
+                            <span>Home</span>
+                        </Button>
+
+                        <Button className="btn-sidebar btn-Tasks">
+                            <i class="fa-solid fa-list-check"></i>
+                            <span>Tasks</span>
+                        </Button>
+
+                        <Button className="btn-sidebar btn-pomodoro">
+                            <i class="fa-solid fa-hourglass-half"></i>
+                            <span>Pomodoro</span>
+                        </Button>
+
+                        <Button className="btn-sidebar btn-analytics">
+                            <i class="fa-solid fa-chart-pie"></i>
+                            <span>Analytics</span>
+                        </Button>
+
+                        <Button className="btn-sidebar btn-quick-notes">
+                            <i class="fa-solid fa-note-sticky"></i>
+                            <span>Quick Notes</span>
+                        </Button>
+
+                        <Button className="btn-sidebar btn-habit-tracker">
+                            <i class="fa-solid fa-calendar-check"></i>
+                            <span>Habit Tracker</span>
+                        </Button>
+
+                        <Button className="btn-sidebar btn-habit-tracker">
+                            <i class="fa-solid fa-calendar-days"></i>
+                            <span>Calendar</span>
+                        </Button>
+
+                        <Button className="btn-sidebar btn-habit-tracker">
+                            <i class="fa-solid fa-gear"></i>
+                            <span>Settings</span>
+                        </Button>
+
+                    </nav>
                 <div className="header-page">
                     <div className="content-header">
-                        <div className="logo-header-page">
-                            <img src={Logo} alt="Logo" />
-                            <h1>Todo List</h1>
-                        </div>
                         <div className="container-navbar-header">
                             <div className="container-btn-header">
+
+                            <div className="search-and-button-evt">
+                                <div className="search-everything">
+                                <Input 
+                                    type="text"
+                                    placeholder="Search everything..."
+                                    className="input-search-evt"
+                                />
+                                <i className="fa-solid fa-magnifying-glass search-icon"></i>
+                                </div>
+                                
+                                <div className="container-btn-search">
+                                    
+                                    <Button className="btn-search btn-seach-evt">
+                                        <i className="fa-solid fa-magnifying-glass search-icon"></i>
+                                    </Button>
+                                </div>
+                            </div>
+
                                 <Button className="btn-modern btn-dark-light">
                                     <label class="switch">
                                     <input id="input" type="checkbox" checked="" />
@@ -104,6 +166,14 @@ function Dashboard() {
                                         <span>About us</span>
                                     </Button>
 
+                                    <Button className="btn-modern btn-quick-add">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </Button>
+                                    
+                                    <Button className="btn-modern btn-noti">
+                                        <i className="fa-solid fa-bell"></i>
+                                    </Button>
+
                                     <Button className="btn-modern btn-user">
                                         <i className="fa-solid fa-user"></i>
                                     </Button>
@@ -113,10 +183,8 @@ function Dashboard() {
                 </div>
             </Header>
 
-            <Body>
-                <div class="parent">
-                    <div class="div1">1</div>
-
+            <Body>  
+                <div className="parent" >
                     <div className="text-hello-user">
                         <h1>Hello..., Start your planning today</h1>
                     </div>
@@ -263,9 +331,58 @@ function Dashboard() {
                         </div>
                     </div>
 
-                    <div class="div8">8</div>
-                    <div class="div9">9</div>
-                    <div class="div10">10</div>
+                    <div className="div8">Calendar mini</div>
+
+                    <Pomodoro className="pomodoro-focus-widget">
+                            <div className="title-for-pomodoro-widget">
+                                <i className="fa-regular fa-clock"></i>
+                                <p id="title-pomodoro-focus">Promodo Focus</p>
+                            </div>
+                            <div className="text-current-task">
+                                <p>CURRENT TASK</p>
+                                <p id="name-of-current-task">Finish UI Design for Analytics Page</p>
+                            </div>
+
+                            <div className="pomodoro-widget-container">
+                                <div className="pomodoro-timer">
+                                <svg className="timer-svg" width="130" height="130" viewBox="0 0 100 100">
+                                    <circle className="timer-bg" cx="50" cy="50" r="45"></circle>
+                                    
+                                    <circle className="timer-progress" cx="50" cy="50" r="45"></circle>
+                                </svg>
+                                
+                                <div className="timer-text" id="pomodoro-time">25:00</div>
+                                </div>
+                            </div>
+
+                            <div className="btn-container">
+                                <Button className="btn-control-pomodoro btn-start">
+                                    <i className="fa-solid fa-play start-icon"></i>
+                                </Button>
+
+                                <Button className="btn-control-pomodoro btn-pause">
+                                        <i className="fa-solid fa-pause pause-icon"></i>
+                                </Button>
+
+                                <Button className="btn-control-pomodoro btn-skip">
+                                        <i className="fa-solid fa-forward skip-icon"></i>
+                                </Button>
+
+                                <Button className="btn-control-pomodoro btn-reset">
+                                        <i className="fa-solid fa-rotate-left reset-icon"></i>
+                                </Button>
+
+                            </div>
+                    </Pomodoro>
+
+                    <div className="div10">Compeled/Pending Task</div>
+                    <div className="div11">Streak</div>
+                    <div className="div12">Quick notes</div>
+                    <div className="div13">Bản đồ nhiệt Thói quen (Habit Heatmap):
+
+Nội dung: Một biểu đồ lịch heatmap (giống như lịch sử đóng góp trên GitHub) cho thấy mật độ hoàn thành thói quen trong tháng.
+
+Tại sao hay? Đây là một trong những widget tạo động lực mạnh nhất. Người dùng sẽ không muốn "phá vỡ chuỗi" và nhìn thấy "lỗ hổng" trên bản đồ của mình.</div>
                 </div>
             </Body>
 

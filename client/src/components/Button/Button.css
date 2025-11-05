@@ -1,3 +1,13 @@
+:root {
+    --primary-color: #e0b880;     
+    --text-color-dark: #343a40; /* Màu chữ tối */
+    --text-color-light: #6c757d; /* Màu chữ mờ (inactive) */
+    --bg-color-hover: #f1f3f5;   /* Màu nền khi hover */
+    --bg-color-active: #e5d4ba;  
+    --sidebar-bg: #e9e6e5; 
+    --icon-color: rgb(57, 57, 58);     /* Màu nền sidebar */
+}
+
 /* Button for social media */
 .social-icons .social-btn {
   display: inline-flex;
@@ -53,12 +63,16 @@
   box-shadow: 0 8px 5px rgba(0, 0, 0, 0.15);
 }
 
+.social-icons .social-btn:active {
+  transform: scale(0.95);
+}
+
 /* button add task */
 .add-task-btn {
   border: 1px solid #52b34c;
-  width: 60px;
-  height: 50px;
-  border-radius: 15px;
+  width: 33px;
+  height: 33px;
+  border-radius: 50%;
   cursor: pointer;
   background: linear-gradient(145deg, #4CAF50, #388E3C);
   color: #ffffff;
@@ -366,7 +380,7 @@
 }
 
 .btn-modern {
-    display: inline-flex; /* Giúp icon và chữ căn đều */
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
@@ -400,7 +414,7 @@
 }
 
 .btn-aboutme:hover {
-   background: linear-gradient(135deg, #28a745, #1c7430);
+   background: linear-gradient(135deg, #007bff, #0056b3);
    box-shadow: 0 7px 10px rgba(40, 167, 69, 0.25);
    color: aliceblue;
 }
@@ -410,21 +424,31 @@
      box-shadow: 0 7px 10px rgba(108, 117, 125, 0.3);
 }
 
-.btn-contract:hover i, .btn-aboutme:hover i, .btn-user:hover i {
+.btn-noti:hover {
+     background: linear-gradient(135deg, #e0b540, #c9af2e);
+     box-shadow: 0 7px 10px rgba(171, 182, 137, 0.3);
+}
+
+.btn-quick-add:hover {
+     background: linear-gradient(135deg, #43e040, #249b3a);
+     box-shadow: 0 7px 10px rgba(171, 182, 137, 0.3);
+}
+
+.btn-contract:hover i, .btn-aboutme:hover i, .btn-user:hover i, .btn-noti:hover i,.btn-quick-add:hover i {
   color: aliceblue;
 }
 
-.btn-contract i, .btn-aboutme i, .btn-user i {
+.btn-contract i, .btn-aboutme i, .btn-user i, .btn-noti i, .btn-quick-add i  {
   color: rgb(57, 57, 58);
 }
 
-.btn-contract, .btn-aboutme, .btn-user {
+.btn-contract, .btn-aboutme{
   color: rgb(43, 43, 45);
 }
 
-.btn-user {
-    width: 48px;  
-    height: 48px; 
+.btn-user, .btn-noti, .btn-quick-add{
+    width: 40px;  
+    height: 40px; 
     padding: 0;
     border-radius: 50%; 
     background-color: transparent;
@@ -434,6 +458,120 @@
   border: none;
   padding: 0;
 }
-.btn-user i {
+.btn-user i, .btn-quick-add i, .btn-noti  {
     font-size: 18px;
+}
+
+
+/* Button for sidebar */
+.btn-sidebar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;          
+    align-items: center;    
+    width: 100%;            
+    text-align: left;    
+    /* Thiết kế & Khoảng cách */
+    padding: 20px 25px; 
+    border-radius: 8px;     /* Bo góc mềm mại, hiện đại */
+    font-size: 19px;
+    font-weight: 500;       /* Chữ hơi đậm một chút */
+    color: var(--text-color-light); /* Màu chữ mờ cho nút không active */
+    /* Hiệu ứng chuyển động */
+    transition: all 0.2s ease-in-out;
+}
+
+/* --- Thiết kế cho Icon --- */
+.btn-sidebar i {
+    width: 20px;            /* Cho icon một không gian cố định */
+    margin-right: 14px;     /* Khoảng cách giữa icon và chữ */
+    font-size: 18px;        /* Kích thước icon */
+    text-align: center;
+}
+
+/* --- Hiệu ứng khi di chuột (Hover) --- */
+.btn-sidebar:hover {
+    background-color: var(--bg-color-hover); /* Đổi màu nền */
+    color: var(--text-color-dark);         /* Chữ đậm lên */
+    transform: translateY(-5px);
+}
+
+/* --- Trạng thái Active (Quan trọng) --- */
+/* Đây là trạng thái khi người dùng đang ở trang đó */
+.btn-sidebar.active {
+    background-color: var(--bg-color-active);
+    color: var(--primary-color); /* Chữ đổi thành màu chính */
+    font-weight: bold;    
+}
+
+/* Button for search */
+.btn-search {
+    background-color: transparent;
+    padding: 11px 15px;
+    border: 1px solid rgb(184, 180, 180);
+    font-size: 25px;
+    cursor: pointer;
+    box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-out;
+    position: relative;
+}
+
+.btn-search:hover {
+    transform: translateY(-4px);
+    filter: brightness(1.05);
+    border-color: transparent;
+    box-shadow: 0 7px 20px rgba(0, 0, 0, 0.15);
+}
+.btn-search:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    filter: brightness(0.9); /* Tối đi một chút */
+}
+
+.btn-seach-evt {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.btn-seach-evt i{
+  color: rgb(83, 82, 82);
+  font-size: 23px;
+}
+
+.container-btn-search {
+  position: relative;
+  flex-grow: 1;
+}
+
+.container-btn-search i {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 7px;
+}
+
+/* Button for control pomodoro */
+.btn-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.btn-control-pomodoro {
+  font-size: 18px;
+  width: 40px;
+  border-radius: 10px;
+  border: 1px solid white;
+  padding: 3px 0px 3px 0px;
+  cursor: pointer;
+  background-color: transparent;
+  color: gainsboro;
+}
+
+.btn-control-pomodoro:active {
+  transform: scale(0.95);
 }

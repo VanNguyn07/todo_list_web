@@ -1,0 +1,102 @@
+:root {
+    --primary-color: #e0b880;     
+    --text-color-dark: #343a40; /* Màu chữ tối */
+    --text-color-light: #6c757d; /* Màu chữ mờ (inactive) */
+    --bg-color-hover: #f1f3f5;   /* Màu nền khi hover */
+    --bg-color-active: #e5d4ba;  
+    --sidebar-bg: #e9e6e5; 
+    --icon-color: rgb(57, 57, 58);     /* Màu nền sidebar */
+}
+
+.pomodoro-focus-widget {
+    background-color: #515558;
+    border-radius: 10px;
+}
+.title-for-pomodoro-widget {
+    display: inline-flex;
+    gap: 10px;
+    padding: 10px 0px 10px 10px;
+    font-weight: bold;
+    color: aliceblue;
+}
+
+.title-for-pomodoro-widget i {
+    font-size: 20px;
+    color: rgb(89, 216, 199);
+}
+#title-pomodoro-focus {
+    font-size: 20px;
+}
+
+.text-current-task {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-left: 10px;
+    color: white;
+}
+#name-of-current-task {
+    margin-left: 30px;
+    color: red;
+    font-style: italic
+}
+
+/* Css for pomodoro-timer */
+
+.pomodoro-widget-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.pomodoro-timer {
+    position: relative; /* Quan trọng để căn giữa chữ */
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    box-shadow: 0 10px 25px -5px rgba(36, 196, 180, 0.638);
+    transition: all 0.3s ease-in-out;
+}
+
+.pomodoro-timer:hover {
+    transform: translateY(-3px); /* Nâng lên 5px */
+    box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.2); /* Bóng đậm hơn */
+}
+
+/* Căn giữa chữ đè lên trên SVG */
+.timer-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px;
+    font-weight: bold;
+    color: white; /* Màu chữ của bạn */
+}
+
+/* Định dạng chung cho 2 vòng tròn */
+.timer-svg circle {
+    fill: transparent;  
+    /* Độ dày của viền */   
+    stroke-width: 5;  
+}
+
+/* Vòng tròn tiến trình (đây là phần ma thuật) */
+.timer-progress {
+    stroke: rgb(89, 216, 199); 
+    /* Quay 90 độ để bắt đầu từ đỉnh (12 giờ) */
+    transform-origin: center;
+    transform: rotate(-90deg);
+    
+    /* TÍNH TOÁN QUAN TRỌNG:
+       Chu vi (C) = 2 * PI * r = 2 * 3.14159 * 45 = 282.7
+       Chúng ta làm tròn là 283
+    */
+    stroke-dasharray: 283;
+    
+    /* stroke-dashoffset = 0; nghĩa là vòng tròn ĐẦY
+       stroke-dashoffset = 283; nghĩa là vòng tròn RỖNG
+    */
+    stroke-dashoffset: 0; /* Mặc định là đầy */
+    
+    transition: all 1s linear;
+}

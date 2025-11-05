@@ -1,15 +1,36 @@
 
+html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 .parent {
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(8, 1fr);
+    grid-template-columns: repeat(7, minmax(10px, 1fr));
+    grid-auto-rows: minmax(80px, auto);
     gap: 8px;
-    border: 1px solid red;
+    margin-left: 235px; 
+    box-sizing: border-box;
+    background-color: var(--sidebar-bg);
+    min-height: 100vh;
 }
     
-.div1 {
-    grid-row: span 8 / span 8;
-    border: 1px solid black;
+.sidebar-nav {
+    position: fixed;
+    width: 235px; 
+    height: calc(100vh);
+    overflow-y: auto; /* scrollbar chỉ cho sidebar */
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column; 
+    gap: 20px;              
+    background-color: #e9e6e5;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 .text-hello-user {
@@ -23,19 +44,20 @@
 .text-hello-user h1 {
     color: aliceblue;
     font-family: cursive;
+    font-size: 30px;
     word-spacing: -2px;
 }
 
 .container-add-filter-task{
     grid-column: span 4 / span 4;
     grid-row: span 2 / span 2;
-    grid-column-start: 5;
+    grid-column-start: 4;
 }
 
 .div6 {
     grid-column: span 3 / span 3;
     grid-row: span 5 / span 5;
-    grid-column-start: 2;
+    grid-column-start: 1;
     grid-row-start: 2;
     border: 1px solid black;
 }
@@ -43,22 +65,22 @@
 .container-task{
     grid-column: span 4 / span 4;
     grid-row: span 4 / span 4;
-    grid-column-start: 5;
+    grid-column-start: 4;
     grid-row-start: 3;
 }
 
 .div8 {
     grid-column: span 2 / span 2;
-    grid-row: span 2 / span 2;
-    grid-column-start: 2;
-    grid-row-start: 7;
+    grid-row: span 3 / span 3;
+    grid-column-start: 1;
+    grid-row-start: 7;  
     border: 1px solid black;
 }
 
-.div9 {
+.pomodoro-focus-widget{
     grid-column: span 2 / span 2;
-    grid-row: span 2 / span 2;
-    grid-column-start: 4;
+    grid-row: span 3 / span 3;
+    grid-column-start: 3;
     grid-row-start: 7;
     border: 1px solid black;
 }
@@ -66,8 +88,31 @@
 .div10 {
     grid-column: span 3 / span 3;
     grid-row: span 2 / span 2;
-    grid-column-start: 6;
+    grid-column-start: 5;
     grid-row-start: 7;
     border: 1px solid black;
 }
+
+.div11 {
+    grid-column: span 2 / span 2;
+    grid-row: span 2 / span 2;
+    grid-column-start: 1;
+    grid-row-start: 10;
+    border: 1px solid black;
+}
+
+.div12 {
+    grid-column: span 2 / span 2;
+    grid-row: span 3 / span 3;
+    grid-column-start: 3;
+    grid-row-start: 10;
+    border: 1px solid black;
+}
         
+.div13 {
+    grid-column: span 3 / span 3;
+    grid-row: span 3 / span 3;
+    grid-column-start: 5;
+    grid-row-start: 9;
+    border: 1px solid black;
+}
