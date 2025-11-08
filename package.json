@@ -10,9 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "date-fns": "^4.1.0",
+    "lottie-react": "^2.4.1",
     "prop-types": "^15.8.1",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-activity-calendar": "^2.7.15",
+    "react-calendar": "^6.0.0",
+    "react-dom": "^19.1.1",
+    "recharts": "^3.3.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

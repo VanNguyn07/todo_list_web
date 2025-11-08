@@ -9,7 +9,7 @@
 }
 
 .pomodoro-focus-widget {
-    background-color: #515558;
+    background-color: #ecc897;
     border-radius: 10px;
 }
 .title-for-pomodoro-widget {
@@ -17,12 +17,12 @@
     gap: 10px;
     padding: 10px 0px 10px 10px;
     font-weight: bold;
-    color: aliceblue;
+    color: rgb(121, 125, 131);
 }
 
 .title-for-pomodoro-widget i {
     font-size: 20px;
-    color: rgb(89, 216, 199);
+    color: rgb(235, 116, 116);
 }
 #title-pomodoro-focus {
     font-size: 20px;
@@ -33,11 +33,11 @@
     flex-direction: column;
     gap: 2px;
     margin-left: 10px;
-    color: white;
-}
+    color: rgb(121, 125, 131);
+}   
 #name-of-current-task {
     margin-left: 30px;
-    color: red;
+    color: black;
     font-style: italic
 }
 
@@ -53,7 +53,7 @@
     width: 130px;
     height: 130px;
     border-radius: 50%;
-    box-shadow: 0 10px 25px -5px rgba(36, 196, 180, 0.638);
+    box-shadow: 0 10px 25px -5px rgba(196, 36, 36, 0.638);
     transition: all 0.3s ease-in-out;
 }
 
@@ -70,7 +70,7 @@
     transform: translate(-50%, -50%);
     font-size: 30px;
     font-weight: bold;
-    color: white; /* Màu chữ của bạn */
+    color: rgb(121, 125, 131);
 }
 
 /* Định dạng chung cho 2 vòng tròn */
@@ -82,7 +82,7 @@
 
 /* Vòng tròn tiến trình (đây là phần ma thuật) */
 .timer-progress {
-    stroke: rgb(89, 216, 199); 
+    stroke: rgb(239, 104, 104);
     /* Quay 90 độ để bắt đầu từ đỉnh (12 giờ) */
     transform-origin: center;
     transform: rotate(-90deg);

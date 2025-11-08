@@ -1,0 +1,67 @@
+
+/* Ghi đè CSS của react-calendar để nó vừa vặn 100% */
+
+.calendar-widget-container .react-calendar {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  background-color: rgb(216, 211, 211);
+  font-family: 'Arial', sans-serif; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 10px;
+}
+
+/* Nút điều hướng tháng ( < > ) */
+.calendar-widget-container .react-calendar__navigation button {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.calendar-widget-container .react-calendar__navigation button:hover {
+    border-radius: 15px;
+}
+
+/* Tên tháng (Tháng 11) */
+.calendar-widget-container .react-calendar__navigation__label {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #333;
+  text-transform: uppercase;
+}
+
+/* Các ô ngày */
+.calendar-widget-container .react-calendar__tile {
+  border-radius: 10px; /* Bo tròn các ô ngày */
+  padding: 10px 5px;
+}
+
+/* Ngày hôm nay (highlight) */
+.calendar-widget-container .react-calendar__tile--now {
+  background: #f0f0f0; 
+  color: black;
+}
+
+/* Ngày được chọn (khi bấm vào) */
+.calendar-widget-container .react-calendar__tile--active {
+  background: #8884d8; /* Màu tím giống biểu đồ (hoặc màu bạn thích) */
+  color: white;
+}
+
+/* (Nâng cao) CSS cho ngày có task */
+.calendar-widget-container .day-has-task {
+  position: relative;
+}
+
+/* Thêm một dấu chấm nhỏ dưới ngày có task */
+.calendar-widget-container .day-has-task::after {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #f87171;
+}

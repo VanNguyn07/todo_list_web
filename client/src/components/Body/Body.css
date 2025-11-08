@@ -54,12 +54,11 @@ html, body, #root {
     grid-column-start: 4;
 }
 
-.div6 {
+.chart-widget-container {
     grid-column: span 3 / span 3;
     grid-row: span 5 / span 5;
     grid-column-start: 1;
     grid-row-start: 2;
-    border: 1px solid black;
 }
 
 .container-task{
@@ -69,23 +68,22 @@ html, body, #root {
     grid-row-start: 3;
 }
 
-.div8 {
+.calendar-widget-container {
     grid-column: span 2 / span 2;
     grid-row: span 3 / span 3;
     grid-column-start: 1;
     grid-row-start: 7;  
-    border: 1px solid black;
 }
 
 .pomodoro-focus-widget{
-    grid-column: span 2 / span 2;
+    grid-column: span 2 / span 2;   
     grid-row: span 3 / span 3;
     grid-column-start: 3;
     grid-row-start: 7;
     border: 1px solid black;
 }
 
-.div10 {
+.container-task-widget {
     grid-column: span 3 / span 3;
     grid-row: span 2 / span 2;
     grid-column-start: 5;
@@ -93,23 +91,24 @@ html, body, #root {
     border: 1px solid black;
 }
 
-.div11 {
+.streak-widget-container {
     grid-column: span 2 / span 2;
     grid-row: span 2 / span 2;
     grid-column-start: 1;
     grid-row-start: 10;
-    border: 1px solid black;
+
 }
 
-.div12 {
+.quick-note-widget {
     grid-column: span 2 / span 2;
     grid-row: span 3 / span 3;
     grid-column-start: 3;
     grid-row-start: 10;
     border: 1px solid black;
+    height: 231px;
 }
         
-.div13 {
+.heatmap-container {
     grid-column: span 3 / span 3;
     grid-row: span 3 / span 3;
     grid-column-start: 5;

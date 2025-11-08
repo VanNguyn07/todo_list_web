@@ -37,7 +37,7 @@
 .content-task-three, .content-task-four {
     border: 1px solid black;
     border-radius: 10px;
-    background-color: #ecc897;
+    background-color: #f4f2f0;
     padding: 20px 20px 0px 20px;
     margin: 0px 20px 20px 0px;
     transition: all 0.2s ease-in-out;
@@ -72,56 +72,55 @@
 
 .content-right .btn-task{
     width: 45px;       
-    height: 45px;    
-    border-radius: 50%;  
+    height: 45px;     
     border: none;
-    background-color: transparent; /* Nền trong suốt mặc định */
-    color: #888;       /* Màu icon xám nhạt */
+    background-color: transparent;
     cursor: pointer;
     display: flex;     /* Dùng flex để căn icon vào giữa */
     justify-content: center;
     align-items: center;
-    transition: all 0.2s ease-in-out; /* Hiệu ứng mượt mà */
 }
 
 
 .content-right .btn-task i {
-    font-size: 28px; 
+    font-size: 27px; 
 }
 
 /* Nút "Hoàn thành" (Check Circle) */
-.content-right .fa-check-circle {
-    color: #4CAF50; 
-}
-.content-right .fa-check-circle:hover {
-    transform: scale(1.1); 
-    filter: brightness(1.2); 
-}
-
-
 .content-right .fa-pen-to-square {
     color: #2196F3; 
 }
-.content-right .fa-pen-to-square:hover {
-    transform: scale(1.1);
-    filter: brightness(1.2);
-}
-
 
 .content-right .fa-trash {
     color: #F44336; 
 }
-.content-right .fa-trash:hover {
-    transform: scale(1.1);
-    filter: brightness(1.2);
-}
 
-
-.content-right .btn-task:hover {
-    background-color: rgba(0, 0, 0, 0.05); 
-
-}
 .content-right .btn-task:active {
-    background-color: rgba(0, 0, 0, 0.142);
     transform: scale(0.95); 
+}
+
+#compeled {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border: 2px solid #4CAF50;
+  border-radius: 50%; /* bo góc rõ ràng */
+  cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #4CAF50;
+  border-color: #4CAF50;
+}
+
+input[type="checkbox"]:checked::after {
+  content: "✔";
+  color: white;
+  font-size: 18px;
 }

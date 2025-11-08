@@ -1,0 +1,46 @@
+/* Dán vào file StreakWidget.css của bạn */
+
+/* 1. Container chính (Card) */
+.streak-container {
+  display: flex;
+  flex-direction: column; /* Xếp từ trên xuống dưới */
+  align-items: center;   /* Căn giữa theo chiều ngang */
+  background-color: #ecc897;
+  font-family: Arial, sans-serif;
+  border-radius: 10px;
+  border: 1px solid black;
+}
+
+/* 2. Phần Top (Icon + Title) */
+.streak-top {
+  /* Dùng Flexbox để xếp icon và title theo chiều ngang */
+  display: flex;
+  align-items: center; 
+  width: 100%; /* Chiếm hết chiều ngang của card */
+}
+
+.streak-top h3 {
+  margin: 0;
+  margin-left: 8px; /* Khoảng cách với icon */
+  color: rgb(116, 113, 113);
+  margin-top: 10px;
+}
+
+/* 4. Phần Bottom (Số + Chữ) */
+.streak-bottom {
+  display: flex;
+  justify-content: center; /* Căn giữa */
+  align-items: center;   /* Căn chữ theo đường base */
+  width: 100%;
+}
+
+.streak-bottom h2 {
+  font-size: 2.2rem;
+  color: #ff9900; 
+}
+
+.streak-bottom h3 {
+  margin-left: 5px;
+  font-size: 1.2rem;
+  color: rgb(116, 113, 113);
+}

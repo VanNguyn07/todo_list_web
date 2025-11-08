@@ -1,17 +1,28 @@
 import React from "react";
-import Body from "../../components/Body/Body";
-import Button from "../../components/Button/Button";
-import Footer from "../../components/Footer/Footer";
-import Header from "../../components/Header/Header";
-import Input from "../../components/Input/Input";
-import TaskCard from "../../components/TaskCard/TaskCard";
-import Textarea from "../../components/Textarea/Textarea";
+import Body from "../../components/body/Body";
+import Button from "../../components/button/Button";
+import Footer from "../../components/footer/Footer";
+import Header from "../../components/header/Header";
+import Input from "../../components/input/Input";
+import TaskCard from "../../components/taskCard/TaskCard";
+import Textarea from "../../components/textArea/Textarea";
 import Logo from "../../assets/images/logo.png";
-import Pomodoro from "../../components/Pomodoro/Pomodoro";
+import Pomodoro from "../../components/pomodoro/Pomodoro";
+import StreakWidget from "../../components/streak/StreakWidget";
+import CompeledTask from "../../components/taskWidget/CompeledTask";
+import PendingTask from "../../components/taskWidget/PendingTask";
+import QuickNotesWidget from "../../components/quickNotes/QuickNotes";
+import { WeeklyProcessChart } from "../../components/recharts/WeeklyProccessChart";
+import { CalendarWidget } from "../../components/calendarWidget/CalendarWidget";
+import mockTasks from "../../components/utils/MockDataChart";
+import { HabitHeatMap } from "../../components/heatMap/HeatMap";
 import "./Dashboard.css";
 
 
 function Dashboard() {
+    const currentStreakCount = 10;
+    const currentCompeledTaskCount = 5;
+    const currentPendingTaskCount = 10;
 
     return(
         <>
@@ -233,7 +244,9 @@ function Dashboard() {
                         </div>
                     </div>
 
-                    <div class="div6">6</div>
+                    <div className="chart-widget-container">
+                        <WeeklyProcessChart allTasks={mockTasks}/>
+                    </div>
 
                     <div className="container-task">
                         <div className="subcontainer-task">
@@ -246,9 +259,7 @@ function Dashboard() {
                                     </div>
 
                                      <div className="content-right">
-                                        <Button className="btn-task btn-check-circle">
-                                            <i class="fa-solid fa-check-circle"></i>
-                                        </Button>
+                                        <input type="checkbox" name="compeled" id="compeled" />
 
                                         <Button className="btn-task btn-pen-to-square">
                                             <i class="fa-solid fa-pen-to-square"></i>
@@ -269,9 +280,7 @@ function Dashboard() {
                                     </div>
 
                                      <div className="content-right">
-                                        <Button className="btn-task btn-check-circle">
-                                            <i class="fa-solid fa-check-circle"></i>
-                                        </Button>
+                                        <input type="checkbox" name="compeled" id="compeled" />
 
                                         <Button className="btn-task btn-pen-to-square">
                                             <i class="fa-solid fa-pen-to-square"></i>
@@ -292,9 +301,7 @@ function Dashboard() {
                                     </div>
 
                                      <div className="content-right">
-                                        <Button className="btn-task btn-check-circle">
-                                            <i class="fa-solid fa-check-circle"></i>
-                                        </Button>
+                                        <input type="checkbox" name="compeled" id="compeled" />
 
                                         <Button className="btn-task btn-pen-to-square">
                                             <i class="fa-solid fa-pen-to-square"></i>
@@ -315,15 +322,13 @@ function Dashboard() {
                                     </div>
 
                                      <div className="content-right">
-                                        <Button className="btn-task btn-check-circle">
-                                            <i class="fa-solid fa-check-circle"></i>
-                                        </Button>
+                                        <input type="checkbox" name="compeled" id="compeled" />
 
-                                        <Button className="btn-task btn-pen-to-square">
+                                        <Button type="button" className="btn-task btn-pen-to-square">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </Button>
 
-                                        <Button className="btn-task btn-trash">
+                                        <Button type="button" className="btn-task btn-trash">
                                             <i class="fa-solid fa-trash"></i>
                                         </Button>
                                     </div>
@@ -331,7 +336,9 @@ function Dashboard() {
                         </div>
                     </div>
 
-                    <div className="div8">Calendar mini</div>
+                    <div className="calendar-widget-container">
+                        <CalendarWidget/>
+                    </div>
 
                     <Pomodoro className="pomodoro-focus-widget">
                             <div className="title-for-pomodoro-widget">
@@ -375,14 +382,40 @@ function Dashboard() {
                             </div>
                     </Pomodoro>
 
-                    <div className="div10">Compeled/Pending Task</div>
-                    <div className="div11">Streak</div>
-                    <div className="div12">Quick notes</div>
-                    <div className="div13">Bản đồ nhiệt Thói quen (Habit Heatmap):
+                    <div className="container-task-widget">
+                        <CompeledTask className="task-widget compeleted-task"
+                            title="Compeled Task"
+                            compeledTaskCount={currentCompeledTaskCount}
+                        />
 
-Nội dung: Một biểu đồ lịch heatmap (giống như lịch sử đóng góp trên GitHub) cho thấy mật độ hoàn thành thói quen trong tháng.
+                    
+                        <PendingTask className="task-widget pending-task"
+                            title="Pending Task"
+                            pendingTaskCount={currentPendingTaskCount}
+                        />
+                    </div>
 
-Tại sao hay? Đây là một trong những widget tạo động lực mạnh nhất. Người dùng sẽ không muốn "phá vỡ chuỗi" và nhìn thấy "lỗ hổng" trên bản đồ của mình.</div>
+                    <div className="streak-widget-container">
+                        <StreakWidget 
+                            title="Your Streak"
+                            streakCount={currentStreakCount}
+                        />
+                    </div>
+
+                    <div className="quick-note-widget">
+                        <div className="quick-note-top">
+                                <i className="fa-solid fa-file-lines"></i> 
+                                <p>Quick notes</p>
+                            <Button className="btn-add-note"><i className="fa-solid fa-plus"></i></Button>
+                        </div>
+                        <QuickNotesWidget className="text-area-note"/>
+
+                    </div>
+
+                    <div className="heatmap-container">
+                        <HabitHeatMap className="heatmap-content"/>
+                    </div>
+                    
                 </div>
             </Body>
 

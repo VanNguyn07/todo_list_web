@@ -84,11 +84,10 @@
   border: none;
   outline: green;
   background-color: #6fe966;
-  transform: translateY(-3px);
 }
 
 .add-task-btn:active {
-  transform: translateY(1px) scale(0.95);
+  transform: scale(0.9);
 }
 
 .add-task-btn i {
@@ -517,14 +516,8 @@
     position: relative;
 }
 
-.btn-search:hover {
-    transform: translateY(-4px);
-    filter: brightness(1.05);
-    border-color: transparent;
-    box-shadow: 0 7px 20px rgba(0, 0, 0, 0.15);
-}
 .btn-search:active {
-    transform: translateY(1px);
+    transform: scale(0.9);
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
     filter: brightness(0.9); /* Tối đi một chút */
 }
@@ -565,13 +558,34 @@
   font-size: 18px;
   width: 40px;
   border-radius: 10px;
-  border: 1px solid white;
+  border: 1px solid rgb(125, 119, 119);
   padding: 3px 0px 3px 0px;
   cursor: pointer;
   background-color: transparent;
-  color: gainsboro;
+  color: rgb(63, 51, 51);
 }
 
 .btn-control-pomodoro:active {
+  transform: scale(0.95);
+}
+
+/* Button for add Quick Notes Widget */
+.btn-add-note {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  border: none;
+  width: 40px;
+  height: 30px;
+  background-color: transparent;
+}
+
+.btn-add-note i {
+  font-size: 25px !important;
+  cursor: pointer;
+}
+
+.btn-add-note:active {
   transform: scale(0.95);
 }
