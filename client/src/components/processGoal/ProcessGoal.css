@@ -1,0 +1,101 @@
+/* File: GoalCard.module.css */
+.card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-left: 5px solid; /* Đường viền bên trái sẽ đổi màu */
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-left: 8px;
+}
+
+.deadlineInfo {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.processContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.processBar {
+  flex-grow: 1;
+  height: 10px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.processFill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.3s ease;
+}
+
+.percentage {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.taskInfo {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+/* * Đây là phần "ma thuật"
+ * CSS Modules sẽ tự động liên kết .normal với styles.normal
+ */
+
+/* 1. Normal (Xanh lá) */
+.normal .processFill,
+.card.normal {
+  background-color: #28a745; /* Màu xanh lá */
+}
+.card.normal {
+  border-left-color: #28a745;
+}
+.icon.normal {
+  color: #28a745;
+}
+
+
+/* 2. Soon (Cam) */
+.soon .processFill,
+.card.soon {
+  background-color: #fd7e14; /* Màu cam */
+}
+.card.soon {
+  border-left-color: #fd7e14;
+}
+.icon.soon {
+  color: #fd7e14;
+}
+
+/* 3. Urgent (Đỏ) */
+.urgent .processFill,
+.card.urgent {
+  background-color: #dc3545; /* Màu đỏ */
+}
+.card.urgent {
+  border-left-color: #dc3545;
+}
+.icon.urgent {
+  color: #dc3545;
+}

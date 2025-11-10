@@ -1,7 +1,7 @@
-import React from "react";
+import React, {useState} from "react";
 import Body from "../../components/body/Body";
 import Button from "../../components/button/Button";
-import Footer from "../../components/footer/Footer";
+import Footer from "../../components/Footer/Footer";
 import Header from "../../components/header/Header";
 import Input from "../../components/input/Input";
 import TaskCard from "../../components/taskCard/TaskCard";
@@ -15,7 +15,8 @@ import QuickNotesWidget from "../../components/quickNotes/QuickNotes";
 import { WeeklyProcessChart } from "../../components/recharts/WeeklyProccessChart";
 import { CalendarWidget } from "../../components/calendarWidget/CalendarWidget";
 import mockTasks from "../../components/utils/MockDataChart";
-import { HabitHeatMap } from "../../components/heatMap/HeatMap";
+import DUMMY_GOALS from "../../components/utils/MockDataProcess";
+import { ProcessGoal } from "../../components/processGoal/ProcessGoal";
 import "./Dashboard.css";
 
 
@@ -23,7 +24,9 @@ function Dashboard() {
     const currentStreakCount = 10;
     const currentCompeledTaskCount = 5;
     const currentPendingTaskCount = 10;
+    const [goals, _setGoals] = useState(DUMMY_GOALS);
 
+    const sortedGoals = [...goals].sort((a,b) => new Date(a.deadline) - new Date(b.deadline));
     return(
         <>
         <div id="dashboard-page" className=" animate__animated animate__fadeIn ">
@@ -411,11 +414,19 @@ function Dashboard() {
                         <QuickNotesWidget className="text-area-note"/>
 
                     </div>
-
-                    <div className="heatmap-container">
-                        <HabitHeatMap className="heatmap-content"/>
+                
+                    <div className="process-goal-container">
+                        <h3>Target due date</h3>
+                        {sortedGoals.map(goal => (
+                            <ProcessGoal
+                                key={goal.id}
+                                title={goal.title}
+                                deadline={goal.deadline}
+                                taskCompleted={goal.taskCompleted}
+                                taskTotal={goal.taskTotal}
+                            />
+                        ))}
                     </div>
-                    
                 </div>
             </Body>
 
