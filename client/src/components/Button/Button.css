@@ -414,7 +414,7 @@
 
 .btn-aboutme:hover {
    background: linear-gradient(135deg, #007bff, #0056b3);
-   box-shadow: 0 7px 10px rgba(40, 167, 69, 0.25);
+   box-shadow: 0 7px 10px rgba(0, 123, 255, 0.25);
    color: aliceblue;
 }
 
@@ -492,7 +492,6 @@
 /* --- Hiệu ứng khi di chuột (Hover) --- */
 .btn-sidebar:hover {
     background-color: var(--bg-color-hover); /* Đổi màu nền */
-    color: var(--text-color-dark);         /* Chữ đậm lên */
     transform: translateY(-5px);
 }
 
@@ -500,8 +499,7 @@
 /* Đây là trạng thái khi người dùng đang ở trang đó */
 .btn-sidebar.active {
     background-color: var(--bg-color-active);
-    color: var(--primary-color); /* Chữ đổi thành màu chính */
-    font-weight: bold;    
+    color: var(--primary-color); /* Chữ đổi thành màu chính */   
 }
 
 /* Button for search */

@@ -10,3 +10,29 @@
     flex-direction: column;
     background-color: #e9e6e5;
 }
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1200;
+}
+
+.contact-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1300;
+}
+
+/* allow interaction with overlay despite pointer-events none on parent elements */
+.contact-overlay,
+.modal-backdrop {
+  pointer-events: auto;
+}
+
+/* ensure modal content inner elements are interactive */
+.contact-overlay * {
+  pointer-events: auto;
+}

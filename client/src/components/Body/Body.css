@@ -86,7 +86,6 @@ html, body, #root {
     grid-row: span 2 / span 2;
     grid-column-start: 5;
     grid-row-start: 7;
-    border: 1px solid black;
 }
 
 .streak-widget-container {

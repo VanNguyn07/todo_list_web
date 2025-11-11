@@ -2,8 +2,6 @@
     display: inline-flex;
     justify-content: space-around;
     align-items: center;
-    background-color: #ecc897;
-    border-radius: 10px;
 }
 
 .task-widget {

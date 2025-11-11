@@ -1,20 +1,23 @@
 import React from "react";
-import { differenceInDays, format } from 'date-fns';
+import { intervalToDuration, format, parseISO, endOfDay, isAfter } from 'date-fns';
 import "./ProcessGoal.css";
 
-const getProcessBar = (daysLeft) => {
-    if (daysLeft <= 3) return 'urgent';
-    if (daysLeft <= 7) return 'soon';
+const getProcessBar = (duration) => {
+    if (duration.days <= 3) return 'urgent';
+    if (duration.days <= 7) return 'soon';
     return 'normal';
 };
 
 export const ProcessGoal = ({ title, deadline, tasksCompleted = 0, tasksTotal = 0 }) => {
-    const deadlineDate = new Date(deadline);
-    const daysLeft = differenceInDays(deadlineDate, new Date());
-    const formattedDeadline = format(deadlineDate, 'dd/MM/yyyy');
+    const deadlineDate = endOfDay(parseISO(deadline));
+    const current = new Date();
+    const isOverdue = !isAfter(deadlineDate, current);
 
+    const duration = !isOverdue ? intervalToDuration({start: current, end: deadlineDate}) : {days: 0, hours: 0};
+    const formattedDeadline = format(deadlineDate, 'dd/MM/yyyy');
     const percentage = tasksTotal > 0 ? Math.round((tasksCompleted / tasksTotal) * 100) : 0;
-    const status = getProcessBar(daysLeft);
+
+    const status = getProcessBar(duration);
 
     return (
         <div className={`card ${status}`}>
@@ -25,8 +28,8 @@ export const ProcessGoal = ({ title, deadline, tasksCompleted = 0, tasksTotal = 
 
             <div className="deadlineInfo">
                 <p>
-                    🔔 Hạn chót: <b>{formattedDeadline}</b>{" "}
-                    {daysLeft > 0 ? ` (Còn ${daysLeft} ngày)` : " (Quá hạn)"}
+                    🔔 Deadline: <b>{formattedDeadline}</b>{" "}
+                    {!isOverdue ? `Remaining: ${duration.days} days ${duration.hours} hours` : "(overdue)"}
                 </p>
             </div>
 

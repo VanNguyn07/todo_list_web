@@ -7,7 +7,6 @@
   padding: 16px;
   margin-bottom: 12px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  overflow-y: auto;
 }
 
 .header {
@@ -64,8 +63,7 @@
  */
 
 /* 1. Normal (Xanh lá) */
-.normal .processFill,
-.card.normal {
+.normal .processFill {
   background-color: #28a745; /* Màu xanh lá */
 }
 .card.normal {
@@ -77,8 +75,7 @@
 
 
 /* 2. Soon (Cam) */
-.soon .processFill,
-.card.soon {
+.soon .processFill{
   background-color: #fd7e14; /* Màu cam */
 }
 .card.soon {
@@ -89,8 +86,7 @@
 }
 
 /* 3. Urgent (Đỏ) */
-.urgent .processFill,
-.card.urgent {
+.urgent .processFill{
   background-color: #dc3545; /* Màu đỏ */
 }
 .card.urgent {
