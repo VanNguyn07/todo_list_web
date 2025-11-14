@@ -1,36 +1,35 @@
 .header-page {
-    width: 81%;
-    height: 95px;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    background: inherit;
-    margin-left: 255px;
+  width: 81%;
+  height: 95px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: inherit;
+  margin-left: 255px;
 }
 
 .content-header {
-    width: 100%;
-    height: 70px;
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 10px;
-    background-color: var(--sidebar-bg);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: 70px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+  background-color: var(--sidebar-bg);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-
 .logo-header-page {
-    display: flex;
-    gap: 20px;
-    margin-left: 21px;
+  display: flex;
+  gap: 20px;
+  margin-left: 21px;
 }
 
 .logo-header-page h1 {
-    font-family: cursive;
-    color: #e0b880;
+  font-family: cursive;
+  color: #e0b880;
 }
 .container-btn-header {
-    margin-right: 21px;
+  margin-right: 21px;
 }

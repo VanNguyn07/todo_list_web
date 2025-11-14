@@ -31,6 +31,10 @@ const handleContactClick = () => {
     console.log("Clicked button Contact")
 }
 
+const handleAboutUsClick = () => {
+    console.log("Clicked button About Us")
+}
+
 export const buttonClickHandles = {
     home: handleHomeClick,
     task: handleTaskClick,
@@ -40,5 +44,6 @@ export const buttonClickHandles = {
     "habit-tracker": handleHabitTrackerClick,
     calendar: handleCalendarClick,
     settings: handleSettingsClick,
-    contact: handleContactClick
+    contact: handleContactClick,
+    aboutus: handleAboutUsClick
 };

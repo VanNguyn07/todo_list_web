@@ -1,5 +1,6 @@
-<?php 
-class UserModelSignUp {
+<?php
+class UserModelSignUp
+{
     private $connect;
     private $table_name = "accounts_user";
 
@@ -16,11 +17,12 @@ class UserModelSignUp {
      */
     // UserModelSignUp.php
 
-    function checkUserAndEmailExists($username, $email){
+    function checkUserAndEmailExists($username, $email)
+    {
         $sql = "SELECT username, email FROM " . $this->table_name . " WHERE username = ? OR email = ? LIMIT 1";
         $prepareStmt = mysqli_prepare($this->connect, $sql);
 
-        if($prepareStmt){
+        if ($prepareStmt) {
             mysqli_stmt_bind_param($prepareStmt, "ss", $username, $email);
             mysqli_stmt_execute($prepareStmt);
 
@@ -28,12 +30,12 @@ class UserModelSignUp {
             $dataArray = mysqli_fetch_assoc($result);
             mysqli_stmt_close($prepareStmt);
 
-            if($dataArray){
+            if ($dataArray) {
                 // Nếu tìm thấy
-                if($dataArray['username'] === $username){
+                if ($dataArray['username'] === $username) {
                     return "ERR_USERNAME_EXISTS"; // Báo lỗi trùng username
                 }
-                if($dataArray['email'] === $email){
+                if ($dataArray['email'] === $email) {
                     return "ERR_EMAIL_EXISTS"; // Báo lỗi trùng email
                 }
             }
@@ -44,7 +46,8 @@ class UserModelSignUp {
     }
 
 
-    function insertDataIntoDatabase($username, $hashed_password, $gender, $email) {
+    function insertDataIntoDatabase($username, $hashed_password, $gender, $email)
+    {
         $sql = "INSERT INTO " . $this->table_name . " (username, password, gender, email) VALUES (?, ?, ?, ?)";
         $prepareStmt = mysqli_prepare($this->connect, $sql);
 
@@ -60,4 +63,3 @@ class UserModelSignUp {
         return false; // Lỗi câu lệnh
     }
 }
-?>

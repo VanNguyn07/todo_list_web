@@ -19,6 +19,7 @@ import { ProcessGoal } from "../../components/processGoal/ProcessGoal";
 import { useSideBarLogic } from "../../components/button/ButtonUseSideBarLogic";
 import Contact from "../contact/contact";
 import "./Dashboard.css";
+import AboutUs from "../aboutUs/aboutUs";
 
 function Dashboard() {
   const currentStreakCount = 10;
@@ -40,11 +41,7 @@ function Dashboard() {
     <>
       <div
         id="dashboard-page"
-        className={`
-    animate__animated animate__fadeIn 
-    ${activeView === "contact" ? "modal-open" : ""}
-  `}
-      >
+        className="animate__animated animate__fadeIn">
         <Header>
           <nav className="sidebar-nav">
             <div className="logo-header-page">
@@ -278,7 +275,9 @@ function Dashboard() {
                     <span>Contact</span>
                   </Button>
 
-                  <Button className="btn-modern btn-aboutme">
+                  <Button className="btn-modern btn-aboutme"
+                  onClick={() => handleViewChange("aboutus")}
+                  >
                     <i className="fa-solid fa-circle-info"></i>
                     <span>About us</span>
                   </Button>
@@ -338,9 +337,9 @@ function Dashboard() {
                   <option value="" disabled>
                     By priority
                   </option>
-                  <option value="high">High</option>
-                  <option value="medium">Medium</option>
-                  <option value="low">Low</option>
+                  <option value="3">High</option>
+                  <option value="2">Medium</option>
+                  <option value="1">Low</option>
                 </select>
 
                 <div className="search-task-by-name">
@@ -563,6 +562,18 @@ function Dashboard() {
             />
             <div className="contact-overlay" role="dialog" aria-modal="true">
               <Contact />
+            </div>
+          </>
+        )}
+
+        {activeView === "aboutus" && (
+          <>
+            <div
+              className="modal-backdrop"
+              onClick={() => handleViewChange("home")}
+            />
+            <div className="contact-overlay" role="dialog" aria-modal="true">
+              <AboutUs />
             </div>
           </>
         )}

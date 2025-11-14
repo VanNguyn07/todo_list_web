@@ -1,7 +1,8 @@
-<?php 
+<?php
 include_once("../../config/connectDatabase.php");
 
-class UserModelSignIn {
+class UserModelSignIn
+{
     private $connect;
     private $table_name = "accounts_user";
 
@@ -9,22 +10,24 @@ class UserModelSignIn {
     public $username;
     public $password;
 
-    public function __construct($database){
+    public function __construct($database)
+    {
         $this->connect = $database;
     }
 
     // LIMIT = 1 vì username là unique nên khi tìm thấy thì lấy luôn không truy vấn hết bảng
-    public function findByUserName($username){
+    public function findByUserName($username)
+    {
         $sql = "SELECT * FROM " . $this->table_name . " WHERE username = ? LIMIT 1";
         $statement = mysqli_prepare($this->connect, $sql);
 
-        if($statement){
+        if ($statement) {
             // Gắn username vào placeholder
             mysqli_stmt_bind_param($statement, "s", $username);
-            
+
             $excute = mysqli_stmt_execute($statement);
             // Thực thi
-            if($excute){
+            if ($excute) {
                 // Lấy kết quả
                 $result = mysqli_stmt_get_result($statement);
                 // Fetch dữ liệu thành một mảng
@@ -38,4 +41,3 @@ class UserModelSignIn {
         return null; // Trả về null nếu có lỗi
     }
 }
-?>
