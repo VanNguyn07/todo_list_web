@@ -43,7 +43,7 @@ resetPassForm.addEventListener("submit", function (event) {
     message.textContent = "Checking...";
     message.style.color = "black";
 
-    const API_URL = "./index.php";
+    const API_URL = "../../../../server/services/forgotPasswordApi.php";
     fetch(API_URL, {
       method: "POST",
       body: formData,

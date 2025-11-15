@@ -1,22 +1,23 @@
+
 <?php 
 session_start(); // Luôn ở đầu
 
-// ---- BẮT ĐẦU SỬA ----
-
+// Project root: todo_list_web/
+$projectRoot = dirname(__DIR__, 2);
 // 1. Nạp Composer (RẤT QUAN TRỌNG, THÊM DÒNG NÀY)
-require_once '../../../../vendor/autoload.php'; 
+require_once $projectRoot . '/vendor/autoload.php'; 
 
 // 2. Nạp CSDL (Cần cho $pdo)
-require_once '../../../../server/config/connectDatabaseForResetPass.php';
+require_once $projectRoot . '/server/config/connectDatabaseOOP.php';
 
 // 3. Nạp Model (Định nghĩa class UserForgotPassword)
-require_once '../../../../server/app/models/forgotPasswordModel.php';
+require_once $projectRoot . '/server/app/models/forgotPasswordModel.php';
 
 // 4. Nạp Helper (Định nghĩa hàm send_otp_from_email)
-require_once '../../../../server/app/helpers/mail_helper.php';
+require_once $projectRoot . '/server/app/helpers/mail_helper.php';
 
 // 5. Nạp Controller (Class này dùng Model và Helper ở trên)
-require_once '../../../../server/app/controllers/PasswordResetController.php';
+require_once $projectRoot . '/server/app/controllers/PasswordResetController.php';
 
 // ---- KẾT THÚC SỬA ----
 

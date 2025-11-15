@@ -1,6 +1,6 @@
 <?php
 
-class UserForgotPassword
+class UserForgotPasswordModel
 {
     private $connect; // Đây là đối tượng mysqli
     private $table_name = "accounts_user";

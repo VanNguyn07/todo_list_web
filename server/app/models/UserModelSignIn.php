@@ -1,5 +1,5 @@
 <?php
-include_once("../../config/connectDatabase.php");
+// include_once("../../config/connectDatabase.php");
 
 class UserModelSignIn
 {

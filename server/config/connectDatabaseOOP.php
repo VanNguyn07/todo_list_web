@@ -10,7 +10,6 @@ if (!headers_sent()) {
 // Thử kết nối database
 try {
     $pdo = new mysqli('localhost', 'root', '', 'task_app_db');
-    
     // Kiểm tra lỗi kết nối
     if ($pdo->connect_error) {
         // Log lỗi

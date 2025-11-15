@@ -10,7 +10,7 @@ class PasswordResetController
 
     public function __construct($database)
     {
-        $this->userModelResetPass = new UserForgotPassword($database);
+        $this->userModelResetPass = new UserForgotPasswordModel($database);
     }
 
     public function handleToRecevieOTP()

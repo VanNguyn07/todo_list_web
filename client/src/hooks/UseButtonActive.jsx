@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { buttonClickHandles } from "./ButtonHandleOnClick";
+import {buttonClickHandles} from "../components/button/ButtonHandleOnClick";
 
-export const useSideBarLogic = (defaultView = "home") => {
+export const UseButtonActive = (defaultView = "home") => {
   const [activeView, setActiveView] = useState(defaultView);
 
   const handleViewChange = (viewName) => {

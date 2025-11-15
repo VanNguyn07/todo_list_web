@@ -16,7 +16,8 @@ import { CalendarWidget } from "../../components/calendarWidget/CalendarWidget";
 import mockTasks from "../../components/utils/MockDataChart";
 import DUMMY_GOALS from "../../components/utils/MockDataProcess";
 import { ProcessGoal } from "../../components/processGoal/ProcessGoal";
-import { useSideBarLogic } from "../../components/button/ButtonUseSideBarLogic";
+import { UseButtonActive } from "../../hooks/UseButtonActive";
+import { useAddTask } from "../../hooks/UseAddTask";
 import Contact from "../contact/contact";
 import "./Dashboard.css";
 import AboutUs from "../aboutUs/aboutUs";
@@ -35,13 +36,12 @@ function Dashboard() {
 
   console.log('Dữ liệu GỐC trong "sortedGoals":', sortedGoals);
 
-  const { activeView, handleViewChange } = useSideBarLogic("home");
+  const { activeView, handleViewChange } = UseButtonActive("home");
+  const { taskForm, handleInputChange, handleAddTask } = useAddTask();
 
   return (
     <>
-      <div
-        id="dashboard-page"
-        className="animate__animated animate__fadeIn">
+      <div id="dashboard-page" className="animate__animated animate__fadeIn">
         <Header>
           <nav className="sidebar-nav">
             <div className="logo-header-page">
@@ -275,8 +275,9 @@ function Dashboard() {
                     <span>Contact</span>
                   </Button>
 
-                  <Button className="btn-modern btn-aboutme"
-                  onClick={() => handleViewChange("aboutus")}
+                  <Button
+                    className="btn-modern btn-aboutme"
+                    onClick={() => handleViewChange("aboutus")}
                   >
                     <i className="fa-solid fa-circle-info"></i>
                     <span>About us</span>
@@ -311,20 +312,38 @@ function Dashboard() {
                   type="text"
                   placeholder="Type Title Of Task"
                   className="task-title-input"
+                  name="titleTask"
+                  id="titleTask"
+                  value={taskForm.titleTask}
+                  onChange={handleInputChange}
                 />
 
                 <Textarea
                   placeholder="Detail Of Your Task"
                   className="task-detail-input"
+                  name="detailTask"
+                  id="detailTask"
+                  value={taskForm.detailTask}
+                  onChange={handleInputChange}
                 />
 
-                <Button className="add-task-btn">
-                  <i class="fa-solid fa-plus"></i>
+                <Button
+                  className="add-task-btn"
+                  id="addTaskButton"
+                  onClick={handleAddTask}
+                >
+                  <i className="fa-solid fa-plus"></i>
                 </Button>
               </div>
 
               <div className="form-filter-task">
-                <select className="filter-task" defaultValue="">
+                <select
+                  className="filter-task"
+                  id="categoryTask"
+                  name="categoryTask"
+                  value={taskForm.categoryTask} // <-- Kết nối
+                  onChange={handleInputChange} // <-- Kết nối
+                >
                   <option value="" disabled>
                     By category
                   </option>
@@ -333,7 +352,13 @@ function Dashboard() {
                   <option value="study">Study</option>
                 </select>
 
-                <select className="filter-select" defaultValue="">
+                <select
+                  className="filter-select"
+                  name="priorityTask"
+                  id="priorityTask"
+                  value={taskForm.priorityTask} // <-- Kết nối
+                  onChange={handleInputChange}
+                >
                   <option value="" disabled>
                     By priority
                   </option>

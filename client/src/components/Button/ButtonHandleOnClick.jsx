@@ -47,3 +47,4 @@ export const buttonClickHandles = {
     contact: handleContactClick,
     aboutus: handleAboutUsClick
 };
+
