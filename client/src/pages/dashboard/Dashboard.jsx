@@ -16,8 +16,11 @@ import { CalendarWidget } from "../../components/calendarWidget/CalendarWidget";
 import mockTasks from "../../components/utils/MockDataChart";
 import DUMMY_GOALS from "../../components/utils/MockDataProcess";
 import { ProcessGoal } from "../../components/processGoal/ProcessGoal";
-import { UseButtonActive } from "../../hooks/UseButtonActive";
 import { useAddTask } from "../../hooks/UseAddTask";
+import { useButtonActive } from "../../hooks/UseButtonActive";
+import { useFetchTasks } from "../../hooks/useFetchTask";
+import { useDeleteTask } from "../../hooks/useDeleteTask";
+import { TaskDatePicker } from "../../components/datePicker/TaskDatePicker";
 import Contact from "../contact/contact";
 import "./Dashboard.css";
 import AboutUs from "../aboutUs/aboutUs";
@@ -36,9 +39,23 @@ function Dashboard() {
 
   console.log('Dữ liệu GỐC trong "sortedGoals":', sortedGoals);
 
-  const { activeView, handleViewChange } = UseButtonActive("home");
-  const { taskForm, handleInputChange, handleAddTask } = useAddTask();
+  const { activeView, handleViewChange } = useButtonActive("home");
+  // 1. Gọi hook fetch, lấy ra hàm 'refetch'
+  const { tasks, isLoading, error, refetch } = useFetchTasks();
 
+  const { taskForm, handleInputChange, handleDateChange, handleAddTask } =
+    useAddTask({ onSuccess: refetch });
+
+  const { handleDelete, isDeleting } = useDeleteTask({ onSuccess: refetch });
+
+  if (isLoading) {
+    return <div>Đang tải danh sách task...</div>;
+  }
+
+  // 4. Xử lý trạng thái Lỗi
+  if (error) {
+    return <div>Lỗi: {error}</div>;
+  }
   return (
     <>
       <div id="dashboard-page" className="animate__animated animate__fadeIn">
@@ -352,25 +369,15 @@ function Dashboard() {
                   <option value="study">Study</option>
                 </select>
 
-                <select
-                  className="filter-select"
-                  name="priorityTask"
-                  id="priorityTask"
-                  value={taskForm.priorityTask} // <-- Kết nối
-                  onChange={handleInputChange}
-                >
-                  <option value="" disabled>
-                    By priority
-                  </option>
-                  <option value="3">High</option>
-                  <option value="2">Medium</option>
-                  <option value="1">Low</option>
-                </select>
+                <TaskDatePicker
+                  selectedDate={taskForm.deadlineTask}
+                  onDateChange={handleDateChange}
+                />
 
                 <div className="search-task-by-name">
                   <Input
                     type="text"
-                    placeholder="Search by name"
+                    placeholder="Search task by name"
                     className="search-input"
                   />
                   <i className="fa-solid fa-magnifying-glass search-icon"></i>
@@ -384,92 +391,41 @@ function Dashboard() {
 
             <div className="container-task">
               <div className="subcontainer-task">
-                {/* Task one */}
-                <TaskCard className="content-task-one">
-                  <div className="content-left">
-                    <h2>Learn Javascript</h2>
-                    <p>Master the language powering the modern web.</p>
-                    <h3>Start date: {new Date().getDate()}</h3>
-                  </div>
+                {tasks.map((task, index) => (
+                  <TaskCard
+                    key={task.idTask}
+                    className={`content-task-${index + 1}`}
+                  >
+                    <div className="content-left">
+                      <h2>{task.titleTask}</h2>
+                      <p>{task.detailTask}</p>
+                      <h3>Deadline Task: {task.deadlineTask}</h3>
+                    </div>
 
-                  <div className="content-right">
-                    <input type="checkbox" name="compeled" id="compeled" />
+                    <div className="content-right">
+                      <input
+                        type="checkbox"
+                        name="completed"
+                        id={`completed-${task.idTask}`}
+                      />
 
-                    <Button className="btn-task btn-pen-to-square">
-                      <i class="fa-solid fa-pen-to-square"></i>
-                    </Button>
+                      <Button className="btn-task btn-pen-to-square">
+                        <i className="fa-solid fa-pen-to-square"></i>
+                      </Button>
 
-                    <Button className="btn-task btn-trash">
-                      <i class="fa-solid fa-trash"></i>
-                    </Button>
-                  </div>
-                </TaskCard>
-
-                {/* Task two */}
-                <TaskCard className="content-task-two">
-                  <div className="content-left">
-                    <h2>Learn Javascript</h2>
-                    <p>Master the language powering the modern web.</p>
-                    <h3>Start date: {new Date().getDate()}</h3>
-                  </div>
-
-                  <div className="content-right">
-                    <input type="checkbox" name="compeled" id="compeled" />
-
-                    <Button className="btn-task btn-pen-to-square">
-                      <i class="fa-solid fa-pen-to-square"></i>
-                    </Button>
-
-                    <Button className="btn-task btn-trash">
-                      <i class="fa-solid fa-trash"></i>
-                    </Button>
-                  </div>
-                </TaskCard>
-
-                {/* Task three */}
-                <TaskCard className="content-task-three">
-                  <div className="content-left">
-                    <h2>Learn Javascript</h2>
-                    <p>Master the language powering the modern web.</p>
-                    <h3>Start date: {new Date().getDate()}</h3>
-                  </div>
-
-                  <div className="content-right">
-                    <input type="checkbox" name="compeled" id="compeled" />
-
-                    <Button className="btn-task btn-pen-to-square">
-                      <i class="fa-solid fa-pen-to-square"></i>
-                    </Button>
-
-                    <Button className="btn-task btn-trash">
-                      <i class="fa-solid fa-trash"></i>
-                    </Button>
-                  </div>
-                </TaskCard>
-
-                {/* Task four */}
-                <TaskCard className="content-task-four">
-                  <div className="content-left">
-                    <h2>Learn Javascript</h2>
-                    <p>Master the language powering the modern web.</p>
-                    <h3>Start date: {new Date().getDate()}</h3>
-                  </div>
-
-                  <div className="content-right">
-                    <input type="checkbox" name="compeled" id="compeled" />
-
-                    <Button
-                      type="button"
-                      className="btn-task btn-pen-to-square"
-                    >
-                      <i class="fa-solid fa-pen-to-square"></i>
-                    </Button>
-
-                    <Button type="button" className="btn-task btn-trash">
-                      <i class="fa-solid fa-trash"></i>
-                    </Button>
-                  </div>
-                </TaskCard>
+                      <Button
+                        className="btn-task btn-trash"
+                        onClick={() => handleDelete(task.idTask)}
+                        disabled={isDeleting}
+                      >
+                        <i className="fa-solid fa-trash"></i>
+                      </Button>
+                    </div>
+                  </TaskCard>
+                ))}
+                {tasks.length === 0 && (
+                  <p>Tuyệt vời! Bạn không có task nào sắp tới hạn.</p>
+                )}
               </div>
             </div>
 

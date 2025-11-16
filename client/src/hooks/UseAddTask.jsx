@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 
-export const useAddTask = () => {
+export const useAddTask = ({ onSuccess }) => {
+  // Hàm helper để thêm số 0 vào trước (ví dụ: 5 -> "05")
+  const pad = (num) => {
+    return num.toString().padStart(2, "0");
+  };
+
   const [taskForm, setTaskForm] = useState({
     titleTask: "",
     detailTask: "",
     categoryTask: "",
-    priorityTask: "",
+    deadlineTask: null,
   });
 
   // Hàm xử lý thay đổi input
@@ -16,23 +21,33 @@ export const useAddTask = () => {
       [name]: value,
     }));
   };
+
+  //Hàm xử lý riêng cho DatePicker
+  // react-datepicker sẽ trả về một Date object (hoặc null)
+  const handleDateChange = (date) => {
+    setTaskForm((prev) => ({
+      ...prev,
+      deadlineTask: date,
+    }));
+  };
+
   // 2. Hàm xử lý `fetch`
   const handleAddTask = () => {
     // Validation phía client (giữ nguyên)
     if (!taskForm.titleTask.trim()) {
-      alert("Vui lòng nhập tiêu đề task!");
+      alert("Please enter a task title!");
       return;
     }
     if (!taskForm.detailTask.trim()) {
-      alert("Vui lòng nhập chi tiết task!");
+      alert("Please enter a task detail!");
       return;
     }
     if (!taskForm.categoryTask) {
-      alert("Vui lòng chọn danh mục!");
+      alert("Please select a task category!");
       return;
     }
-    if (!taskForm.priorityTask) {
-      alert("Vui lòng chọn độ ưu tiên!");
+    if (!taskForm.deadlineTask) {
+      alert("Please select a task deadline!");
       return;
     }
 
@@ -41,8 +56,24 @@ export const useAddTask = () => {
     formData.append("action", "add_task");
     formData.append("titleTask", taskForm.titleTask.trim());
     formData.append("detailTask", taskForm.detailTask.trim());
-    formData.append("categoryTask", taskForm.categoryTask.trim());
-    formData.append("priorityTask", taskForm.priorityTask.trim());
+    formData.append("categoryTask", taskForm.categoryTask);
+
+    //Chuyển Date object thành chuỗi ISO string (chuẩn UTC)
+    if (taskForm.deadlineTask instanceof Date) {
+      const date = taskForm.deadlineTask;
+      // Lấy các thành phần theo giờ local (GMT+7)
+      const Y = date.getFullYear();
+      const M = pad(date.getMonth() + 1); // getMonth() bắt đầu từ 0
+      const D = pad(date.getDate());
+      const h = pad(date.getHours());
+      const m = pad(date.getMinutes());
+      const s = pad(date.getSeconds());
+
+      // Tạo chuỗi YYYY-MM-DD HH:MM:SS
+      const localDateTimeString = `${Y}-${M}-${D} ${h}:${m}:${s}`;
+
+      formData.append("deadlineTask", localDateTimeString);
+    }
 
     console.log("Sending data: ", Object.fromEntries(formData));
 
@@ -65,8 +96,12 @@ export const useAddTask = () => {
               titleTask: "",
               detailTask: "",
               categoryTask: "",
-              priorityTask: "",
+              deadlineTask: null,
             });
+            // 2. GỌI CALLBACK SAU KHI THÀNH CÔNG!
+            if (onSuccess) {
+              onSuccess(); // Đây chính là hàm refetch()
+            }
           } else {
             alert(data.message || "Lỗi thêm task");
           }
@@ -82,7 +117,9 @@ export const useAddTask = () => {
   };
   return {
     taskForm,
+    setTaskForm,
     handleInputChange,
+    handleDateChange,
     handleAddTask,
   };
 };

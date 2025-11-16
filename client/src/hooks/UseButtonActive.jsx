@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {buttonClickHandles} from "../components/button/ButtonHandleOnClick";
 
-export const UseButtonActive = (defaultView = "home") => {
+export const useButtonActive = (defaultView = "home") => {
   const [activeView, setActiveView] = useState(defaultView);
 
   const handleViewChange = (viewName) => {

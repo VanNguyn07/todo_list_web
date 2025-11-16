@@ -32,44 +32,21 @@ try {
     $controller = new TaskController($connect);
 
     // 2. LẤY DỮ LIỆU
-    $action = $_POST['action'] ?? null;
+    $action = $_GET['action'] ?? null;
 
     // 3. XỬ LÝ LOGIC
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         switch ($action) {
-            
-            case 'add_task':
-                $controller->handleInsertTaskIntoDb();
-                break;
             
             case 'get_nearest_tasks':
                 $controller->handleSelectAllDataFromDb();
-                break;
-                
-            case 'update_task':
-                $controller->handleUpdateTask();
-                break;
-            
-            case 'delete_task':
-                $controller->handleDeleteTask();
-                break;
-            
-            case 'get_tasks':
-                $controller->handleGetTasks();
-                break;
-            
-            case 'toggle_complete':
-                $controller->handleToggleComplete();
                 break;
 
             default:
                 echo json_encode(['success' => false, 'message' => 'Hành động không hợp lệ.']);
                 exit();
         }
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Chỉ chấp nhận phương thức POST.']);
+        echo json_encode(['success' => false, 'message' => 'Chỉ chấp nhận phương thức GET.']);
         exit();
-    }
 
 } catch (Throwable $e) {
     // Bắt tất cả lỗi cú pháp

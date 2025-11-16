@@ -68,14 +68,14 @@
 
 /* style for input search by name */
 .search-task-by-name {
-    margin-left: 118px;
     position: relative;
     flex-grow: 1;
 }
 
 .search-task-by-name .search-input {
-    padding: 10px 0px 10px 50px;
-    width: 227px;
+    padding: 10px 0px 10px 40px;
+    width: 200px;
+    margin-right: 50px;
 }
 .search-task-by-name i {
     display: inline-flex;

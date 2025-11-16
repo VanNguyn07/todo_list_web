@@ -11,7 +11,7 @@ require_once $projectRoot . '/vendor/autoload.php';
 require_once $projectRoot . '/server/config/connectDatabaseOOP.php';
 
 // 3. Nạp Model (Định nghĩa class UserForgotPassword)
-require_once $projectRoot . '/server/app/models/forgotPasswordModel.php';
+require_once $projectRoot . '/server/app/models/UserForgotPasswordModel.php';
 
 // 4. Nạp Helper (Định nghĩa hàm send_otp_from_email)
 require_once $projectRoot . '/server/app/helpers/mail_helper.php';

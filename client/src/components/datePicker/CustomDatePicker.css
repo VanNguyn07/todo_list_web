@@ -1,0 +1,80 @@
+/* CustomDatePicker.css */
+h3 {
+  color: #575656;
+}
+/* Ô input mặc định (nếu bạn không dùng customInput) */
+.react-datepicker-wrapper input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #575656;
+  width: 170px;
+  border-radius: 10px;
+  padding: 5px 0px 5px 30px;
+  cursor: pointer;
+  margin-left: 10px;
+  margin-right: 30px;
+}
+
+
+.react-datepicker__close-icon {
+  margin-right: 35px;
+}
+
+.react-datepicker__input-container .react-datepicker__calendar-icon {
+  /* 4. Đặt icon ở vị trí tuyệt đối (so với .custom-datepicker-input) */
+  position: absolute;
+
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  color: #575656; /* Màu của icon */
+}
+
+/* Phần header của lịch (chỗ "Tháng 11 2025") */
+.react-datepicker__header {
+  background-color: #575656;
+  border-bottom: none;
+}
+
+/* Chữ trong header (tên tháng, tên năm) */
+.react-datepicker__current-month,
+.react-datepicker__day-name {
+  color: white;
+  font-weight: bold;
+}
+
+/* Nút mũi tên trái/phải */
+.react-datepicker__navigation-icon {
+  border-color: white;
+}
+
+/* Ngày được chọn */
+.react-datepicker__day--selected {
+  background-color: #3498db;
+  color: white;
+}
+
+/* Ngày khi hover */
+.react-datepicker__day:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.react-datepicker__month-select,
+.react-datepicker__year-select {
+  background-color: #d5d3d3; /* Thêm màu nền cho dễ thấy */
+  border: 1px solid #ccc;
+
+  /* Đây là dòng bạn cần! */
+  border-radius: 10px; /* Bạn có thể đổi số 8px tùy ý */
+  padding: 3px;
+  cursor: pointer;
+}
+
+/* Thêm style khi hover cho đẹp */
+.react-datepicker__month-select:hover,
+.react-datepicker__year-select:hover {
+  background-color: white;
+}
