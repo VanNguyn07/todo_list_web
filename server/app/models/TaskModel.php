@@ -1,83 +1,72 @@
 <?php
 class TaskModel
 {
-    private $connect;
-    private $table_name = "add_task"; // <-- Tên bảng
+    private $pdo; // Đổi tên biến thành pdo cho dễ hiểu
+    private $table_name = "tasks"; // ⚠️ Đảm bảo tên bảng trong DB là 'tasks'
 
+    // Constructor nhận vào kết nối PDO
     public function __construct($database)
     {
-        $this->connect = $database;
+        $this->pdo = $database;
     }
 
-    public function insertTaskIntoDatabase($titleTask, $detailTask, $categoryTask, $deadlineTask)
+    // 1. Thêm công việc mới
+    public function insertTaskIntoDatabase($title, $detail, $category, $deadline)
     {
-        // <-- Tên cột
-        $sql = "INSERT INTO " . $this->table_name . "(titleTask, detailTask, categoryTask, deadlineTask) VALUES (?, ?, ?, ?)";
+        // ⚠️ Lưu ý: Kiểm tra lại tên cột trong DB của bạn xem đã đổi thành title, description... chưa
+        // hay vẫn là titleTask, detailTask. Dưới đây mình để theo tên cũ trong code của bạn:
+        $sql = "INSERT INTO " . $this->table_name . " (titleTask, detailTask, categoryTask, deadlineTask) VALUES (?, ?, ?, ?)";
 
-        $prepareStmt = mysqli_prepare($this->connect, $sql);
+        try {
+            $stmt = $this->pdo->prepare($sql);
 
-        if ($prepareStmt === false) {
-            $error_message = mysqli_error($this->connect); // Lỗi sai tên bảng/cột
-            return ['success' => false, 'message' => $error_message];
-        }
+            // PDO không cần "ssss" loằng ngoằng, chỉ cần truyền mảng vào execute là xong
+            $result = $stmt->execute([$title, $detail, $category, $deadline]);
 
-        // Dùng "sssi" (string, string, string, integer)
-        mysqli_stmt_bind_param($prepareStmt, "ssss", $titleTask, $detailTask, $categoryTask, $deadlineTask);
-
-        if (mysqli_stmt_execute($prepareStmt)) {
-            mysqli_stmt_close($prepareStmt);
-            return ['success' => true];
-        } else {
-            $error_message = mysqli_stmt_error($prepareStmt); // Lỗi sai kiểu dữ liệu
-            mysqli_stmt_close($prepareStmt);
-            return ['success' => false, 'message' => $error_message];
+            if ($result) {
+                return ['success' => true];
+            }
+            return ['success' => false, 'message' => 'Không thể thêm task'];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
         }
     }
 
+    // 2. Lấy danh sách công việc sắp tới
     public function getNearestUpcomingTasks()
     {
         $sql = "SELECT * FROM " . $this->table_name . " 
-            WHERE deadlineTask >= NOW() 
-            ORDER BY deadlineTask ASC 
-            LIMIT 4";
+                WHERE deadlineTask >= NOW() 
+                ORDER BY deadlineTask ASC 
+                LIMIT 4";
 
-        // * WHERE deadlineTask >= NOW(): Chỉ lấy task chưa quá hạn.
-        // * ORDER BY deadlineTask ASC: Sắp xếp task sắp tới hạn lên đầu.
-        // * LIMIT 4: Chỉ lấy 4 task.
-        $prepareStmt = mysqli_prepare($this->connect, $sql);
-
-        if ($prepareStmt) {
-
-            $execute = mysqli_stmt_execute($prepareStmt);
-            if ($execute) {
-                $result = mysqli_stmt_get_result($prepareStmt);
-                $taskArray = [];
-
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $taskArray[] = $row;
-                }
-
-                mysqli_stmt_close($prepareStmt);
-
-                return $taskArray;
-            }
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute();
+            // PDO lấy dữ liệu cực nhanh bằng fetchAll
+            // PDO::FETCH_ASSOC nghĩa là chỉ lấy key theo tên cột, không lấy số thứ tự
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return []; // Trả về mảng rỗng nếu lỗi
         }
-
-        return null;
     }
 
+    // 3. Xóa công việc
     public function deleteTaskById($taskId)
     {
+        // Giả sử cột ID của bạn là idTask (nếu đã đổi thành id thì sửa lại nhé)
         $sql = "DELETE FROM " . $this->table_name . " WHERE idTask = ?";
-        $prepareStmt = mysqli_prepare($this->connect, $sql);
-        mysqli_stmt_bind_param($prepareStmt, "i", $taskId);
-        if (mysqli_stmt_execute($prepareStmt)) {
-            mysqli_stmt_close($prepareStmt);
-            return ['success' => true];
-        } else {
-            $error_message = mysqli_stmt_error($prepareStmt); // Lỗi sai kiểu dữ liệu
-            mysqli_stmt_close($prepareStmt);
-            return ['success' => false, 'message' => $error_message];
+
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $result = $stmt->execute([$taskId]); // Truyền ID vào dấu ?
+
+            if ($result) {
+                return ['success' => true];
+            }
+            return ['success' => false, 'message' => 'Xóa thất bại'];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
         }
     }
 }

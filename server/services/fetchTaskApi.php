@@ -15,7 +15,7 @@ try {
     $projectRoot = dirname(__DIR__, 2);
     
     // Nạp CSDL
-    require_once $projectRoot . '/server/config/connectDatabase.php';
+    require_once $projectRoot . '/server/config/connectDatabaseOOP.php';
     
     // Nạp Model
     require_once $projectRoot . '/server/app/models/TaskModel.php'; 
@@ -24,12 +24,12 @@ try {
     require_once $projectRoot . '/server/app/controllers/TaskController.php';
     
     // Biến $connect phải được tạo từ connectDatabase.php
-    if (!isset($connect)) {
-         throw new Exception('Biến $connect không tồn tại sau khi nạp CSDL.');
+    if (!isset($pdo)) {
+         throw new Exception('Biến $pdo không tồn tại sau khi nạp CSDL.');
     }
 
     // Khởi tạo Controller
-    $controller = new TaskController($connect);
+    $controller = new TaskController($pdo);
 
     // 2. LẤY DỮ LIỆU
     $action = $_GET['action'] ?? null;

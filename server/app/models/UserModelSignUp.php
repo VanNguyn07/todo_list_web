@@ -1,65 +1,58 @@
 <?php
 class UserModelSignUp
 {
-    private $connect;
-    private $table_name = "accounts_user";
+    private $pdo;
+    private $table_name = "users";
 
     public function __construct($database)
     {
-        $this->connect = $database;
+        $this->pdo = $database;
     }
-
-    /**
-     * Chèn người dùng mới vào database.
-     * @param string $username Tên đăng nhập.
-     * @param string $hashed_password Mật khẩu ĐÃ ĐƯỢC BĂM.
-     * @return bool Trả về true nếu thành công, false nếu thất bại.
-     */
-    // UserModelSignUp.php
 
     function checkUserAndEmailExists($username, $email)
     {
         $sql = "SELECT username, email FROM " . $this->table_name . " WHERE username = ? OR email = ? LIMIT 1";
-        $prepareStmt = mysqli_prepare($this->connect, $sql);
+        
+        try {
+            $prepareStmt = $this->pdo->prepare($sql);
 
-        if ($prepareStmt) {
-            mysqli_stmt_bind_param($prepareStmt, "ss", $username, $email);
-            mysqli_stmt_execute($prepareStmt);
+            $prepareStmt->execute([$username, $email]);
+            
+            // Lấy 1 dòng dữ liệu duy nhất (vì LIMIT 1)
+            $existingUser = $prepareStmt->fetch(PDO::FETCH_ASSOC);
+            // PDO::FETCH_ASSOC nghĩa là chỉ lấy key theo tên cột, không lấy số thứ tự
 
-            $result = mysqli_stmt_get_result($prepareStmt);
-            $dataArray = mysqli_fetch_assoc($result);
-            mysqli_stmt_close($prepareStmt);
-
-            if ($dataArray) {
-                // Nếu tìm thấy
-                if ($dataArray['username'] === $username) {
-                    return "ERR_USERNAME_EXISTS"; // Báo lỗi trùng username
+            if($existingUser){
+                if($existingUser['username'] === $username){
+                    return "ERR_USERNAME_EXISTS";
                 }
-                if ($dataArray['email'] === $email) {
+                if ($existingUser['email'] === $email) {
                     return "ERR_EMAIL_EXISTS"; // Báo lỗi trùng email
                 }
             }
             return "NOT_FOUND";
+        } catch (PDOException $e){
+            return "ERROR_DB";
         }
-        // Lỗi prepare
-        return "ERR_GENERAL";
     }
 
 
     function insertDataIntoDatabase($username, $hashed_password, $gender, $email)
     {
         $sql = "INSERT INTO " . $this->table_name . " (username, password, gender, email) VALUES (?, ?, ?, ?)";
-        $prepareStmt = mysqli_prepare($this->connect, $sql);
 
-        if ($prepareStmt) {
-            mysqli_stmt_bind_param($prepareStmt, "ssss", $username, $hashed_password, $gender, $email);
+        try {
+            $prepareStmt = $this->pdo->prepare($sql);
 
-            // 1. Thực thi
-            if (mysqli_stmt_execute($prepareStmt)) {
-                mysqli_stmt_close($prepareStmt);
-                return true;
+            $result = $prepareStmt->execute([$username, $hashed_password, $gender, $email]);
+
+            if($result){
+                return ['success' => true];
+            }else {
+                return ['success' => false, 'message' => 'Can not add into database'];
             }
+        }catch(PDOException $e){
+            return ['success' => false, 'message' => $e->getMessage()];
         }
-        return false; // Lỗi câu lệnh
-    }
+    }  
 }

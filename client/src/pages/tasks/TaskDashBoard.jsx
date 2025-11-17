@@ -49,7 +49,6 @@ function TaskDashboard(){
                             <i class="fa-solid fa-gear"></i>
                             <span>Settings</span>
                         </Button>
-
                     </nav>
                 <div className="header-page">
                     <div className="content-header">
