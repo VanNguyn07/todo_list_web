@@ -15,7 +15,7 @@ try {
     $projectRoot = dirname(__DIR__, 2);
     
     // Nạp CSDL
-require_once $projectRoot . '/server/config/connectDatabaseOOP.php';
+    require_once $projectRoot . '/server/config/connectDatabaseOOP.php';
     
     // Nạp Model
     require_once $projectRoot . '/server/app/models/TaskModel.php'; 
@@ -25,7 +25,7 @@ require_once $projectRoot . '/server/config/connectDatabaseOOP.php';
     
     // Biến $connect phải được tạo từ connectDatabase.php
     if (!isset($pdo)) {
-         throw new Exception('Biến $connect không tồn tại sau khi nạp CSDL.');
+         throw new Exception('Biến $pdo không tồn tại sau khi nạp CSDL.');
     }
 
     // Khởi tạo Controller

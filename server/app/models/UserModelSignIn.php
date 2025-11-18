@@ -2,7 +2,7 @@
 class UserModelSignIn
 {
     private $pdo;
-    private $table_name = "tasks";
+    private $table_name = "users";
 
     public function __construct($database) {
         $this->pdo = $database;
@@ -15,9 +15,11 @@ class UserModelSignIn
         try {
             $prepareStmt = $this->pdo->prepare($sql);
 
-            $result = $prepareStmt->execute([$username]);
-            if($result) {
-                return ['success' => true];
+            $prepareStmt->execute([$username]);
+            $user = $prepareStmt->fetch(PDO::FETCH_ASSOC);
+
+            if($user) {
+                return $user;
             }else {
                 return ['success' => false, 'message' => 'Can not add task'];
             }

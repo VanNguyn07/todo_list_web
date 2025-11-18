@@ -73,7 +73,7 @@ function Dashboard() {
               id="homeButton"
               onClick={() => handleViewChange("home")}
             >
-              <i class="fa-solid fa-house"></i>
+              <i className="fa-solid fa-house"></i>
               <span>Home</span>
             </Button>
 
@@ -84,7 +84,7 @@ function Dashboard() {
               id="taskButton"
               onClick={() => handleViewChange("task")}
             >
-              <i class="fa-solid fa-list-check"></i>
+              <i className="fa-solid fa-list-check"></i>
               <span>Tasks</span>
             </Button>
 
@@ -95,7 +95,7 @@ function Dashboard() {
               id="pomodoroButton"
               onClick={() => handleViewChange("pomodoro")}
             >
-              <i class="fa-solid fa-hourglass-half"></i>
+              <i className="fa-solid fa-hourglass-half"></i>
               <span>Pomodoro</span>
             </Button>
 
@@ -106,7 +106,7 @@ function Dashboard() {
               id="analyticsButton"
               onClick={() => handleViewChange("analytics")}
             >
-              <i class="fa-solid fa-chart-pie"></i>
+              <i className="fa-solid fa-chart-pie"></i>
               <span>Analytics</span>
             </Button>
 
@@ -117,7 +117,7 @@ function Dashboard() {
               id="quickNotesButton"
               onClick={() => handleViewChange("quick-notes")}
             >
-              <i class="fa-solid fa-note-sticky"></i>
+              <i className="fa-solid fa-note-sticky"></i>
               <span>Quick Notes</span>
             </Button>
 
@@ -128,7 +128,7 @@ function Dashboard() {
               id="habitTrackerButton"
               onClick={() => handleViewChange("habit-tracker")}
             >
-              <i class="fa-solid fa-calendar-check"></i>
+              <i className="fa-solid fa-calendar-check"></i>
               <span>Habit Tracker</span>
             </Button>
 
@@ -139,7 +139,7 @@ function Dashboard() {
               id="calendarButton"
               onClick={() => handleViewChange("calendar")}
             >
-              <i class="fa-solid fa-calendar-days"></i>
+              <i className="fa-solid fa-calendar-days"></i>
               <span>Calendar</span>
             </Button>
 
@@ -150,7 +150,7 @@ function Dashboard() {
               id="settingsButton"
               onClick={() => handleViewChange("settings")}
             >
-              <i class="fa-solid fa-gear"></i>
+              <i className="fa-solid fa-gear"></i>
               <span>Settings</span>
             </Button>
           </nav>
@@ -176,48 +176,48 @@ function Dashboard() {
                   </div>
 
                   <Button className="btn-modern btn-dark-light">
-                    <label class="switch">
-                      <input id="input" type="checkbox" checked="" />
-                      <div class="slider round">
-                        <div class="sun-moon">
+                    <label className="switch">
+                      <input id="input" type="checkbox" defaultChecked={false} />
+                      <div className="slider round">
+                        <div className="sun-moon">
                           <svg
                             id="moon-dot-1"
-                            class="moon-dot"
+                            className="moon-dot"
                             viewBox="0 0 100 100"
                           >
                             <circle cx="50" cy="50" r="50"></circle>
                           </svg>
                           <svg
                             id="moon-dot-2"
-                            class="moon-dot"
+                            className="moon-dot"
                             viewBox="0 0 100 100"
                           >
                             <circle cx="50" cy="50" r="50"></circle>
                           </svg>
                           <svg
                             id="moon-dot-3"
-                            class="moon-dot"
+                            className="moon-dot"
                             viewBox="0 0 100 100"
                           >
                             <circle cx="50" cy="50" r="50"></circle>
                           </svg>
                           <svg
                             id="light-ray-1"
-                            class="light-ray"
+                            className="light-ray"
                             viewBox="0 0 100 100"
                           >
                             <circle cx="50" cy="50" r="50"></circle>
                           </svg>
                           <svg
                             id="light-ray-2"
-                            class="light-ray"
+                            className="light-ray"
                             viewBox="0 0 100 100"
                           >
                             <circle cx="50" cy="50" r="50"></circle>
                           </svg>
                           <svg
                             id="light-ray-3"
-                            class="light-ray"
+                            className="light-ray"
                             viewBox="0 0 100 100"
                           >
                             <circle cx="50" cy="50" r="50"></circle>
@@ -225,58 +225,58 @@ function Dashboard() {
 
                           <svg
                             id="cloud-1"
-                            class="cloud-dark"
+                            className="cloud-dark"
                             viewBox="0 0 100 100"
                           >
                             <circle cx="50" cy="50" r="50"></circle>
                           </svg>
                           <svg
                             id="cloud-2"
-                            class="cloud-dark"
+                            className="cloud-dark"
                             viewBox="0 0 100 100"
                           >
                             <circle cx="50" cy="50" r="50"></circle>
                           </svg>
                           <svg
                             id="cloud-3"
-                            class="cloud-dark"
+                            className="cloud-dark"
                             viewBox="0 0 100 100"
                           >
                             <circle cx="50" cy="50" r="50"></circle>
                           </svg>
                           <svg
                             id="cloud-4"
-                            class="cloud-light"
+                            className="cloud-light"
                             viewBox="0 0 100 100"
                           >
                             <circle cx="50" cy="50" r="50"></circle>
                           </svg>
                           <svg
                             id="cloud-5"
-                            class="cloud-light"
+                            className="cloud-light"
                             viewBox="0 0 100 100"
                           >
                             <circle cx="50" cy="50" r="50"></circle>
                           </svg>
                           <svg
                             id="cloud-6"
-                            class="cloud-light"
+                            className="cloud-light"
                             viewBox="0 0 100 100"
                           >
                             <circle cx="50" cy="50" r="50"></circle>
                           </svg>
                         </div>
-                        <div class="stars">
-                          <svg id="star-1" class="star" viewBox="0 0 20 20">
+                        <div className="stars">
+                          <svg id="star-1" className="star" viewBox="0 0 20 20">
                             <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path>
                           </svg>
-                          <svg id="star-2" class="star" viewBox="0 0 20 20">
+                          <svg id="star-2" className="star" viewBox="0 0 20 20">
                             <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path>
                           </svg>
-                          <svg id="star-3" class="star" viewBox="0 0 20 20">
+                          <svg id="star-3" className="star" viewBox="0 0 20 20">
                             <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path>
                           </svg>
-                          <svg id="star-4" class="star" viewBox="0 0 20 20">
+                          <svg id="star-4" className="star" viewBox="0 0 20 20">
                             <path d="M 0 10 C 10 10,10 10 ,0 10 C 10 10 , 10 10 , 10 20 C 10 10 , 10 10 , 20 10 C 10 10 , 10 10 , 10 0 C 10 10,10 10 ,0 10 Z"></path>
                           </svg>
                         </div>

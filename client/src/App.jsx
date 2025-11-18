@@ -1,44 +1,45 @@
-import { useState } from 'react';
+import { useState } from "react";
 import SignIn from "./pages/signInPages/SignIn.jsx";
-import SignUp from "./pages/signUpPages/SignUp.jsx"; // Import trang mới
-import Dashboard from "./pages/dashboard/Dashboard";
+import SignUp from "./pages/signUpPages/SignUp.jsx";
+import Dashboard from "./pages/dashboard/Dashboard.jsx";
+import ForgotPassword from "./pages/forgotPassword/ForgotPassword.jsx";
+import VerifyOtp from "./pages/forgotPassword/VerifyOtp.jsx";
+import ResetPassword from "./pages/forgotPassword/ResetPassword.jsx";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   
-  // State để kiểm soát đang ở trang Login hay Register
-  // 'signin' | 'signup'
-  const [currentPage, setCurrentPage] = useState('signin'); 
-
-  const handleLoginSuccess = () => {
-      setIsLoggedIn(true);
-  };
+  // Các trạng thái trang: 'signin', 'signup', 'forgot', 'verify_otp', 'reset'
+  const [currentPage, setCurrentPage] = useState("signin");
 
   return (
     <>
       {isLoggedIn ? (
-          <Dashboard />
+        <Dashboard />
+      ) : currentPage === "signin" ? (
+        <SignIn
+          onLoginSuccess={() => setIsLoggedIn(true)}
+          onSwitchToSignUp={() => setCurrentPage("signup")}
+          onSwitchToForgot={() => setCurrentPage("forgot")}
+        />
+      ) : currentPage === "signup" ? (
+        <SignUp onSwitchToSignIn={() => setCurrentPage("signin")} />
+      ) : currentPage === "forgot" ? (
+        <ForgotPassword 
+            onSwitchToSignIn={() => setCurrentPage("signin")}
+            // Nếu gửi email thành công -> chuyển sang trang Verify OTP
+            onSwitchToVerify={() => setCurrentPage("verify_otp")} 
+        />
+      ) : currentPage === "verify_otp" ? (
+        <VerifyOtp 
+            // Nếu nhập đúng OTP -> chuyển sang trang Reset Password
+            onVerifySuccess={() => setCurrentPage("reset")}
+            // Nút Back quay lại nhập Email
+            onBack={() => setCurrentPage("forgot")}
+        />
       ) : (
-          // Logic chuyển trang
-          currentPage === 'signin' ? (
-             // Truyền hàm để SignIn có thể gọi khi user bấm nút "Registration" (nếu bạn thêm nút đó)
-             <SignIn 
-                onLoginSuccess={handleLoginSuccess} 
-                // Bạn có thể thêm nút chuyển sang SignUp trong SignIn.jsx và gọi prop này
-                // onSwitchToSignUp={() => setCurrentPage('signup')} 
-             />
-          ) : (
-             // Trang SignUp
-             <SignUp onSwitchToSignIn={() => setCurrentPage('signin')} />
-          )
-      )}
-      
-      {/* Nút test tạm thời để bạn chuyển qua lại giữa 2 trang */}
-      {!isLoggedIn && (
-          <div style={{position: 'fixed', top: 10, right: 10, zIndex: 9999}}>
-              <button onClick={() => setCurrentPage('signin')}>Go to Login</button>
-              <button onClick={() => setCurrentPage('signup')}>Go to Sign Up</button>
-          </div>
+        // Trang Reset Password
+        <ResetPassword onResetSuccess={() => setCurrentPage("signin")} />
       )}
     </>
   );

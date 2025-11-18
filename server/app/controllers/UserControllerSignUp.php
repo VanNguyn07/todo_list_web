@@ -1,29 +1,42 @@
 <?php
-// Báo cho trình duyệt biết rằng đây là một phản hồi JSON
 header('Content-Type: application/json');
-session_start();
-require_once "../../config/connectDatabase.php";
-require_once "../models/UserModelSignUp.php";
 
-$response = ['success' => false, 'message' => ''];
+class UserControllerSignUp
+{
+    private $userModel;
 
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $userModelSignUp = new UserModelSignUp($connect);
+    // Constructor nhận kết nối Database
+    public function __construct($pdo)
+    {
+        $this->userModel = new UserModelSignUp($pdo);
+    }
 
-    // Dùng ?? '' để tránh lỗi nếu không có dữ liệu
-    $username = trim($_POST['inputUserName']);
-    $password = trim($_POST['inputPassword']);
-    $gender = trim($_POST['gender']);
-    $email = trim($_POST['inputEmail']);
+    // Hàm xử lý đăng ký
+    public function register()
+    {
+        $response = ['success' => false, 'message' => ''];
 
-    // --- BẮT BUỘC: Thêm validation phía server ---
-    if (empty($username) || empty($password) || empty($email)) {
-        $response['message'] = 'Please enter full field!';
-    } else {
-        // $checkResult bây giờ là một CHUỖI (ví dụ: "ERR_USERNAME_EXISTS")
-        $checkResult = $userModelSignUp->checkUserAndEmailExists($username, $email);
+        // Chỉ nhận POST request
+        if ($_SERVER['REQUEST_METHOD'] !== "POST") {
+            $response['message'] = 'Invalid Request Method';
+            return $response;
+        }
 
-        // --- LOGIC: Kiểm tra kết quả từ Model ---
+        // Lấy dữ liệu an toàn (dùng ?? '' để tránh lỗi nếu thiếu dữ liệu)
+        $username = trim($_POST['inputUserName'] ?? '');
+        $password = trim($_POST['inputPassword'] ?? '');
+        $gender   = trim($_POST['gender'] ?? '');
+        $email    = trim($_POST['inputEmail'] ?? '');
+
+        // 1. Validation: Kiểm tra rỗng
+        if (empty($username) || empty($password) || empty($email)) {
+            $response['message'] = 'Please enter full field!';
+            return $response;
+        }
+
+        // 2. Gọi Model kiểm tra trùng lặp
+        $checkResult = $this->userModel->checkUserAndEmailExists($username, $email);
+
         if ($checkResult === "ERR_USERNAME_EXISTS") {
             // Lỗi: Trùng Username
             $response['success'] = false;
@@ -35,22 +48,24 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $response['message'] = "Your email already exists!";
             $response['field'] = 'email';
         } else if ($checkResult === "NOT_FOUND") {
-            //Không trùng, TIẾN HÀNH INSERT
-            // --- BẢO MẬT: Băm mật khẩu trước khi lưu ---
+            // 3. Không trùng -> Tiến hành tạo tài khoản
+
+            // Băm mật khẩu
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            $isSuccess = $userModelSignUp->insertDataIntoDatabase($username, $hashed_password, $gender, $email);
+
+            // Gọi model insert
+            $isSuccess = $this->userModel->insertDataIntoDatabase($username, $hashed_password, $gender, $email);
 
             if ($isSuccess) {
                 $response['success'] = true;
                 $response['message'] = 'Create your account successfully!';
-                $response['redirectUrl'] = '/todolist/todo_list_web/client/src/pages/signInPages/SignIn.html';
+                // Thay vì trả về đường dẫn file, nên trả về route (đường dẫn ảo) của React
+                $response['redirectUrl'] = '/sign-in';
+            } else {
+                $response['message'] = 'Failed to insert data.';
             }
         }
-    }
-} else {
-    $response['message'] = 'Yêu cầu không hợp lệ.';
-}
 
-// Luôn luôn echo ra mảng response đã được encode
-echo json_encode($response);
-exit();
+        return $response;
+    }
+}

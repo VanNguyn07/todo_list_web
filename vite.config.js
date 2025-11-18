@@ -23,7 +23,6 @@ export default defineConfig({
         
         // 2. REWRITE: Đường dẫn file tính từ gốc dự án
         // Request từ React: /api/get_tasks 
-        // -> Sẽ thành: http://todo_list_web.test/server/routers/api.php
         rewrite: (path) => path.replace(/^\/api/, '/server/services')
       }
     }

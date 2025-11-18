@@ -1,5 +1,13 @@
 
 <?php 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+
+// Xử lý riêng cho OPTIONS
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit(0);
+}
 session_start(); // Luôn ở đầu
 
 // Project root: todo_list_web/
