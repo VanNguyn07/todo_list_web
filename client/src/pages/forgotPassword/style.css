@@ -1,112 +1,149 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body {
-    height: 100vh;
+.forgotContainer, .verifyContainer, .resetContainer  {
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: antiquewhite;
+    height: 100vh;
 }
 
 form {
-    background-color: aliceblue;
-    box-shadow: 3px 3px 10px rgb(40, 26, 26);
-    border-radius: 15px;
-    padding: 15px;
+  background-color: aliceblue;
+  box-shadow: 3px 3px 10px rgb(40, 26, 26);
+  border-radius: 15px;
+  padding: 15px;
 }
 
 h2 {
-    text-align: center;
-    margin-bottom: 15px;
-    font-size: 30px;
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 30px;
 }
 
-p {
-    font-size: 18px;
-    margin-bottom: 10px;
-    text-align: center;
+.desc {
+  font-size: 18px;
+  margin-bottom: 10px;
+  text-align: center;
 }
-
 
 /* style for forgot pass */
 .content-forgot-pass {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-    font-size: 18px;
-    margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  font-size: 18px;
+  margin-bottom: 10px;
 }
 
-input {
-    height: 25px;
-    width: 200px;
-    padding-left: 5px;
-    border-radius: 10px;
+#email {
+  height: 25px;
+  width: 200px;
+  padding-left: 5px;
+  border-radius: 10px;
+  border: 2px solid black
 }
 
-input:focus {
-    border: none;
-    outline: 2px solid rgb(89, 123, 204);
+#email:focus {
+  border: none;
+  outline: 2px solid rgb(89, 123, 204);
 }
 
 button {
-    border-radius: 10px;
-    padding: 3px;
-    cursor: pointer;
-    /* margin-bottom: 15px; */
+  border-radius: 10px;
+  padding: 3px;
+  cursor: pointer;
+  /* margin-bottom: 15px; */
 }
 
 button:active {
-    transform: scale(0.95);
-}   
-
-/* style for reset password */
-.content-reset-pass {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.newPassword label{
-    margin-right: 30px
-}
-
-.confirmPassword label {
-    margin-right: 6px;
-}
-
-#btnUpdatePassword {
-    margin-bottom: 15px;
+  transform: scale(0.95);
 }
 
 /* style for vefity OTP */
 #otp {
-    width: 65px;
-    font-size: 14px;
+  width: 90px;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 2px solid black;
+  padding: 3px;
 }
 
 .content-verify {
-    display: flex;
-    gap: 16px;
+  display: flex;
+  gap: 16px;
+}
+
+/* style for reset password */
+.content-reset-pass {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#new_password {
+    margin-left: 35px;
+    border-radius: 10px;
+    padding-left: 5px;
+    height: 25px;
+    border: 2px solid black;
+}
+
+#confirm_password {
+    margin-left: 10px;    
+    border-radius: 10px;
+    padding-left: 5px;
+    height: 25px;
+    border: 2px solid black;
+}
+#btnUpdatePassword {
+  margin-bottom: 15px;
 }
 
 
 /* Hiệu ứng rung */
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-8px); }
-  40%, 80% { transform: translateX(8px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-8px);
+  }
+  40%,
+  80% {
+    transform: translateX(8px);
+  }
 }
 
-/* lớp errorUserName đc tạo bằng js  */
-input.shakeError {
-   border-color: #ff4d4d;
+#email.shakeError, #otp.shakeError, #new_password.shakeError, #confirm_password.shakeError{
+  border-color: #ff4d4d;
   animation: shake 0.3s ease;
   /* cho animation chạy đầy đủ, không giữ transform cuối */
-   animation-fill-mode: none;
+  animation-fill-mode: none;
+}
+
+/* set message when error and success*/
+.message-box.success {
+    color: green;
+}
+
+.message-box.error {
+    color: red;
+}
+
+/* back lick to signIn */
+.back-link a {
+    text-decoration: none;
+}
+
+.back-link a:hover {
+    color: red;
+    text-decoration: underline;
 }

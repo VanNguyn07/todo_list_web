@@ -32,6 +32,26 @@ class TaskModel
         }
     }
 
+public function checkTitleTask($titleTask)
+{
+    $sql = "SELECT idTask FROM " . $this->table_name . " WHERE titleTask = ? LIMIT 1";
+
+    try {
+        $prepareStmt = $this->pdo->prepare($sql);
+        $prepareStmt->execute([$titleTask]);
+
+        // Nếu rowCount > 0 nghĩa là tìm thấy -> Đã tồn tại
+        if ($prepareStmt->rowCount() > 0) {
+            return "ERR_TITLETASK_EXISTS";
+        }
+        
+        return "NOT_FOUND";
+    } catch (PDOException $e) {
+        // Ghi log lỗi thực tế để debug nếu cần: error_log($e->getMessage());
+        return "ERROR_DB"; 
+    }
+}
+
     // 2. Lấy danh sách công việc sắp tới
     public function getNearestUpcomingTasks()
     {

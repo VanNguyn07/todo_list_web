@@ -159,12 +159,12 @@ const SignIn = ({ onLoginSuccess, onSwitchToSignUp, onSwitchToForgot }) => {
             </div>
           </div>
           {/* --- CỘT PHẢI (Form đăng nhập) --- */}
-          <form className="formSignUp" onSubmit={handleSubmit}>
+          <form className="formSignIn" onSubmit={handleSubmit}>
             <div id="Welcome">
               <p>Welcome</p>
             </div>
 
-            <div className="input-stack">
+            <div className="input-stack-signIn">
               {/* USER NAME INPUT */}
               <div className="input-UserName">
                 <input

@@ -60,23 +60,40 @@
                 exit();
             }
 
-            // Gọi Model để insert vào database
-            $isSuccess = $this->taskModel->insertTaskIntoDatabase(
-                $titleTask,
-                $detailTask,
-                $categoryTask,
-                $deadlineTask
-            );
+            $checkDublicateTitleTask = $this->taskModel->checkTitleTask($titleTask);
 
-            if ($isSuccess) {
-                $this->response['success'] = true;
-                $this->response['message'] = 'Add task successfully!';
-            } else {
-                $this->response['message'] = 'Lỗi CSDL: ' . $isSuccess['message'];
+            if ($checkDublicateTitleTask === "ERR_TITLETASK_EXISTS") {
+                $this->response['message'] = 'Title Task already exists!';
+                $this->response['field'] = 'titleTask';
+                echo json_encode($this->response);
+                exit();
+            }
+            // Thêm xử lý lỗi DB
+            if ($checkDublicateTitleTask === "ERROR_DB") {
+                $this->response['message'] = 'Database error while checking duplicate!';
+                echo json_encode($this->response);
+                exit();
             }
 
-            echo json_encode($this->response);
-            exit();
+            if ($checkDublicateTitleTask === "NOT_FOUND") {
+                // Gọi Model để insert vào database
+                $isSuccess = $this->taskModel->insertTaskIntoDatabase(
+                    $titleTask,
+                    $detailTask,
+                    $categoryTask,
+                    $deadlineTask
+                );
+
+                if ($isSuccess) {
+                    $this->response['success'] = true;
+                    $this->response['message'] = 'Add task successfully!';
+                } else {
+                    $this->response['message'] = 'Lỗi CSDL: ' . $isSuccess['message'];
+                }
+
+                echo json_encode($this->response);
+                exit();
+            }
         }
 
         public function handleSelectAllDataFromDb()

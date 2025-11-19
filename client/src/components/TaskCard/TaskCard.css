@@ -51,6 +51,9 @@
 
 .content-left {
     margin-right: 10px;
+    display: flex;
+    align-items: start;
+    flex-direction: column;
 }
 
 .content-left h2 {
