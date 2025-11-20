@@ -70,9 +70,9 @@ const VerifyOtp = ({ onVerifySuccess, onBack }) => {
 
     return (
         <div className="SCOPE_VERIFY_OTP">
-            <div className="verifyContainer animate__animated animate__fadeInDown">
+            <div className="verifyContainer animate__animated animate__fadeIn">
                 <form onSubmit={handleSubmit} id="validateForm">
-                    <h2>Verify OTP code</h2>
+                    <h2 id='titleForSet-Forgot-Reset-Verify'>Verify OTP code</h2>
                     <p className="desc">We have sent OTP code to your email. Please check!</p>
                     
                     <div className="content-verify">

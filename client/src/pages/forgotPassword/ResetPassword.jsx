@@ -105,9 +105,9 @@ const ResetPassword = ({ onResetSuccess }) => {
 
   return (
     <div className="SCOPE_RESET_PASS">
-      <div className="resetContainer animate__animated animate__fadeInDown">
+      <div className="resetContainer animate__animated animate__fadeIn">
         <form onSubmit={handleSubmit} id="resetForm">
-          <h2>Reset Your Password</h2>
+          <h2 id="titleForSet-Forgot-Reset-Verify">Reset Your Password</h2>
 
           <div className="content-reset-pass">
             <div className="input-group">

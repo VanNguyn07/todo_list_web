@@ -26,7 +26,7 @@ class TaskModel
             if ($result) {
                 return ['success' => true];
             }
-            return ['success' => false, 'message' => 'Không thể thêm task'];
+            return ['success' => false, 'message' => 'Can not add task'];
         } catch (PDOException $e) {
             return ['success' => false, 'message' => $e->getMessage()];
         }

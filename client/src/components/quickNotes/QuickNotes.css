@@ -21,13 +21,13 @@
     font-size: 18px;
     font-weight: bold;
     color: gray;
-    margin-right: 165px;
+    margin-right: 120px;
 }
 
-.text-area-note {
+.contentNotes {
     padding-left: 5px;
     font-size: 16px;
-    height: 190px;
+    height: 185px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
 }

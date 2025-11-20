@@ -71,9 +71,9 @@ const ForgotPassword = ({ onSwitchToSignIn, onSwitchToVerify }) => {
   return (
     // Bọc class cha để cô lập CSS
     <div className="SCOPE_FORGOT_PASS">
-      <div className="forgotContainer animate__animated animate__fadeInDown">
+      <div className="forgotContainer animate__animated animate__fadeIn">
         <form onSubmit={handleSubmit} id="forgotForm">
-          <h2 id="titleForSetPass">Forgot Password</h2>
+          <h2 id="titleForSet-Forgot-Reset-Verify">Forgot Password</h2>
           <p className="desc">
             Enter your email to receive a verification OTP code!
           </p>

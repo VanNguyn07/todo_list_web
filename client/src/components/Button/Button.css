@@ -1,11 +1,11 @@
 :root {
-    --primary-color: #e0b880;     
-    --text-color-dark: #343a40; /* Màu chữ tối */
-    --text-color-light: #6c757d; /* Màu chữ mờ (inactive) */
-    --bg-color-hover: #f1f3f5;   /* Màu nền khi hover */
-    --bg-color-active: #e5d4ba;  
-    --sidebar-bg: #e9e6e5; 
-    --icon-color: rgb(57, 57, 58);     /* Màu nền sidebar */
+  --primary-color: #e0b880;
+  --text-color-dark: #343a40; /* Màu chữ tối */
+  --text-color-light: #6c757d; /* Màu chữ mờ (inactive) */
+  --bg-color-hover: #f1f3f5; /* Màu nền khi hover */
+  --bg-color-active: #e5d4ba;
+  --sidebar-bg: #e9e6e5;
+  --icon-color: rgb(57, 57, 58); /* Màu nền sidebar */
 }
 
 /* Button for social media */
@@ -28,7 +28,7 @@
   color: #1e293b;
 }
 
-.btn-Facebook:hover{
+.btn-Facebook:hover {
   background: linear-gradient(135deg, #1877f2, #2681cc);
   border: none;
 }
@@ -38,17 +38,20 @@
   border: none;
 }
 
-.btn-Github:hover  {
+.btn-Github:hover {
   background-color: rgb(72, 70, 70);
   border: none;
 }
 
 .btn-Linkedin:hover {
-  background: linear-gradient(135deg, #0A66C2, #0077b5);
+  background: linear-gradient(135deg, #0a66c2, #0077b5);
   border: none;
 }
 
-.btn-Facebook:hover i, .btn-Ig:hover i, .btn-Github:hover i, .btn-Linkedin:hover i {
+.btn-Facebook:hover i,
+.btn-Ig:hover i,
+.btn-Github:hover i,
+.btn-Linkedin:hover i {
   color: aliceblue;
 }
 
@@ -56,7 +59,6 @@
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-
 
 .social-icons .social-btn:hover {
   transform: translateY(-5px);
@@ -74,7 +76,7 @@
   height: 33px;
   border-radius: 50%;
   cursor: pointer;
-  background: linear-gradient(145deg, #4CAF50, #388E3C);
+  background: linear-gradient(145deg, #4caf50, #388e3c);
   color: #ffffff;
   transition: all 0.2s ease-in-out;
 }
@@ -91,7 +93,7 @@
 }
 
 .add-task-btn i {
-    font-size: 23px; 
+  font-size: 23px;
 }
 
 /* Button Light/Dark */
@@ -368,7 +370,6 @@
   }
 }
 
-
 /* Button Contract, About, User */
 
 .container-btn-header {
@@ -379,145 +380,157 @@
 }
 
 .btn-modern {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    background-color: transparent;
-    padding: 11px 15px;
-    border: 1px solid rgb(184, 180, 180);
-    border-radius: 13px; 
-    font-size: 16px;
-    cursor: pointer;
-    box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: transparent;
+  padding: 11px 15px;
+  border: 1px solid rgb(184, 180, 180);
+  border-radius: 13px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-out;
 }
 
 .btn-modern:hover {
-    transform: translateY(-4px);
-    filter: brightness(1.05);
-    border-color: transparent;
-    box-shadow: 0 7px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+  filter: brightness(1.05);
+  border-color: transparent;
+  box-shadow: 0 7px 20px rgba(0, 0, 0, 0.15);
 }
 
 .btn-modern:active {
-    transform: translateY(1px);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    filter: brightness(0.9); /* Tối đi một chút */
+  transform: translateY(1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  filter: brightness(0.9); /* Tối đi một chút */
 }
 
 .btn-contract:hover {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    box-shadow: 0 7px 10px rgba(0, 123, 255, 0.25);
-    color: aliceblue;
-}
-
-.btn-aboutme:hover {
-   background: linear-gradient(135deg, #007bff, #0056b3);
-   box-shadow: 0 7px 10px rgba(0, 123, 255, 0.25);
-   color: aliceblue;
-}
-
-.btn-user:hover {
-     background: linear-gradient(135deg, #6c757d, #495057);
-     box-shadow: 0 7px 10px rgba(108, 117, 125, 0.3);
-}
-
-.btn-noti:hover {
-     background: linear-gradient(135deg, #e0b540, #c9af2e);
-     box-shadow: 0 7px 10px rgba(171, 182, 137, 0.3);
-}
-
-.btn-quick-add:hover {
-     background: linear-gradient(135deg, #43e040, #249b3a);
-     box-shadow: 0 7px 10px rgba(171, 182, 137, 0.3);
-}
-
-.btn-contract:hover i, .btn-aboutme:hover i, .btn-user:hover i, .btn-noti:hover i,.btn-quick-add:hover i {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  box-shadow: 0 7px 10px rgba(0, 123, 255, 0.25);
   color: aliceblue;
 }
 
-.btn-contract i, .btn-aboutme i, .btn-user i, .btn-noti i, .btn-quick-add i  {
+.btn-aboutme:hover {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  box-shadow: 0 7px 10px rgba(0, 123, 255, 0.25);
+  color: aliceblue;
+}
+
+.btn-user:hover {
+  background: linear-gradient(135deg, #6c757d, #495057);
+  box-shadow: 0 7px 10px rgba(108, 117, 125, 0.3);
+}
+
+.btn-noti:hover {
+  background: linear-gradient(135deg, #e0b540, #c9af2e);
+  box-shadow: 0 7px 10px rgba(171, 182, 137, 0.3);
+}
+
+.btn-quick-add:hover {
+  background: linear-gradient(135deg, #43e040, #249b3a);
+  box-shadow: 0 7px 10px rgba(171, 182, 137, 0.3);
+}
+
+.btn-contract:hover i,
+.btn-aboutme:hover i,
+.btn-user:hover i,
+.btn-noti:hover i,
+.btn-quick-add:hover i {
+  color: aliceblue;
+}
+
+.btn-contract i,
+.btn-aboutme i,
+.btn-user i,
+.btn-noti i,
+.btn-quick-add i {
   color: rgb(57, 57, 58);
 }
 
-.btn-contract, .btn-aboutme{
+.btn-contract,
+.btn-aboutme {
   color: rgb(43, 43, 45);
 }
 
-.btn-user, .btn-noti, .btn-quick-add{
-    width: 40px;  
-    height: 40px; 
-    padding: 0;
-    border-radius: 50%; 
-    background-color: transparent;
+.btn-user,
+.btn-noti,
+.btn-quick-add {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  background-color: transparent;
 }
 
 .btn-dark-light {
   border: none;
   padding: 0;
 }
-.btn-user i, .btn-quick-add i, .btn-noti  {
-    font-size: 18px;
+.btn-user i,
+.btn-quick-add i,
+.btn-noti {
+  font-size: 18px;
 }
-
 
 /* Button for sidebar */
 .btn-sidebar {
-    background: none;
-    border: none;
-    cursor: pointer;
-    display: flex;          
-    align-items: center;    
-    width: 100%;            
-    text-align: left;    
-    /* Thiết kế & Khoảng cách */
-    padding: 20px 25px; 
-    border-radius: 8px;     /* Bo góc mềm mại, hiện đại */
-    font-size: 19px;
-    font-weight: 500;       /* Chữ hơi đậm một chút */
-    color: var(--text-color-light); /* Màu chữ mờ cho nút không active */
-    /* Hiệu ứng chuyển động */
-    transition: all 0.2s ease-in-out;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  /* Thiết kế & Khoảng cách */
+  padding: 20px 25px;
+  border-radius: 8px; /* Bo góc mềm mại, hiện đại */
+  font-size: 19px;
+  font-weight: 500; /* Chữ hơi đậm một chút */
+  color: var(--text-color-light); /* Màu chữ mờ cho nút không active */
+  /* Hiệu ứng chuyển động */
+  transition: all 0.2s ease-in-out;
 }
 
 /* --- Thiết kế cho Icon --- */
 .btn-sidebar i {
-    width: 20px;            /* Cho icon một không gian cố định */
-    margin-right: 14px;     /* Khoảng cách giữa icon và chữ */
-    font-size: 18px;        /* Kích thước icon */
-    text-align: center;
+  width: 20px; /* Cho icon một không gian cố định */
+  margin-right: 14px; /* Khoảng cách giữa icon và chữ */
+  font-size: 18px; /* Kích thước icon */
+  text-align: center;
 }
 
 /* --- Hiệu ứng khi di chuột (Hover) --- */
 .btn-sidebar:hover {
-    background-color: var(--bg-color-hover); /* Đổi màu nền */
-    transform: translateY(-5px);
+  background-color: var(--bg-color-hover); /* Đổi màu nền */
+  transform: translateY(-5px);
 }
 
 /* --- Trạng thái Active (Quan trọng) --- */
 /* Đây là trạng thái khi người dùng đang ở trang đó */
 .btn-sidebar.active {
-    background-color: var(--bg-color-active);
-    color: var(--primary-color); /* Chữ đổi thành màu chính */   
+  background-color: var(--bg-color-active);
+  color: var(--primary-color); /* Chữ đổi thành màu chính */
 }
 
 /* Button for search */
 .btn-search {
-    background-color: transparent;
-    padding: 11px 15px;
-    border: 1px solid rgb(184, 180, 180);
-    font-size: 25px;
-    cursor: pointer;
-    box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease-out;
-    position: relative;
+  background-color: transparent;
+  padding: 11px 15px;
+  border: 1px solid rgb(184, 180, 180);
+  font-size: 25px;
+  cursor: pointer;
+  box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-out;
+  position: relative;
 }
 
 .btn-search:active {
-    transform: scale(0.9);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    filter: brightness(0.9); /* Tối đi một chút */
+  transform: scale(0.9);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  filter: brightness(0.9); /* Tối đi một chút */
 }
 
 .btn-seach-evt {
@@ -526,7 +539,7 @@
   border-radius: 50%;
 }
 
-.btn-seach-evt i{
+.btn-seach-evt i {
   color: rgb(83, 82, 82);
   font-size: 23px;
 }
@@ -568,7 +581,9 @@
 }
 
 /* Button for add Quick Notes Widget */
-.btn-add-note {
+.btn-add-note,
+.btn-save-note {
+  position: relative;
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -579,11 +594,54 @@
   background-color: transparent;
 }
 
-.btn-add-note i {
+.btn-add-note .tooltip-text,
+.btn-save-note .tooltip-text {
+  visibility: hidden;
+  width: 60px;
+  background-color: rgba(0,0,0,0.8);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 6px 8px;
+  position: absolute;
+  bottom: 125%; 
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  font-size: 14px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* mũi tên nhỏ */
+.btn-add-note .tooltip-text::after,
+.btn-save-note .tooltip-text::after {
+  content: '';
+  position: absolute;
+  top: 100%; /* dưới tooltip */
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: rgba(0,0,0,0.8) transparent transparent transparent;
+}
+
+.btn-add-note:hover .tooltip-text,
+.btn-save-note:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.btn-add-note i,
+.btn-save-note i {
   font-size: 25px !important;
   cursor: pointer;
 }
 
-.btn-add-note:active {
+.btn-add-note:active,
+.btn-save-note:active {
   transform: scale(0.95);
 }

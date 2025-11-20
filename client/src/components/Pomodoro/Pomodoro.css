@@ -55,6 +55,7 @@
   border-radius: 50%;
   box-shadow: 0 10px 25px -5px rgba(196, 36, 36, 0.638);
   transition: all 0.3s ease-in-out;
+  margin-top: 15px;
 }
 
 .pomodoro-timer:hover {

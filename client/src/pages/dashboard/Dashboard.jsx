@@ -548,17 +548,8 @@ function Dashboard() {
                 streakCount={currentStreakCount}
               />
             </div>
-
-            <div className="quick-note-widget">
-              <div className="quick-note-top">
-                <i className="fa-solid fa-file-lines"></i>
-                <p>Quick notes</p>
-                <Button className="btn-add-note">
-                  <i className="fa-solid fa-plus"></i>
-                </Button>
-              </div>
-              <QuickNotesWidget className="text-area-note" />
-            </div>
+            
+              <QuickNotesWidget className="contentNotes" />
 
             <div className="process-goal-container">
               <h3>Target due date</h3>
