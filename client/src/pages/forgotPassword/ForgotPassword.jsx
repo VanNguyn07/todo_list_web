@@ -73,7 +73,7 @@ const ForgotPassword = ({ onSwitchToSignIn, onSwitchToVerify }) => {
     <div className="SCOPE_FORGOT_PASS">
       <div className="forgotContainer animate__animated animate__fadeInDown">
         <form onSubmit={handleSubmit} id="forgotForm">
-          <h2>Forgot Password</h2>
+          <h2 id="titleForSetPass">Forgot Password</h2>
           <p className="desc">
             Enter your email to receive a verification OTP code!
           </p>

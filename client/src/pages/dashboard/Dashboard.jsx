@@ -20,6 +20,7 @@ import { useAddTask } from "../../hooks/UseAddTask";
 import { useButtonActive } from "../../hooks/UseButtonActive";
 import { useFetchTasks } from "../../hooks/useFetchTask";
 import { useDeleteTask } from "../../hooks/useDeleteTask";
+import { usePomodoro } from "../../hooks/usePomodoro";
 import { TaskDatePicker } from "../../components/datePicker/TaskDatePicker";
 import Contact from "../contact/contact";
 import "./Dashboard.css";
@@ -48,6 +49,17 @@ function Dashboard() {
 
   const { handleDelete, isDeleting } = useDeleteTask({ onSuccess: refetch });
 
+  const {
+    isActive,
+    mode,
+    formatTime,
+    skipPlay,
+    startPlay,
+    pausePlay,
+    resetTimer,
+    circumference,
+    progressOffset,
+  } = usePomodoro();
   if (isLoading) {
     return <div>Đang tải danh sách task...</div>;
   }
@@ -127,7 +139,7 @@ function Dashboard() {
               }`}
               id="habitTrackerButton"
               onClick={() => handleViewChange("habit-tracker")}
-            >
+            > 
               <i className="fa-solid fa-calendar-check"></i>
               <span>Habit Tracker</span>
             </Button>
@@ -177,7 +189,11 @@ function Dashboard() {
 
                   <Button className="btn-modern btn-dark-light">
                     <label className="switch">
-                      <input id="input" type="checkbox" defaultChecked={false} />
+                      <input
+                        id="input"
+                        type="checkbox"
+                        defaultChecked={false}
+                      />
                       <div className="slider round">
                         <div className="sun-moon">
                           <svg
@@ -436,7 +452,7 @@ function Dashboard() {
             <Pomodoro className="pomodoro-focus-widget">
               <div className="title-for-pomodoro-widget">
                 <i className="fa-regular fa-clock"></i>
-                <p id="title-pomodoro-focus">Promodo Focus</p>
+                <p id="title-pomodoro-focus">{mode === "FOCUS" ? "Pomodoro Focus" : "Short Break"}</p>
               </div>
               <div className="text-current-task">
                 <p>CURRENT TASK</p>
@@ -449,8 +465,8 @@ function Dashboard() {
                 <div className="pomodoro-timer">
                   <svg
                     className="timer-svg"
-                    width="130"
-                    height="130"
+                    width="150"
+                    height="150"
                     viewBox="0 0 100 100"
                   >
                     <circle
@@ -465,29 +481,48 @@ function Dashboard() {
                       cx="50"
                       cy="50"
                       r="45"
+                      style={{
+                        strokeDasharray: circumference,
+                        strokeDashoffset: progressOffset,
+                        transition: "stroke-dashoffset 1s linear",
+                      }}
                     ></circle>
                   </svg>
 
                   <div className="timer-text" id="pomodoro-time">
-                    25:00
+                    {formatTime()}
                   </div>
                 </div>
               </div>
 
               <div className="btn-container">
-                <Button className="btn-control-pomodoro btn-start">
-                  <i className="fa-solid fa-play start-icon"></i>
-                </Button>
+                {!isActive ? (
+                  <Button
+                    className="btn-control-pomodoro btn-start"
+                    onClick={startPlay}
+                  >
+                    <i className="fa-solid fa-play start-icon"></i>
+                  </Button>
+                ) : (
+                  <Button
+                    className="btn-control-pomodoro btn-pause"
+                    onClick={pausePlay}
+                  >
+                    <i className="fa-solid fa-pause pause-icon"></i>
+                  </Button>
+                )}
 
-                <Button className="btn-control-pomodoro btn-pause">
-                  <i className="fa-solid fa-pause pause-icon"></i>
-                </Button>
-
-                <Button className="btn-control-pomodoro btn-skip">
+                <Button
+                  className="btn-control-pomodoro btn-skip"
+                  onClick={skipPlay}
+                >
                   <i className="fa-solid fa-forward skip-icon"></i>
                 </Button>
 
-                <Button className="btn-control-pomodoro btn-reset">
+                <Button
+                  className="btn-control-pomodoro btn-reset"
+                  onClick={resetTimer}
+                >
                   <i className="fa-solid fa-rotate-left reset-icon"></i>
                 </Button>
               </div>

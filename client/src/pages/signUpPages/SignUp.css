@@ -11,7 +11,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    overflow-y: auto; 
+    overflow-y: auto;
   }
 
   /* Các class bạn cung cấp (đã copy) */
@@ -155,7 +155,7 @@
     border: 3px solid #2837a7;
     padding-top: 20px; /* Thêm padding */
   }
-  
+
   .input-stack {
     display: flex;
     flex-direction: column;
@@ -240,6 +240,8 @@
   input[type="radio"] {
     accent-color: #6f74dd;
     cursor: pointer;
+    width: 16px;
+    height: 16px;
   }
   input[type="radio"]:checked + i {
     color: #6f74dd;
@@ -298,18 +300,18 @@
   }
 }
 
-  /* --- 4. FIX RUNG: Thêm/Sửa code Rung --- */
-  @keyframes shake {
-    0%,
-    100% {
-      transform: translateX(0);
-    }
-    20%,
-    60% {
-      transform: translateX(-8px);
-    }
-    40%,
-    80% {
-      transform: translateX(8px);
-    }
+/* --- 4. FIX RUNG: Thêm/Sửa code Rung --- */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
   }
+  20%,
+  60% {
+    transform: translateX(-8px);
+  }
+  40%,
+  80% {
+    transform: translateX(8px);
+  }
+}
