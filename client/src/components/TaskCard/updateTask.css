@@ -1,0 +1,123 @@
+.input-wrapper {
+  background-color: #eee;
+  padding: 20px;
+  border-radius: 12px;
+  font-family: sans-serif;
+}
+
+.input-row {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start; /* Căn lề trên để ô Detail dãn xuống không bị lệch Title */
+  margin-bottom: 20px;
+}
+
+/* Ô Title đơn giản */
+.title-input {
+  width: 220px;
+  height: 45px; /* Chiều cao cố định */
+  padding: 0 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #eef2f6;
+  outline: none;
+}
+
+/* -- PHẦN QUAN TRỌNG: CONTAINER CỦA DETAIL -- */
+.detail-container {
+  flex: 1; /* Chiếm hết chỗ trống còn lại */
+}
+
+.input-with-list {
+  background: #eef2f6;
+  border: 1px solid #86efac; /* Viền xanh lá giống ảnh */
+  border-radius: 8px;
+  padding: 5px;
+  min-height: 45px; /* Chiều cao tối thiểu */
+  display: flex;
+  flex-direction: column;
+  background-color: #eef2f6;
+}
+
+/* Input thật sự (ẩn viền để hòa vào container) */
+.detail-input-real {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 8px 10px;
+  outline: none;
+  font-size: 14px;
+}
+
+/* Danh sách các item tạm thời */
+.temp-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 0 5px;
+}
+
+.temp-item {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #333;
+  animation: fadeIn 0.2s ease;
+}
+
+.remove-temp-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #999;
+  display: flex;
+  padding: 0;
+}
+.remove-temp-btn:hover { color: red; }
+
+/* Nút Add */
+.add-btn {
+  background-color: #4caf50;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  flex-shrink: 0; /* Không bị co lại */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s;
+}
+
+.add-btn:active { transform: scale(0.95); }
+
+/* Phần trang trí Filter bên dưới */
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.filter-select, .date-input-dummy, .search-box {
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+}
+.search-box input { border: none; outline: none; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

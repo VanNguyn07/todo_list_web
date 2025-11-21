@@ -5,12 +5,16 @@
   width: 100%;
   border: none;
   border-radius: 10px;
-  background-color: rgb(216, 211, 211);
+  background-color: #f4f2f0;
   font-family: 'Arial', sans-serif; 
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #333;
   padding: 10px;
 }
 
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none;
+  border: none;
+}
 /* Nút điều hướng tháng ( < > ) */
 .calendar-widget-container .react-calendar__navigation button {
   font-weight: bold;
@@ -43,8 +47,7 @@
 
 /* Ngày được chọn (khi bấm vào) */
 .calendar-widget-container .react-calendar__tile--active {
-  background: #8884d8; /* Màu tím giống biểu đồ (hoặc màu bạn thích) */
-  color: white;
+  background: #eac99b; 
 }
 
 /* (Nâng cao) CSS cho ngày có task */

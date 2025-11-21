@@ -36,8 +36,7 @@
     margin-bottom: 15px;
 }
 
-.filter-task,
-.filter-select {
+.filter-task {
     /* 1. Tắt giao diện mặc định của trình duyệt */
     -webkit-appearance: none; /* Cho Safari/Chrome */
     -moz-appearance: none;    /* Cho Firefox */
@@ -45,7 +44,7 @@
     
     font-size: 1rem;       
     color: #333;           
-    background-color: #ecc897; 
+    background-color: #f4f2f0; 
     border: 1px solid black; 
     border-radius: 10px;    
     padding: 10px 30px 10px 12px; 
@@ -61,8 +60,7 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.filter-task:hover,
-.filter-select:hover {
+.filter-task:hover {
     border: 1px solid grey;
 }
 

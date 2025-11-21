@@ -4,6 +4,7 @@ import Button from "../../components/button/Button";
 import Header from "../../components/header/Header";
 import Input from "../../components/input/Input";
 import TaskCard from "../../components/taskCard/TaskCard";
+import { RenderSubTasks } from "../../components/taskCard/renderSubTasks";
 import Textarea from "../../components/textArea/Textarea";
 import Logo from "../../assets/images/logo.png";
 import Pomodoro from "../../components/pomodoro/Pomodoro";
@@ -25,11 +26,13 @@ import { TaskDatePicker } from "../../components/datePicker/TaskDatePicker";
 import Contact from "../contact/contact";
 import "./Dashboard.css";
 import AboutUs from "../aboutUs/aboutUs";
+import { X } from "lucide-react";
 
 function Dashboard() {
   const currentStreakCount = 10;
   const currentCompeledTaskCount = 5;
   const currentPendingTaskCount = 10;
+
   const [goals, _setGoals] = useState(DUMMY_GOALS);
 
   console.log('Dữ liệu GỐC trong "goals":', goals);
@@ -38,14 +41,34 @@ function Dashboard() {
     (a, b) => new Date(a.deadline) - new Date(b.deadline)
   );
 
-  console.log('Dữ liệu GỐC trong "sortedGoals":', sortedGoals);
-
   const { activeView, handleViewChange } = useButtonActive("home");
   // 1. Gọi hook fetch, lấy ra hàm 'refetch'
   const { tasks, isLoading, error, refetch } = useFetchTasks();
 
-  const { taskForm, handleInputChange, handleDateChange, handleAddTask } =
-    useAddTask({ onSuccess: refetch });
+  // const taskDetail = tasks.detailTask;
+  // let subTaskDisplay = [];
+
+  // try {
+  //   subTaskDisplay = JSON.parse(taskDetail);
+  // }catch{
+  //   // Fallback: Nếu dữ liệu cũ là dạng text thường (\n) thì xử lý kiểu cũ để không lỗi app
+  // subTaskDisplay = taskDetail.split('\n').map((line, index) => ({
+  //   id: index,
+  //   title: line,
+  //   completed: false
+  // }));
+  // }
+  const {
+    taskForm,
+    subTask,
+    currentDetailInput,
+    handleDetailChange,
+    handleWhenClickEnter,
+    removeSubTask,
+    handleInputChange,
+    handleDateChange,
+    handleAddTask,
+  } = useAddTask({ onSuccess: refetch });
 
   const { handleDelete, isDeleting } = useDeleteTask({ onSuccess: refetch });
 
@@ -139,7 +162,7 @@ function Dashboard() {
               }`}
               id="habitTrackerButton"
               onClick={() => handleViewChange("habit-tracker")}
-            > 
+            >
               <i className="fa-solid fa-calendar-check"></i>
               <span>Habit Tracker</span>
             </Button>
@@ -318,14 +341,17 @@ function Dashboard() {
 
                   <Button className="btn-modern btn-quick-add">
                     <i class="fa-solid fa-plus"></i>
+                    <span className="tooltip-text">Add Task</span>
                   </Button>
 
                   <Button className="btn-modern btn-noti">
                     <i className="fa-solid fa-bell"></i>
+                    <span className="tooltip-text">Notification</span>
                   </Button>
 
                   <Button className="btn-modern btn-user">
                     <i className="fa-solid fa-user"></i>
+                    <span className="tooltip-text">Profile</span>
                   </Button>
                 </div>
               </div>
@@ -351,15 +377,31 @@ function Dashboard() {
                   onChange={handleInputChange}
                 />
 
-                <Textarea
-                  placeholder="Detail Of Your Task"
-                  className="task-detail-input"
-                  name="detailTask"
-                  id="detailTask"
-                  value={taskForm.detailTask}
-                  onChange={handleInputChange}
-                />
-
+                <div className="detail-container">
+                  <div className="sub-task-list">
+                    {subTask.map((sub) => (
+                      <span key={sub.id}>
+                        • {sub.title}
+                        <Button onClick={() => removeSubTask(sub.id)}>
+                          <X size={12} />
+                        </Button>
+                      </span>
+                    ))}
+                  </div>
+                  <input
+                    type="text"
+                    name="detailTask"
+                    id=""
+                    placeholder={ 
+                      subTask.length > 0
+                        ? "Nhập tiếp việc nhỏ rồi Enter..."
+                        : "Nhập chi tiết công việc (Ấn Enter để xuống dòng)..."
+                    }
+                    value={currentDetailInput}
+                    onChange={handleDetailChange}
+                    onKeyDown={handleWhenClickEnter}
+                  />
+                </div>
                 <Button
                   className="add-task-btn"
                   id="addTaskButton"
@@ -414,7 +456,7 @@ function Dashboard() {
                   >
                     <div className="content-left">
                       <h2>{task.titleTask}</h2>
-                      <p>{task.detailTask}</p>
+                      <p>{RenderSubTasks(task.detailTask)}</p>
                       <h3>Deadline Task: {task.deadlineTask}</h3>
                     </div>
 
@@ -452,7 +494,9 @@ function Dashboard() {
             <Pomodoro className="pomodoro-focus-widget">
               <div className="title-for-pomodoro-widget">
                 <i className="fa-regular fa-clock"></i>
-                <p id="title-pomodoro-focus">{mode === "FOCUS" ? "Pomodoro Focus" : "Short Break"}</p>
+                <p id="title-pomodoro-focus">
+                  {mode === "FOCUS" ? "Pomodoro Focus" : "Short Break"}
+                </p>
               </div>
               <div className="text-current-task">
                 <p>CURRENT TASK</p>
@@ -502,6 +546,7 @@ function Dashboard() {
                     onClick={startPlay}
                   >
                     <i className="fa-solid fa-play start-icon"></i>
+                    <span className="tooltip-text">Start</span>
                   </Button>
                 ) : (
                   <Button
@@ -509,6 +554,7 @@ function Dashboard() {
                     onClick={pausePlay}
                   >
                     <i className="fa-solid fa-pause pause-icon"></i>
+                    <span className="tooltip-text">Pause</span>
                   </Button>
                 )}
 
@@ -517,6 +563,7 @@ function Dashboard() {
                   onClick={skipPlay}
                 >
                   <i className="fa-solid fa-forward skip-icon"></i>
+                  <span className="tooltip-text">Skip</span>
                 </Button>
 
                 <Button
@@ -524,6 +571,7 @@ function Dashboard() {
                   onClick={resetTimer}
                 >
                   <i className="fa-solid fa-rotate-left reset-icon"></i>
+                  <span className="tooltip-text">Reset</span>
                 </Button>
               </div>
             </Pomodoro>
@@ -548,8 +596,8 @@ function Dashboard() {
                 streakCount={currentStreakCount}
               />
             </div>
-            
-              <QuickNotesWidget className="contentNotes" />
+
+            <QuickNotesWidget className="contentNotes" />
 
             <div className="process-goal-container">
               <h3>Target due date</h3>

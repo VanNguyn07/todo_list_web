@@ -1,6 +1,6 @@
 import React, {useMemo} from "react";
 import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer} from 'recharts'
-import {processTaskDataForChart} from "../utils/chatHelper";
+import {processTaskDataForChart} from "../utils/chartHelper";
 
 export const WeeklyProcessChart = ({allTasks}) => {
     // useMemo giúp tối ưu, chỉ tính toán lại khi 'allTasks' thay đổi
@@ -39,7 +39,7 @@ export const WeeklyProcessChart = ({allTasks}) => {
             }}/>
 
             <Bar
-                dataKey="task" fill="#8884d8" radius={[4, 4, 0, 0]}
+                dataKey="task" fill="#e8cba2ff" radius={[4, 4, 0, 0]}
             />
         </BarChart>
     </ResponsiveContainer>

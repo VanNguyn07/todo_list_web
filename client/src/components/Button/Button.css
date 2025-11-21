@@ -515,6 +515,50 @@
   color: var(--primary-color); /* Chữ đổi thành màu chính */
 }
 
+.btn-quick-add .tooltip-text,
+.btn-noti .tooltip-text,
+.btn-user .tooltip-text {
+  visibility: hidden;
+  width: 90px;
+  background-color: rgba(0,0,0,0.8);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 6px 8px;
+  position: absolute;
+  bottom: 100%; 
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  font-size: 14px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* mũi tên nhỏ */
+.btn-quick-add .tooltip-text::after,
+.btn-noti .tooltip-text::after,
+.btn-user .tooltip-text::after {
+  content: '';
+  position: absolute;
+  top: 100%; /* dưới tooltip */
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: rgba(0,0,0,0.8) transparent transparent transparent;
+}
+
+.btn-quick-add:hover .tooltip-text,
+.btn-noti:hover .tooltip-text,
+.btn-user:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
 /* Button for search */
 .btn-search {
   background-color: transparent;
@@ -566,6 +610,7 @@
 }
 
 .btn-control-pomodoro {
+  position: relative;
   font-size: 18px;
   width: 40px;
   border-radius: 10px;
@@ -576,10 +621,58 @@
   color: rgb(63, 51, 51);
 }
 
+.btn-start .tooltip-text,
+.btn-pause .tooltip-text,
+.btn-skip .tooltip-text,
+.btn-reset .tooltip-text {
+  visibility: hidden;
+  width: 60px;
+  background-color: rgba(0,0,0,0.8);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 6px 8px;
+  position: absolute;
+  bottom: auto;
+  top: 100%; 
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  font-size: 14px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* mũi tên nhỏ */
+.btn-start .tooltip-text::after,
+.btn-pause .tooltip-text::after,
+.btn-skip .tooltip-text::after,
+.btn-reset .tooltip-text::after {
+  content: '';
+  position: absolute;
+  top: auto;
+  bottom: 100%; 
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent rgba(0,0,0,0.8) transparent;
+}
+
+.btn-start:hover .tooltip-text,
+.btn-pause:hover .tooltip-text,
+.btn-skip:hover .tooltip-text,
+.btn-reset:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(5px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
 .btn-control-pomodoro:active {
   transform: scale(0.95);
 }
-
 /* Button for add Quick Notes Widget */
 .btn-add-note,
 .btn-save-note {
@@ -604,7 +697,7 @@
   border-radius: 6px;
   padding: 6px 8px;
   position: absolute;
-  bottom: 125%; 
+  bottom: 100%; 
   left: 50%;
   transform: translateX(-50%);
   opacity: 0;

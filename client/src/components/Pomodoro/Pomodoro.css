@@ -9,7 +9,7 @@
 }
 
 .pomodoro-focus-widget {
-  background-color: #ecc897;
+  background-color: #f4f2f0;
   border-radius: 10px;
 }
 .title-for-pomodoro-widget {
@@ -17,12 +17,12 @@
   gap: 10px;
   padding: 10px 0px 10px 10px;
   font-weight: bold;
-  color: rgb(121, 125, 131);
+  color: #e0b880;
 }
 
 .title-for-pomodoro-widget i {
   font-size: 20px;
-  color: rgb(235, 116, 116);
+  color: #e0b880;
 }
 #title-pomodoro-focus {
   font-size: 20px;
@@ -53,7 +53,7 @@
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  box-shadow: 0 10px 25px -5px rgba(196, 36, 36, 0.638);
+  box-shadow: 0 10px 25px -5px #eeba72;
   transition: all 0.3s ease-in-out;
   margin-top: 15px;
 }
@@ -85,7 +85,7 @@
 
 /* Vòng tròn tiến trình (đây là phần ma thuật) */
 .timer-progress {
-  stroke: rgb(239, 104, 104);
+  stroke: #e0b880;
   /* Quay 90 độ để bắt đầu từ đỉnh (12 giờ) */
   transform-origin: center;
   transform: rotate(-90deg);
