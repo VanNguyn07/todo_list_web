@@ -1,123 +1,264 @@
-.input-wrapper {
-  background-color: #eee;
-  padding: 20px;
-  border-radius: 12px;
-  font-family: sans-serif;
+/* --- Container tổng --- */
+.form-update {
+  width: 330px;
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 18px;
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.4s ease;
+  font-family: "Poppins", sans-serif;
 }
 
-.input-row {
+/* Hiệu ứng fade nhẹ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- TOP CONTENT --- */
+.content-top {
   display: flex;
-  gap: 15px;
-  align-items: flex-start; /* Căn lề trên để ô Detail dãn xuống không bị lệch Title */
-  margin-bottom: 20px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
 }
 
-/* Ô Title đơn giản */
-.title-input {
-  width: 220px;
-  height: 45px; /* Chiều cao cố định */
-  padding: 0 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background: #eef2f6;
+#update-title-text {
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+}
+
+.content-top i {
+  font-size: 22px;
+  padding: 10px;
+  border-radius: 50%;
+  background: #f0f0f5;
+  color: #444;
+  transition: 0.25s;
+  cursor: pointer;
+}
+
+.content-top i:hover {
+  background: #f3d077;
+  color: white;
+  transform: rotate(10deg);
+}
+
+/* --- INPUT TASK NAME --- */
+.update-input-task-name {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 16px;
+}
+
+.update-input-task-name label {
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: #555;
+}
+
+.update-input-task-name input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 2px solid #dcdcdc;
+  font-size: 15px;
+  transition: 0.25s;
+  width: 198px;
+}
+
+.update-input-task-name input:focus {
+  box-shadow: 0px 0px 0px 3px rgba(51, 45, 42, 0.2);
   outline: none;
 }
 
-/* -- PHẦN QUAN TRỌNG: CONTAINER CỦA DETAIL -- */
-.detail-container {
-  flex: 1; /* Chiếm hết chỗ trống còn lại */
+/* --- SUBTASK BOX --- */
+.update-sub-task {
+  border: 2px solid #dcdcdc;
+  margin-bottom: 16px;
+  padding: 10px;
+  background: #f7f8ff;
+  border-radius: 10px;
+  color: #f3d077;
+  font-weight: 500;
 }
 
-.input-with-list {
-  background: #eef2f6;
-  border: 1px solid #86efac; /* Viền xanh lá giống ảnh */
-  border-radius: 8px;
-  padding: 5px;
-  min-height: 45px; /* Chiều cao tối thiểu */
-  display: flex;
-  flex-direction: column;
-  background-color: #eef2f6;
-}
-
-/* Input thật sự (ẩn viền để hòa vào container) */
-.detail-input-real {
+/* CATEGORY / SELECT — STYLE MỚI */
+.update-select-wrapper {
+  position: relative;
   width: 100%;
-  border: none;
-  background: transparent;
-  padding: 8px 10px;
+}
+
+.update-category-select {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 12px;
+  border: 2px solid #e3e3e3;
+  background: #fafaff;
+  font-size: 15px;
+  appearance: none; /* Ẩn mũi tên mặc định */
+  -webkit-appearance: none;
+  transition: 0.25s;
+  cursor: pointer;
+  color: #444;
+}
+
+.update-category-select:focus {
   outline: none;
+  box-shadow: 0px 0px 0px 3px rgba(51, 45, 42, 0.2);
+}
+
+/* Icon mũi tên */
+.update-select-wrapper i {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #777;
   font-size: 14px;
 }
 
-/* Danh sách các item tạm thời */
-.temp-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  padding: 0 5px;
+
+/* Text deadline */
+#update-deadline-text {
+  color: #444;
+  margin: 0;
 }
 
-.temp-item {
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 2px 8px;
-  font-size: 13px;
+.update-datepicker-wrapper {
   display: flex;
   align-items: center;
-  gap: 5px;
-  color: #333;
-  animation: fadeIn 0.2s ease;
-}
-
-.remove-temp-btn {
-  border: none;
-  background: none;
-  cursor: pointer;
-  color: #999;
-  display: flex;
-  padding: 0;
-}
-.remove-temp-btn:hover { color: red; }
-
-/* Nút Add */
-.add-btn {
-  background-color: #4caf50;
-  border: none;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  cursor: pointer;
-  flex-shrink: 0; /* Không bị co lại */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.1s;
-}
-
-.add-btn:active { transform: scale(0.95); }
-
-/* Phần trang trí Filter bên dưới */
-.filter-row {
-  display: flex;
-  align-items: center;
+  padding: 15px;
+  border-radius: 12px;
   gap: 20px;
-  flex-wrap: wrap;
 }
-.filter-select, .date-input-dummy, .search-box {
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #666;
-}
-.search-box input { border: none; outline: none; }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
+/* INPUT CỦA DATE PICKER */
+
+.react-datepicker__view-calendar-icon input {
+padding: 10px 13px 10px 30px !important
+}
+.update-datepicker-wrapper input:focus {
+  outline: none;
+  box-shadow: 0px 0px 0px 3px rgba(51, 45, 42, 0.2);
+}
+
+/* ICON CALENDAR */
+.update-datepicker-wrapper i {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #6a6a6a;
+  font-size: 16px;
+}
+
+/* Ô input mặc định (nếu bạn không dùng customInput) */
+.react-datepicker-wrapper input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #dcdcdc;
+  width: 170px;
+  border-radius: 10px;
+  padding: 5px 0px 5px 30px;
+  cursor: pointer;
+  margin-left: 10px;
+  margin-right: 30px;
+}
+
+
+.react-datepicker__close-icon {
+  margin-right: 35px;
+}
+
+.react-datepicker__input-container .react-datepicker__calendar-icon {
+  /* 4. Đặt icon ở vị trí tuyệt đối (so với .custom-datepicker-input) */
+  position: absolute;
+
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  color: #575656; /* Màu của icon */
+}
+
+/* Phần header của lịch (chỗ "Tháng 11 2025") */
+.react-datepicker__header {
+  background-color: #575656;
+  border-bottom: none;
+}
+
+/* Chữ trong header (tên tháng, tên năm) */
+.react-datepicker__current-month,
+.react-datepicker__day-name {
+  color: white;
+  font-weight: bold;
+}
+
+/* Nút mũi tên trái/phải */
+.react-datepicker__navigation-icon {
+  border-color: white;
+}
+
+/* Ngày được chọn */
+.react-datepicker__day--selected {
+  background-color: #3498db;
+  color: white;
+}
+
+/* Ngày khi hover */
+.react-datepicker__day:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.react-datepicker__month-select,
+.react-datepicker__year-select {
+  background-color: #d5d3d3; /* Thêm màu nền cho dễ thấy */
+  border: 1px solid #ccc;
+
+  /* Đây là dòng bạn cần! */
+  border-radius: 10px; /* Bạn có thể đổi số 8px tùy ý */
+  padding: 3px;
+  cursor: pointer;
+}
+
+/* Thêm style khi hover cho đẹp */
+.react-datepicker__month-select:hover,
+.react-datepicker__year-select:hover {
+  background-color: white;
+}
+
+
+/* --- BUTTON GROUP --- */
+.btn-group button {
+  width: 100%;
+  padding: 12px 0;
+  background: #f3d077 !important;
+  color: white !important;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  transition: 0.3s;
+  cursor: pointer;
+  box-shadow: 0px 4px 12px rgba(92, 108, 255, 0.3);
+}
+
+.btn-group button:hover {
+  background: #f4c538 !important;
+  transform: translateY(-2px);
+}
+
+.btn-group button:active {
+  transform: scale(0.97);
 }

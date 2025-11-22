@@ -105,4 +105,15 @@ class TaskModel
             return ['success' => false, 'message' => $e->getMessage()];
         }
     }
+
+    public function fetchDataForUpdate() {
+        $sql = "SELECT * FROM " . $this->table_name . " WHERE titleTask = ? LIMIT 1";
+        try {
+            $prepareStmt = $this->pdo->prepare($sql);
+            $prepareStmt->execute();
+            return $prepareStmt->fetch(PDO::FETCH_ASSOC);
+        } catch(PDOException){
+            return [];
+        }
+    }
 }

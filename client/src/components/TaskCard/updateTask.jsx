@@ -1,118 +1,59 @@
-import React, { useState } from 'react';
-import { Plus, X, Calendar, Search } from 'lucide-react'; 
-import './updateTask.css';
-
-const TaskInput = ({ onAddTask }) => {
-  const [title, setTitle] = useState('');
-  const [currentSubInput, setCurrentSubInput] = useState('');
-  const [tempSubTasks, setTempSubTasks] = useState([]); // Mảng chứa các task con tạm thời
-
-  // Xử lý khi ấn Enter trong ô Detail
-  const handleKeyDownDetail = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault(); // Chặn xuống dòng mặc định
-      if (!currentSubInput.trim()) return;
-
-      // Thêm vào danh sách tạm
-      const newSub = {
-        id: Date.now(),
-        title: currentSubInput.trim(),
-        completed: false
-      };
-      setTempSubTasks([...tempSubTasks, newSub]);
-      setCurrentSubInput(''); // Xóa trắng ô nhập để nhập cái tiếp theo
-    }
-  };
-
-  // Xóa một task con khi đang nhập (nếu lỡ nhập sai)
-  const removeTempSubTask = (id) => {
-    setTempSubTasks(tempSubTasks.filter(item => item.id !== id));
-  };
-
-  // Submit Task Tổng (Nút Xanh lá)
-  const handleSubmit = () => {
-    if (!title.trim()) {
-      alert("Vui lòng nhập tiêu đề Task chính!");
-      return;
-    }
-
-    // Nếu user nhập nội dung ở detail mà QUÊN ấn Enter, ta vẫn tính nó là 1 subtask cuối
-    let finalSubTasks = [...tempSubTasks];
-    if (currentSubInput.trim()) {
-       finalSubTasks.push({
-         id: Date.now(),
-         title: currentSubInput.trim(),
-         completed: false
-       });
-    }
-
-    // Gửi dữ liệu ra ngoài cho Component cha
-    onAddTask({
-      title,
-      subTasks: finalSubTasks
-    });
-
-    // Reset form
-    setTitle('');
-    setCurrentSubInput('');
-    setTempSubTasks([]);
-  };
-
+import React from "react";
+import DatePicker from "react-datepicker";
+import Button from "../button/Button";
+import "./UpdateTask.css";
+// Import CSS bắt buộc của react-datepicker
+import "react-datepicker/dist/react-datepicker.css";
+export const UpdateTask = ({ selectedDate, onDateChange }) => {
   return (
-    <div className="input-wrapper">
-      <div className="input-row">
-        {/* Ô Title */}
-        <input
-          type="text"
-          className="input-box title-input"
-          placeholder="Tên công việc chính..."
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        
-        {/* Ô Detail thông minh */}
-        <div className="detail-container">
-          <div className="input-with-list">
-             {/* Danh sách các task con đã thêm tạm thời */}
-            <div className="temp-list">
-              {tempSubTasks.map(sub => (
-                <div key={sub.id} className="temp-item">
-                  <span>• {sub.title}</span>
-                  <button onClick={() => removeTempSubTask(sub.id)} className="remove-temp-btn"><X size={12}/></button>
-                </div>
-              ))}
-            </div>
+    <div className="form-update">
+      <div className="content-top">
+        <h1 id="update-title-text">Update your task</h1>
+        <i className="fa-solid fa-pen"></i>
+      </div>
+      <div className="content-body">
+        <div className="update-input-task-name">
+          <label htmlFor="update-input-name">Task Name: </label>
+          <input type="text" name="update-input-name" id="update-input-name" placeholder="Update your name task"/>
+        </div>
+        <div className="update-sub-task">Sub task</div>
+        <div className="update-category-and-deadline">
+          <div className="update-select-wrapper">
+            <select className="update-category-select">
+              <option value="" disabled selected>
+                Category
+              </option>
+              <option value="work">Work</option>
+              <option value="personal">Personal</option>
+              <option value="study">Study</option>
+            </select>
+            <i className="fa-solid fa-chevron-down"></i>
+          </div>
 
-            <input
-              type="text"
-              className="input-box detail-input-real"
-              placeholder={tempSubTasks.length > 0 ? "Nhập tiếp việc nhỏ rồi Enter..." : "Nhập chi tiết việc nhỏ (Ấn Enter để thêm dòng)..."}
-              value={currentSubInput}
-              onChange={(e) => setCurrentSubInput(e.target.value)}
-              onKeyDown={handleKeyDownDetail}
-            />
+          <div className="update-datepicker-wrapper">
+            <p id="update-deadline-text">Deadline:</p>
+            <DatePicker
+              selected={selectedDate}
+              onChange={onDateChange}
+              placeholderText="Click to select date"
+              showTimeSelect
+              dateFormat="dd/MM/yyyy HH:mm"
+              minDate={new Date()} // Không cho chọn ngày trong quá khứ
+              isClearable // Hiển thị nút (x) để xóa ngày đã chọn
+              // Chỉ hiển thị lịch khi bấm vào icon
+              showIcon
+              icon="fa fa-calendar" // Cần cài thêm Font Awesome nếu dùng
+              // Hiển thị tháng và năm để chọn nhanh
+              showYearDropdown
+              showMonthDropdown
+              dropdownMode="select"
+            ></DatePicker>
           </div>
         </div>
-        
-        {/* Nút Add lớn */}
-        <button className="add-btn" onClick={handleSubmit}>
-          <Plus color="white" size={24} />
-        </button>
-      </div>
-
-      {/* Phần filter (Giữ nguyên như cũ) */}
-      <div className="filter-row">
-        <select className="filter-select"><option>By category</option></select>
-        <div className="date-picker-group">
-            <span style={{fontSize: '14px', fontWeight: 'bold', color: '#555'}}>Deadline:</span>
-            <div className="date-input-dummy"><Calendar size={16} /> Select date</div>
-        </div>
-        <div className="search-box">
-             <Search size={16} /> <input type="text" placeholder="Search task..." />
+        <div className="btn-group">
+          <Button>Update</Button>
         </div>
       </div>
     </div>
   );
 };
-
-export default TaskInput;

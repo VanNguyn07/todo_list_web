@@ -1,7 +1,7 @@
 .custom-input {
   /* Đây là style chung cho tất cả input */
   border: 1.5px solid gray;
-  background-color: #e6e9f0; 
+  background-color: #e6e9f0;
   padding: 13px 18px;
   border-radius: 10px;
   font-size: 16px;
@@ -10,108 +10,199 @@
 
 /* Thêm hiệu ứng khi click (focus) vào ô input */
 .custom-input:focus {
-  box-shadow: 0 0 0 2px #5d9c59; 
+  box-shadow: 0 0 0 2px #5d9c59;
   border-color: transparent;
   outline: #5d9c59;
 }
 
 .form-enter-task {
-    display: flex;
-    align-items: center;
-    /* margin-top: 25px; */
-}
-
-.task-title-input {
-    margin-bottom: 18px;
-    width: 195px;
-    margin-right: 21px;
+  display: flex;
 }
 
 /* style for filter task */
 .form-filter-task {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-top: 20px;
-    margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+  margin-bottom: 15px;
 }
 
 .filter-task {
-    /* 1. Tắt giao diện mặc định của trình duyệt */
-    -webkit-appearance: none; /* Cho Safari/Chrome */
-    -moz-appearance: none;    /* Cho Firefox */
-    appearance: none;         /* Tiêu chuẩn */
-    
-    font-size: 1rem;       
-    color: #333;           
-    background-color: #f4f2f0; 
-    border: 1px solid black; 
-    border-radius: 10px;    
-    padding: 10px 30px 10px 12px; 
-    cursor: pointer;
-    min-width: 150px;
+  /* 1. Tắt giao diện mặc định của trình duyệt */
+  -webkit-appearance: none; /* Cho Safari/Chrome */
+  -moz-appearance: none; /* Cho Firefox */
+  appearance: none; /* Tiêu chuẩn */
 
-    /* 3. Tạo mũi tên tùy chỉnh (dùng SVG) */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23555' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 15px center; /* Đặt mũi tên cách lề phải 10px */
-    background-size: 16px 16px;           /* Kích thước mũi tên */
+  font-size: 1rem;
+  color: #333;
+  background-color: #f4f2f0;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 10px 30px 10px 12px;
+  cursor: pointer;
+  min-width: 150px;
 
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  /* 3. Tạo mũi tên tùy chỉnh (dùng SVG) */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23555' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center; /* Đặt mũi tên cách lề phải 10px */
+  background-size: 16px 16px; /* Kích thước mũi tên */
+
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .filter-task:hover {
-    border: 1px solid grey;
+  border: 1px solid grey;
 }
 
 /* style for input search by name */
 .search-task-by-name {
-    position: relative;
-    flex-grow: 1;
+  position: relative;
+  flex-grow: 1;
 }
 
 .search-task-by-name .search-input {
-    padding: 10px 0px 10px 40px;
-    width: 200px;
-    margin-right: 50px;
+  padding: 10px 0px 10px 40px;
+  width: 200px;
+  margin-right: 50px;
 }
 .search-task-by-name i {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    color: #6b6a6a;
-    font-size: 20px;
-    position: absolute;
-    top: 50%;
-    left: 15px;
-    transform: translateY(-50%);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  color: #6b6a6a;
+  font-size: 20px;
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
 }
 
 /* input search and button for search everything */
 .search-and-button-evt {
-    display: inline-flex;
-    margin-right: 290px;
+  display: inline-flex;
+  margin-right: 290px;
 }
 
 .search-everything {
-    position: relative;
-    flex-grow: 1;
+  position: relative;
+  flex-grow: 1;
 }
 
 .input-search-evt {
-    height: 40px;
-    margin: 0px 30px 0px 30px;
-    padding-left: 45px;
+  height: 40px;
+  margin: 0px 30px 0px 30px;
+  padding-left: 45px;
 }
 
 .search-everything i {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    color: #6b6a6a;
-    font-size: 20px;
-    position: absolute;
-    top: 50%;
-    left: 45px;
-    transform: translateY(-50%);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  color: #6b6a6a;
+  font-size: 20px;
+  position: absolute;
+  top: 50%;
+  left: 45px;
+  transform: translateY(-50%);
+}
+
+.detail-container {
+  border-radius: 12px;
+  font-family: sans-serif;
+  flex: 1;
+}
+
+.input-row {
+  padding: 15px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #eee;
+  gap: 15px;
+}
+/* Ô Title đơn giản */
+.task-title-input {
+  width: 180px;
+  height: 45px; /* Chiều cao cố định */
+  padding: 0 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #eef2f6;
+  outline: none;
+}
+
+.input-with-list {
+  background: #eef2f6;
+  border: 1px solid #ccc; /* Viền xanh lá giống ảnh */
+  border-radius: 8px;
+  padding: 5px;
+  min-height: 45px; /* Chiều cao tối thiểu */
+  display: flex;
+  flex-direction: column;
+  background-color: #eef2f6;
+  width: 400px;
+}
+/* Input thật sự (ẩn viền để hòa vào container) */
+.detail-input-real {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 8px 10px;
+  outline: none;
+  font-size: 14px;
+}
+
+.detail-input-real:focus {
+  box-shadow: 0 0 0 2px #5d9c59;
+  border-color: transparent;
+  outline: #5d9c59;
+  border-radius: 5px;
+}
+
+.sub-task-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 0 5px;
+}
+.sub-task-item {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #333;
+  animation: fadeIn 0.2s ease;
+  margin-bottom: 7px;
+}
+
+.remove-temp-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #999;
+  display: flex;
+  padding: 0;
+}
+.remove-temp-btn:hover {
+  color: red;
+}
+.remove-temp-btn:active {
+  transform: scale(0.95);
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

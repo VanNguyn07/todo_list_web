@@ -43,21 +43,7 @@ function Dashboard() {
 
   const { activeView, handleViewChange } = useButtonActive("home");
   // 1. Gọi hook fetch, lấy ra hàm 'refetch'
-  const { tasks, isLoading, error, refetch } = useFetchTasks();
-
-  // const taskDetail = tasks.detailTask;
-  // let subTaskDisplay = [];
-
-  // try {
-  //   subTaskDisplay = JSON.parse(taskDetail);
-  // }catch{
-  //   // Fallback: Nếu dữ liệu cũ là dạng text thường (\n) thì xử lý kiểu cũ để không lỗi app
-  // subTaskDisplay = taskDetail.split('\n').map((line, index) => ({
-  //   id: index,
-  //   title: line,
-  //   completed: false
-  // }));
-  // }
+  const { tasks, refetch } = useFetchTasks();
   const {
     taskForm,
     subTask,
@@ -83,14 +69,7 @@ function Dashboard() {
     circumference,
     progressOffset,
   } = usePomodoro();
-  if (isLoading) {
-    return <div>Đang tải danh sách task...</div>;
-  }
 
-  // 4. Xử lý trạng thái Lỗi
-  if (error) {
-    return <div>Lỗi: {error}</div>;
-  }
   return (
     <>
       <div id="dashboard-page" className="animate__animated animate__fadeIn">
@@ -367,48 +346,53 @@ function Dashboard() {
 
             <div className="container-add-filter-task">
               <div className="form-enter-task">
-                <Input
-                  type="text"
-                  placeholder="Type Title Of Task"
-                  className="task-title-input"
-                  name="titleTask"
-                  id="titleTask"
-                  value={taskForm.titleTask}
-                  onChange={handleInputChange}
-                />
-
-                <div className="detail-container">
-                  <div className="sub-task-list">
-                    {subTask.map((sub) => (
-                      <span key={sub.id}>
-                        • {sub.title}
-                        <Button onClick={() => removeSubTask(sub.id)}>
-                          <X size={12} />
-                        </Button>
-                      </span>
-                    ))}
-                  </div>
-                  <input
+                <div className="input-row">
+                  <Input
                     type="text"
-                    name="detailTask"
-                    id=""
-                    placeholder={ 
-                      subTask.length > 0
-                        ? "Nhập tiếp việc nhỏ rồi Enter..."
-                        : "Nhập chi tiết công việc (Ấn Enter để xuống dòng)..."
-                    }
-                    value={currentDetailInput}
-                    onChange={handleDetailChange}
-                    onKeyDown={handleWhenClickEnter}
+                    placeholder="Main Task Name"
+                    className="task-title-input"
+                    name="titleTask"
+                    id="titleTask"
+                    value={taskForm.titleTask}
+                    onChange={handleInputChange}
                   />
+
+                  <div className="detail-container">
+                    <div className="input-with-list">
+                      <div className="sub-task-list">
+                        {subTask.map((sub) => (
+                          <span key={sub.id} className="sub-task-item">
+                            • {sub.title}
+                            <Button onClick={() => removeSubTask(sub.id)} className="remove-temp-btn">
+                              <X size={13} />
+                            </Button>
+                          </span>
+                        ))}
+                      </div>
+                      <input
+                        type="text"
+                        name="detailTask"
+                        className="detail-input-real"
+                        id=""
+                        placeholder={
+                          subTask.length > 0
+                            ? "Add another sub-task..."
+                            : "Type a sub-task and press Enter..."
+                        }
+                        value={currentDetailInput}
+                        onChange={handleDetailChange}
+                        onKeyDown={handleWhenClickEnter}
+                      />
+                    </div>
+                  </div>
+                  <Button
+                    className="add-task-btn"
+                    id="addTaskButton"
+                    onClick={handleAddTask}
+                  >
+                    <i className="fa-solid fa-plus"></i>
+                  </Button>
                 </div>
-                <Button
-                  className="add-task-btn"
-                  id="addTaskButton"
-                  onClick={handleAddTask}
-                >
-                  <i className="fa-solid fa-plus"></i>
-                </Button>
               </div>
 
               <div className="form-filter-task">

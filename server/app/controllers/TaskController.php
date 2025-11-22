@@ -143,14 +143,18 @@
             exit();
         }
 
-        /**
-         * Xử lý lấy danh sách tasks
-         * Frontend có thể gửi: category, priority để filter
-         */
-        public function handleGetTasks()
+        public function handleGetTasksToUpdate()
         {
-            // TODO: Implement get tasks
-            $this->response['message'] = 'Chức năng lấy danh sách task đang được phát triển.';
+            $result = $this->taskModel->fetchDataForUpdate();
+                if ($result !== null) {
+                // 2. Trả về JSON thành công
+                $this->response['success'] = true;
+                $this->response['tasks'] = $result;
+            } else {
+                // 3. Trả về JSON lỗi
+                $this->response['message'] = 'Lỗi khi lấy danh sách task';
+            }
+
             echo json_encode($this->response);
             exit();
         }

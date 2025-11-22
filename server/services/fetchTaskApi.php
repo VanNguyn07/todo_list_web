@@ -41,6 +41,9 @@ try {
                 $controller->handleSelectAllDataFromDb();
                 break;
 
+            case 'get_task_to_update':
+                $controller->handleGetTasksToUpdate();
+
             default:
                 echo json_encode(['success' => false, 'message' => 'Hành động không hợp lệ.']);
                 exit();
