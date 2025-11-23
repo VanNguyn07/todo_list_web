@@ -1,33 +1,39 @@
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 export const useFetchTaskToUpdate = () => {
   // 1. Chỉ giữ lại state cần thiết
-  const [tasks, setTasks] = useState([]);
+  const [taskToUpdate, setTasks] = useState(null);
+  const [isShowFormUpdate, setIsShowFormUpdate] = useState(false);
 
-  useEffect(() => {
-    // 2. Tạo một hàm async riêng biệt bên trong useEffect
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "/api/fetchTaskApi.php?action=get_task_to_update"
-        );
-        const data = await response.json();
+  const handleUpdate = async (idTask) => {
+    console.log("Received idTask is: ", idTask);
+    try {
+      const response = await fetch(
+        `/api/fetchTaskApi.php?action=get_task_to_update&idTask=${idTask}`
+      );
+      const data = await response.json();
 
-        // 3. Kiểm tra logic success
-        if (data.success) {
-          setTasks(data.tasks);
-        } else {
-          console.error(data.message || "Lỗi API trả về false");
-        }
-      } catch (error) {
-        console.error("Lỗi kết nối hoặc lỗi JSON:", error);
+      if (data.success) {
+        setTasks(data.tasks);
+        setIsShowFormUpdate(true);
+        console.log("Data when success is: ", data.tasks);
+      } else {
+        console.error(data.message || "Lỗi API trả về false");
       }
-    };
+    } catch (er) {
+      console.error("Lỗi kết nối hoặc lỗi JSON:", er);
+    }
+  };
 
-    // 4. Gọi hàm đó ngay lập tức
-    fetchData();
-  }, []); // [] để chỉ chạy 1 lần khi component mount
-
+  const handleCloseFormUpdate = () => {
+    setIsShowFormUpdate(false);
+    setTasks(null);
+  };
   // 5. Trả về dữ liệu
-  return { tasks };
+  return {
+    taskToUpdate,
+    handleUpdate,
+    isShowFormUpdate,
+    handleCloseFormUpdate,
+  };
 };

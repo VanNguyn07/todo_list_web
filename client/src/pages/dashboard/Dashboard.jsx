@@ -22,7 +22,9 @@ import { useButtonActive } from "../../hooks/UseButtonActive";
 import { useFetchTasks } from "../../hooks/useFetchTask";
 import { useDeleteTask } from "../../hooks/useDeleteTask";
 import { usePomodoro } from "../../hooks/usePomodoro";
+import { useFetchTaskToUpdate } from "../../hooks/useFetchTaskToUpdate";
 import { TaskDatePicker } from "../../components/datePicker/TaskDatePicker";
+import { UpdateTask } from "../../components/taskCard/updateTask";
 import Contact from "../contact/contact";
 import "./Dashboard.css";
 import AboutUs from "../aboutUs/aboutUs";
@@ -69,6 +71,13 @@ function Dashboard() {
     circumference,
     progressOffset,
   } = usePomodoro();
+
+  const {
+    handleUpdate,
+    isShowFormUpdate,
+    taskToUpdate,
+    handleCloseFormUpdate,
+  } = useFetchTaskToUpdate();
 
   return (
     <>
@@ -363,7 +372,10 @@ function Dashboard() {
                         {subTask.map((sub) => (
                           <span key={sub.id} className="sub-task-item">
                             • {sub.title}
-                            <Button onClick={() => removeSubTask(sub.id)} className="remove-temp-btn">
+                            <Button
+                              onClick={() => removeSubTask(sub.id)}
+                              className="remove-temp-btn"
+                            >
                               <X size={13} />
                             </Button>
                           </span>
@@ -451,7 +463,10 @@ function Dashboard() {
                         id={`completed-${task.idTask}`}
                       />
 
-                      <Button className="btn-task btn-pen-to-square">
+                      <Button
+                        className="btn-task btn-pen-to-square"
+                        onClick={() => handleUpdate(task.idTask)}
+                      >
                         <i className="fa-solid fa-pen-to-square"></i>
                       </Button>
 
@@ -470,7 +485,6 @@ function Dashboard() {
                 )}
               </div>
             </div>
-
             <div className="calendar-widget-container">
               <CalendarWidget />
             </div>
@@ -615,6 +629,9 @@ function Dashboard() {
               <AboutUs />
             </div>
           </>
+        )}
+        {isShowFormUpdate && (
+          <UpdateTask taskData={taskToUpdate} onClose={handleCloseFormUpdate} />
         )}
       </div>
     </>

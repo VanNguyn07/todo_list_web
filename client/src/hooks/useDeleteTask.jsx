@@ -9,7 +9,7 @@ export const useDeleteTask = ({ onSuccess }) => {
     const [error, setError] = useState(null);
 
     // Hàm handleDelete giờ nằm trong hook
-    const handleDelete = (taskId) => {
+    const handleDelete = (idTask) => {
         // Hỏi xác nhận
         if (!window.confirm("Are your sure want to delete this task?")) {
             return;
@@ -21,7 +21,7 @@ export const useDeleteTask = ({ onSuccess }) => {
         // Chuẩn bị FormData
         const formData = new FormData();
         formData.append('action', 'delete_task');
-        formData.append('taskId', taskId);
+        formData.append('taskId', idTask);
 
         // Gọi API
         fetch('/api/addTaskApi.php', {

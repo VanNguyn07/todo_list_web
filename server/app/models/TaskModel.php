@@ -106,14 +106,14 @@ class TaskModel
         }
     }
 
-    public function fetchDataForUpdate() {
-        $sql = "SELECT * FROM " . $this->table_name . " WHERE titleTask = ? LIMIT 1";
+    public function fetchDataForUpdate($idTask) {
+        $sql = "SELECT * FROM " . $this->table_name . " WHERE idTask = ? LIMIT 1";
         try {
             $prepareStmt = $this->pdo->prepare($sql);
-            $prepareStmt->execute();
+            $prepareStmt->execute([$idTask]);
             return $prepareStmt->fetch(PDO::FETCH_ASSOC);
         } catch(PDOException){
             return [];
         }
     }
-}
+}                                                           

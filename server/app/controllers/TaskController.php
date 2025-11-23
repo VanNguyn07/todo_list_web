@@ -143,9 +143,9 @@
             exit();
         }
 
-        public function handleGetTasksToUpdate()
+        public function handleGetTasksToUpdate($idTask)
         {
-            $result = $this->taskModel->fetchDataForUpdate();
+            $result = $this->taskModel->fetchDataForUpdate($idTask);
                 if ($result !== null) {
                 // 2. Trả về JSON thành công
                 $this->response['success'] = true;

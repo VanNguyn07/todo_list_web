@@ -262,3 +262,40 @@ padding: 10px 13px 10px 30px !important
 .btn-group button:active {
   transform: scale(0.97);
 }
+/* 1. Lớp phủ toàn màn hình (Overlay) */
+.modal-overlay-for-update {
+  position: fixed; /* Cố định, không trôi khi cuộn chuột */
+  top: 0;
+  left: 0;
+  width: 100vw; /* Chiều rộng 100% màn hình */
+  height: 100vh; /* Chiều cao 100% màn hình */
+  background-color: rgba(0, 0, 0, 0.5); /* Màu đen mờ 50% */
+  
+  /* Dùng Flexbox để căn form ra chính giữa màn hình */
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  
+  z-index: 9999; /* Đảm bảo nó nổi lên trên cùng */
+}
+
+/* 2. Style cho cái Form (Khung trắng) */
+.form-update {
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 500px; /* Hoặc độ rộng tùy ý */
+  max-width: 90%; /* Để không bị tràn trên mobile */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Đổ bóng cho đẹp */
+  
+  /* Quan trọng: Để nội dung bên trong không bị ảnh hưởng bởi flex của overlay */
+  position: relative; 
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* (Tùy chọn) Thêm style cho danh sách subtask để đẹp hơn */
+.sub-tasks-item {
+  margin-bottom: 8px;
+}
