@@ -42,24 +42,13 @@ try {
                 $controller->handleInsertTaskIntoDb();
                 break;
             
-            case 'get_nearest_tasks':
-                $controller->handleSelectAllDataFromDb();
-                break;
-                
             case 'update_task':
-                $controller->handleUpdateTask();
+                $updatetaskById = $_POST['idTask'];
+                $controller->handleUpdateTask($updatetaskById);
                 break;
             
             case 'delete_task':
                 $controller->handleDeleteTask();
-                break;
-            
-            case 'get_tasks':
-                $controller->handleGetTasks();
-                break;
-            
-            case 'toggle_complete':
-                $controller->handleToggleComplete();
                 break;
 
             default:

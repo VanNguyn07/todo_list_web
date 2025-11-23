@@ -115,7 +115,7 @@ export const useAddTask = ({ onSuccess }) => {
     console.log("Sending data: ", Object.fromEntries(formData));
 
     try {
-      const API_URL = "/api/addTaskApi.php";
+      const API_URL = "/api/taskApi.php";
       fetch(API_URL, {
         method: "POST",
         body: formData,

@@ -4,7 +4,9 @@ import Button from "../button/Button";
 import "./UpdateTask.css";
 // Import CSS bắt buộc của react-datepicker
 import "react-datepicker/dist/react-datepicker.css";
-export const UpdateTask = ({ taskData, onClose }) => {
+import {useUpdateTask } from "../../hooks/useUpdateTask";
+
+export const UpdateTask = ({ taskData, onClose, onReload }) => {
   //Tạo state nội bộ để quản lý các ô input
   const [formData, setFormData] = useState({
     titleTask: "",
@@ -55,7 +57,7 @@ export const UpdateTask = ({ taskData, onClose }) => {
     if (updatedSubTasks[index].title !== undefined) {
       updatedSubTasks[index].title = newValue;
     } else {
-      updatedSubTasks[index].titleTask = newValue;
+      updatedSubTasks[index].title = newValue;
     }
 
     //Cập nhật lại state chung
@@ -64,6 +66,9 @@ export const UpdateTask = ({ taskData, onClose }) => {
       detailTask: updatedSubTasks,
     });
   };
+
+  const {handleSubmitUpdate} = useUpdateTask();
+
   //onClick={(e) => e.stopPropagation()} vào cái Form (lớp bên trong).
   // Tại sao? Để khi bạn click vào ô input để gõ chữ, sự kiện click đó không "nổi bong bóng" (bubble) ra ngoài Overlay, tránh việc đang gõ thì form bị đóng.
   return (
@@ -151,7 +156,10 @@ export const UpdateTask = ({ taskData, onClose }) => {
             </div>
           </div>
           <div className="btn-group">
-            <Button>Update</Button>
+            <Button onClick={() => handleSubmitUpdate({idTask: taskData.idTask, taskForm: formData}, () => {
+              onClose();
+              if(onReload) onReload();
+            })}>Update</Button>
           </div>
         </div>
       </div>

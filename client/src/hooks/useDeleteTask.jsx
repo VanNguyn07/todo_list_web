@@ -24,7 +24,7 @@ export const useDeleteTask = ({ onSuccess }) => {
         formData.append('taskId', idTask);
 
         // Gọi API
-        fetch('/api/addTaskApi.php', {
+        fetch('/api/taskApi.php', {
             method: 'POST',
             body: formData,
         })

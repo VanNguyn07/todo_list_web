@@ -135,10 +135,24 @@
             exit();
         }
 
-        public function handleUpdateTask()
+        public function handleUpdateTask($idTask)
         {
-            // TODO: Implement update task
-            $this->response['message'] = 'Chức năng cập nhật task đang được phát triển.';
+            $titleTask = trim($_POST['titleTask'] ?? '');
+            $detailTask = trim($_POST['detailTask'] ?? '');
+            $categoryTask = trim($_POST['categoryTask'] ?? '');
+            $deadlineTask = trim($_POST['deadlineTask'] ?? '');
+
+            $result = $this->taskModel->updateTaskById($titleTask, $detailTask, $categoryTask, $deadlineTask, $idTask);
+
+            if ($result !== null) {
+                // 2. Trả về JSON thành công
+                $this->response['success'] = true;
+                $this->response['message'] = "Update your task successfully!";
+            } else {
+                $this->response['success'] = false;
+                $this->response['message'] = 'Lỗi DB: ' . $result['message'];
+            }
+
             echo json_encode($this->response);
             exit();
         }
@@ -146,7 +160,7 @@
         public function handleGetTasksToUpdate($idTask)
         {
             $result = $this->taskModel->fetchDataForUpdate($idTask);
-                if ($result !== null) {
+            if ($result !== null) {
                 // 2. Trả về JSON thành công
                 $this->response['success'] = true;
                 $this->response['tasks'] = $result;

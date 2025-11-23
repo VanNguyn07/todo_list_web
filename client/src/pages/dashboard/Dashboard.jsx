@@ -5,7 +5,6 @@ import Header from "../../components/header/Header";
 import Input from "../../components/input/Input";
 import TaskCard from "../../components/taskCard/TaskCard";
 import { RenderSubTasks } from "../../components/taskCard/renderSubTasks";
-import Textarea from "../../components/textArea/Textarea";
 import Logo from "../../assets/images/logo.png";
 import Pomodoro from "../../components/pomodoro/Pomodoro";
 import StreakWidget from "../../components/streak/StreakWidget";
@@ -17,12 +16,12 @@ import { CalendarWidget } from "../../components/calendarWidget/CalendarWidget";
 import mockTasks from "../../components/utils/MockDataChart";
 import DUMMY_GOALS from "../../components/utils/MockDataProcess";
 import { ProcessGoal } from "../../components/processGoal/ProcessGoal";
-import { useAddTask } from "../../hooks/UseAddTask";
+import { useAddTask } from "../../hooks/useAddTask";
 import { useButtonActive } from "../../hooks/UseButtonActive";
 import { useFetchTasks } from "../../hooks/useFetchTask";
 import { useDeleteTask } from "../../hooks/useDeleteTask";
 import { usePomodoro } from "../../hooks/usePomodoro";
-import { useFetchTaskToUpdate } from "../../hooks/useFetchTaskToUpdate";
+import { useFetchTaskOnUpdateForm } from "../../hooks/useFetchTaskOnUpdateForm";
 import { TaskDatePicker } from "../../components/datePicker/TaskDatePicker";
 import { UpdateTask } from "../../components/taskCard/updateTask";
 import Contact from "../contact/contact";
@@ -77,7 +76,7 @@ function Dashboard() {
     isShowFormUpdate,
     taskToUpdate,
     handleCloseFormUpdate,
-  } = useFetchTaskToUpdate();
+  } = useFetchTaskOnUpdateForm();
 
   return (
     <>
@@ -631,7 +630,7 @@ function Dashboard() {
           </>
         )}
         {isShowFormUpdate && (
-          <UpdateTask taskData={taskToUpdate} onClose={handleCloseFormUpdate} />
+          <UpdateTask taskData={taskToUpdate} onClose={handleCloseFormUpdate} onReload={refetch}/>
         )}
       </div>
     </>

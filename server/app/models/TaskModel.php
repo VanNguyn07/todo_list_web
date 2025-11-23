@@ -106,14 +106,42 @@ class TaskModel
         }
     }
 
-    public function fetchDataForUpdate($idTask) {
+    public function fetchDataForUpdate($idTask)
+    {
         $sql = "SELECT * FROM " . $this->table_name . " WHERE idTask = ? LIMIT 1";
         try {
             $prepareStmt = $this->pdo->prepare($sql);
             $prepareStmt->execute([$idTask]);
             return $prepareStmt->fetch(PDO::FETCH_ASSOC);
-        } catch(PDOException){
+        } catch (PDOException) {
             return [];
         }
     }
-}                                                           
+
+    public function updateTaskById($titleTask, $detailTask, $categoryTask, $deadlineTask, $idTask)
+    {
+        // Sửa lại chuỗi SQL cho chuẩn
+        $sql = "UPDATE " . $this->table_name . " SET 
+            titleTask = ?, 
+            detailTask = ?,      
+            categoryTask = ?, 
+            deadlineTask = ?    
+            WHERE idTask = ?";
+
+        try {
+            $prepareStmt = $this->pdo->prepare($sql);
+            // Execute trả về true/false
+            $isSuccess = $prepareStmt->execute([$titleTask, $detailTask, $categoryTask, $deadlineTask, $idTask]);
+
+            if ($isSuccess) {
+                return ['success' => true, 'message' => 'Update successfully!'];
+            } else {
+                return ['success' => false, 'message' => 'Execute failed!'];
+            }
+        } catch (PDOException $e) {
+            // Ghi log lỗi ra để debug
+            error_log("SQL Error: " . $e->getMessage());
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+}
