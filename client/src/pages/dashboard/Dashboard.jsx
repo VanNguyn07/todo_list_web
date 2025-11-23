@@ -81,7 +81,7 @@ function Dashboard() {
 
   return (
     <>
-      <div id="dashboard-page" className="animate__animated animate__fadeIn">
+      <div id="dashboard-page">
         <Header>
           <nav className="sidebar-nav">
             <div className="logo-header-page">
@@ -348,7 +348,7 @@ function Dashboard() {
         </Header>
 
         <Body>
-          <div className="parent">
+          <div className="parent animate__animated animate__fadeIn">
             <div className="text-hello-user">
               <h1>Hello..., Start your planning today</h1>
             </div>
