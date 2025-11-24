@@ -367,6 +367,7 @@ function Dashboard() {
                       className="task-title-input"
                       name="titleTask"
                       id="titleTask"
+                      spellCheck="flase"
                       value={taskForm.titleTask}
                       onChange={handleInputChange}
                     />
@@ -391,6 +392,7 @@ function Dashboard() {
                           name="detailTask"
                           className="detail-input-real"
                           id=""
+                          spellCheck="false"
                           placeholder={
                             subTask.length > 0
                               ? "Add another sub-task..."
@@ -616,7 +618,7 @@ function Dashboard() {
           {/* ======================================================== */}
 
           {activeView === "task" && (
-            <div className="task-page-wrapper animate__animated animate__fadeIn">
+            <div className="task-page-wrapper">
               <Task />
             </div>
           )}
