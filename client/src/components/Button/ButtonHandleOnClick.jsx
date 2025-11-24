@@ -3,7 +3,7 @@ const handleHomeClick = () => {
     console.log("Clicked button Home")
 }
 const handleTaskClick = () => {
-    console.log("Clicked button Task")
+    console.log("Clicked button Task");
 }
 const handlePomodoroClick = () => {
     console.log("Clicked button Pomodoro")

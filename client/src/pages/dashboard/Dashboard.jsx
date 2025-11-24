@@ -25,6 +25,7 @@ import { useFetchTaskOnUpdateForm } from "../../hooks/useFetchTaskOnUpdateForm";
 import { TaskDatePicker } from "../../components/datePicker/TaskDatePicker";
 import { UpdateTask } from "../../components/taskCard/updateTask";
 import Contact from "../contact/contact";
+import { Task } from "../tasks/Task";
 import "./Dashboard.css";
 import AboutUs from "../aboutUs/aboutUs";
 import { X } from "lucide-react";
@@ -42,7 +43,8 @@ function Dashboard() {
     (a, b) => new Date(a.deadline) - new Date(b.deadline)
   );
 
-  const { activeView, handleViewChange } = useButtonActive("home");
+  const { activeView, handleTransitionPage } = useButtonActive("home");
+  const [activeModal, setActiveMoal] = useState(null);
   // 1. Gọi hook fetch, lấy ra hàm 'refetch'
   const { tasks, refetch } = useFetchTasks();
   const {
@@ -93,7 +95,7 @@ function Dashboard() {
                 activeView === "home" ? "active" : ""
               }`}
               id="homeButton"
-              onClick={() => handleViewChange("home")}
+              onClick={() => handleTransitionPage("home")}
             >
               <i className="fa-solid fa-house"></i>
               <span>Home</span>
@@ -104,7 +106,7 @@ function Dashboard() {
                 activeView === "task" ? "active" : ""
               }`}
               id="taskButton"
-              onClick={() => handleViewChange("task")}
+              onClick={() => handleTransitionPage("task")}
             >
               <i className="fa-solid fa-list-check"></i>
               <span>Tasks</span>
@@ -115,7 +117,7 @@ function Dashboard() {
                 activeView === "pomodoro" ? "active" : ""
               }`}
               id="pomodoroButton"
-              onClick={() => handleViewChange("pomodoro")}
+              onClick={() => handleTransitionPage("pomodoro")}
             >
               <i className="fa-solid fa-hourglass-half"></i>
               <span>Pomodoro</span>
@@ -126,7 +128,7 @@ function Dashboard() {
                 activeView === "analytics" ? "active" : ""
               }`}
               id="analyticsButton"
-              onClick={() => handleViewChange("analytics")}
+              onClick={() => handleTransitionPage("analytics")}
             >
               <i className="fa-solid fa-chart-pie"></i>
               <span>Analytics</span>
@@ -137,7 +139,7 @@ function Dashboard() {
                 activeView === "quick-notes" ? "active" : ""
               }`}
               id="quickNotesButton"
-              onClick={() => handleViewChange("quick-notes")}
+              onClick={() => handleTransitionPage("quick-notes")}
             >
               <i className="fa-solid fa-note-sticky"></i>
               <span>Quick Notes</span>
@@ -148,7 +150,7 @@ function Dashboard() {
                 activeView === "habit-tracker" ? "active" : ""
               }`}
               id="habitTrackerButton"
-              onClick={() => handleViewChange("habit-tracker")}
+              onClick={() => handleTransitionPage("habit-tracker")}
             >
               <i className="fa-solid fa-calendar-check"></i>
               <span>Habit Tracker</span>
@@ -159,7 +161,7 @@ function Dashboard() {
                 activeView === "calendar" ? "active" : ""
               }`}
               id="calendarButton"
-              onClick={() => handleViewChange("calendar")}
+              onClick={() => handleTransitionPage("calendar")}
             >
               <i className="fa-solid fa-calendar-days"></i>
               <span>Calendar</span>
@@ -170,7 +172,7 @@ function Dashboard() {
                 activeView === "settings" ? "active" : ""
               }`}
               id="settingsButton"
-              onClick={() => handleViewChange("settings")}
+              onClick={() => handleTransitionPage("settings")}
             >
               <i className="fa-solid fa-gear"></i>
               <span>Settings</span>
@@ -312,7 +314,7 @@ function Dashboard() {
 
                   <Button
                     className="btn-modern btn-contract"
-                    onClick={() => handleViewChange("contact")}
+                    onClick={() => setActiveMoal("contact")}
                   >
                     <i className="fa-solid fa-file-signature"></i>
                     <span>Contact</span>
@@ -320,7 +322,7 @@ function Dashboard() {
 
                   <Button
                     className="btn-modern btn-aboutme"
-                    onClick={() => handleViewChange("aboutus")}
+                    onClick={() => setActiveMoal("aboutus")}
                   >
                     <i className="fa-solid fa-circle-info"></i>
                     <span>About us</span>
@@ -347,270 +349,285 @@ function Dashboard() {
         </Header>
 
         <Body>
-          <div className="parent animate__animated animate__fadeIn">
-            <div className="text-hello-user">
-              <h1>Hello..., Start your planning today</h1>
-            </div>
+          {/* ======================================================== */}
+          {/* KHU VỰC 1: TRANG HOME      */}
+          {/* ======================================================== */}
+          {activeView === "home" && (
+            <div className="parent animate__animated animate__fadeIn">
+              <div className="text-hello-user">
+                <h1>Hello..., Start your planning today</h1>
+              </div>
 
-            <div className="container-add-filter-task">
-              <div className="form-enter-task">
-                <div className="input-row">
-                  <Input
-                    type="text"
-                    placeholder="Main Task Name"
-                    className="task-title-input"
-                    name="titleTask"
-                    id="titleTask"
-                    value={taskForm.titleTask}
-                    onChange={handleInputChange}
+              <div className="container-add-filter-task">
+                <div className="form-enter-task">
+                  <div className="input-row">
+                    <Input
+                      type="text"
+                      placeholder="Main Task Name"
+                      className="task-title-input"
+                      name="titleTask"
+                      id="titleTask"
+                      value={taskForm.titleTask}
+                      onChange={handleInputChange}
+                    />
+
+                    <div className="detail-container">
+                      <div className="input-with-list">
+                        <div className="sub-task-list">
+                          {subTask.map((sub) => (
+                            <span key={sub.id} className="sub-task-item">
+                              • {sub.title}
+                              <Button
+                                onClick={() => removeSubTask(sub.id)}
+                                className="remove-temp-btn"
+                              >
+                                <X size={13} />
+                              </Button>
+                            </span>
+                          ))}
+                        </div>
+                        <input
+                          type="text"
+                          name="detailTask"
+                          className="detail-input-real"
+                          id=""
+                          placeholder={
+                            subTask.length > 0
+                              ? "Add another sub-task..."
+                              : "Type a sub-task and press Enter..."
+                          }
+                          value={currentDetailInput}
+                          onChange={handleDetailChange}
+                          onKeyDown={handleWhenClickEnter}
+                        />
+                      </div>
+                    </div>
+                    <Button
+                      className="add-task-btn"
+                      id="addTaskButton"
+                      onClick={handleAddTask}
+                    >
+                      <i className="fa-solid fa-plus"></i>
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="form-filter-task">
+                  <select
+                    className="filter-task"
+                    id="categoryTask"
+                    name="categoryTask"
+                    value={taskForm.categoryTask} // <-- Kết nối
+                    onChange={handleInputChange} // <-- Kết nối
+                  >
+                    <option value="" disabled>
+                      By category
+                    </option>
+                    <option value="work">Work</option>
+                    <option value="personal">Personal</option>
+                    <option value="study">Study</option>
+                  </select>
+
+                  <TaskDatePicker
+                    selectedDate={taskForm.deadlineTask}
+                    onDateChange={handleDateChange}
                   />
 
-                  <div className="detail-container">
-                    <div className="input-with-list">
-                      <div className="sub-task-list">
-                        {subTask.map((sub) => (
-                          <span key={sub.id} className="sub-task-item">
-                            • {sub.title}
-                            <Button
-                              onClick={() => removeSubTask(sub.id)}
-                              className="remove-temp-btn"
-                            >
-                              <X size={13} />
-                            </Button>
-                          </span>
-                        ))}
-                      </div>
-                      <input
-                        type="text"
-                        name="detailTask"
-                        className="detail-input-real"
-                        id=""
-                        placeholder={
-                          subTask.length > 0
-                            ? "Add another sub-task..."
-                            : "Type a sub-task and press Enter..."
-                        }
-                        value={currentDetailInput}
-                        onChange={handleDetailChange}
-                        onKeyDown={handleWhenClickEnter}
-                      />
-                    </div>
+                  <div className="search-task-by-name">
+                    <Input
+                      type="text"
+                      placeholder="Search task by name"
+                      className="search-input"
+                    />
+                    <i className="fa-solid fa-magnifying-glass search-icon"></i>
                   </div>
-                  <Button
-                    className="add-task-btn"
-                    id="addTaskButton"
-                    onClick={handleAddTask}
-                  >
-                    <i className="fa-solid fa-plus"></i>
-                  </Button>
                 </div>
               </div>
 
-              <div className="form-filter-task">
-                <select
-                  className="filter-task"
-                  id="categoryTask"
-                  name="categoryTask"
-                  value={taskForm.categoryTask} // <-- Kết nối
-                  onChange={handleInputChange} // <-- Kết nối
-                >
-                  <option value="" disabled>
-                    By category
-                  </option>
-                  <option value="work">Work</option>
-                  <option value="personal">Personal</option>
-                  <option value="study">Study</option>
-                </select>
+              <div className="chart-widget-container">
+                <WeeklyProcessChart allTasks={mockTasks} />
+              </div>
 
-                <TaskDatePicker
-                  selectedDate={taskForm.deadlineTask}
-                  onDateChange={handleDateChange}
+              <div className="container-task">
+                <div className="subcontainer-task">
+                  {tasks.map((task, index) => (
+                    <TaskCard
+                      key={task.idTask}
+                      className={`content-task-${index + 1}`}
+                    >
+                      <div className="content-left">
+                        <h2>{task.titleTask}</h2>
+                        <p>{RenderSubTasks(task.detailTask)}</p>
+                        <h3>Deadline Task: {task.deadlineTask}</h3>
+                      </div>
+
+                      <div className="content-right">
+                        <input
+                          type="checkbox"
+                          name="completed"
+                          id={`completed-${task.idTask}`}
+                        />
+
+                        <Button
+                          className="btn-task btn-pen-to-square"
+                          onClick={() => handleUpdate(task.idTask)}
+                        >
+                          <i className="fa-solid fa-pen-to-square"></i>
+                        </Button>
+
+                        <Button
+                          className="btn-task btn-trash"
+                          onClick={() => handleDelete(task.idTask)}
+                          disabled={isDeleting}
+                        >
+                          <i className="fa-solid fa-trash"></i>
+                        </Button>
+                      </div>
+                    </TaskCard>
+                  ))}
+                  {tasks.length === 0 && (
+                    <p>Tuyệt vời! Bạn không có task nào sắp tới hạn.</p>
+                  )}
+                </div>
+              </div>
+              <div className="calendar-widget-container">
+                <CalendarWidget />
+              </div>
+
+              <Pomodoro className="pomodoro-focus-widget">
+                <div className="title-for-pomodoro-widget">
+                  <i className="fa-regular fa-clock"></i>
+                  <p id="title-pomodoro-focus">
+                    {mode === "FOCUS" ? "Pomodoro Focus" : "Short Break"}
+                  </p>
+                </div>
+                <div className="text-current-task">
+                  <p>CURRENT TASK</p>
+                  <p id="name-of-current-task">
+                    Finish UI Design for Analytics Page
+                  </p>
+                </div>
+
+                <div className="pomodoro-widget-container">
+                  <div className="pomodoro-timer">
+                    <svg
+                      className="timer-svg"
+                      width="150"
+                      height="150"
+                      viewBox="0 0 100 100"
+                    >
+                      <circle
+                        className="timer-bg"
+                        cx="50"
+                        cy="50"
+                        r="45"
+                      ></circle>
+
+                      <circle
+                        className="timer-progress"
+                        cx="50"
+                        cy="50"
+                        r="45"
+                        style={{
+                          strokeDasharray: circumference,
+                          strokeDashoffset: progressOffset,
+                          transition: "stroke-dashoffset 1s linear",
+                        }}
+                      ></circle>
+                    </svg>
+
+                    <div className="timer-text" id="pomodoro-time">
+                      {formatTime()}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="btn-container">
+                  {!isActive ? (
+                    <Button
+                      className="btn-control-pomodoro btn-start"
+                      onClick={startPlay}
+                    >
+                      <i className="fa-solid fa-play start-icon"></i>
+                      <span className="tooltip-text">Start</span>
+                    </Button>
+                  ) : (
+                    <Button
+                      className="btn-control-pomodoro btn-pause"
+                      onClick={pausePlay}
+                    >
+                      <i className="fa-solid fa-pause pause-icon"></i>
+                      <span className="tooltip-text">Pause</span>
+                    </Button>
+                  )}
+
+                  <Button
+                    className="btn-control-pomodoro btn-skip"
+                    onClick={skipPlay}
+                  >
+                    <i className="fa-solid fa-forward skip-icon"></i>
+                    <span className="tooltip-text">Skip</span>
+                  </Button>
+
+                  <Button
+                    className="btn-control-pomodoro btn-reset"
+                    onClick={resetTimer}
+                  >
+                    <i className="fa-solid fa-rotate-left reset-icon"></i>
+                    <span className="tooltip-text">Reset</span>
+                  </Button>
+                </div>
+              </Pomodoro>
+
+              <div className="container-task-widget">
+                <CompeledTask
+                  className="task-widget compeleted-task"
+                  title="Compeled Task"
+                  compeledTaskCount={currentCompeledTaskCount}
                 />
 
-                <div className="search-task-by-name">
-                  <Input
-                    type="text"
-                    placeholder="Search task by name"
-                    className="search-input"
-                  />
-                  <i className="fa-solid fa-magnifying-glass search-icon"></i>
-                </div>
+                <PendingTask
+                  className="task-widget pending-task"
+                  title="Pending Task"
+                  pendingTaskCount={currentPendingTaskCount}
+                />
               </div>
-            </div>
 
-            <div className="chart-widget-container">
-              <WeeklyProcessChart allTasks={mockTasks} />
-            </div>
+              <div className="streak-widget-container">
+                <StreakWidget
+                  title="Your Streak"
+                  streakCount={currentStreakCount}
+                />
+              </div>
 
-            <div className="container-task">
-              <div className="subcontainer-task">
-                {tasks.map((task, index) => (
-                  <TaskCard
-                    key={task.idTask}
-                    className={`content-task-${index + 1}`}
-                  >
-                    <div className="content-left">
-                      <h2>{task.titleTask}</h2>
-                      <p>{RenderSubTasks(task.detailTask)}</p>
-                      <h3>Deadline Task: {task.deadlineTask}</h3>
-                    </div>
+              <QuickNotesWidget className="contentNotes" />
 
-                    <div className="content-right">
-                      <input
-                        type="checkbox"
-                        name="completed"
-                        id={`completed-${task.idTask}`}
-                      />
-
-                      <Button
-                        className="btn-task btn-pen-to-square"
-                        onClick={() => handleUpdate(task.idTask)}
-                      >
-                        <i className="fa-solid fa-pen-to-square"></i>
-                      </Button>
-
-                      <Button
-                        className="btn-task btn-trash"
-                        onClick={() => handleDelete(task.idTask)}
-                        disabled={isDeleting}
-                      >
-                        <i className="fa-solid fa-trash"></i>
-                      </Button>
-                    </div>
-                  </TaskCard>
+              <div className="process-goal-container">
+                <h3>Target due date</h3>
+                {sortedGoals.map((item) => (
+                  <ProcessGoal key={item.id} {...item} />
                 ))}
-                {tasks.length === 0 && (
-                  <p>Tuyệt vời! Bạn không có task nào sắp tới hạn.</p>
-                )}
               </div>
             </div>
-            <div className="calendar-widget-container">
-              <CalendarWidget />
+          )}
+
+          {/* ======================================================== */}
+          {/* KHU VỰC 2: TRANG TASK                                    */}
+          {/* ======================================================== */}
+
+          {activeView === "task" && (
+            <div className="task-page-wrapper animate__animated animate__fadeIn">
+              <Task />
             </div>
-
-            <Pomodoro className="pomodoro-focus-widget">
-              <div className="title-for-pomodoro-widget">
-                <i className="fa-regular fa-clock"></i>
-                <p id="title-pomodoro-focus">
-                  {mode === "FOCUS" ? "Pomodoro Focus" : "Short Break"}
-                </p>
-              </div>
-              <div className="text-current-task">
-                <p>CURRENT TASK</p>
-                <p id="name-of-current-task">
-                  Finish UI Design for Analytics Page
-                </p>
-              </div>
-
-              <div className="pomodoro-widget-container">
-                <div className="pomodoro-timer">
-                  <svg
-                    className="timer-svg"
-                    width="150"
-                    height="150"
-                    viewBox="0 0 100 100"
-                  >
-                    <circle
-                      className="timer-bg"
-                      cx="50"
-                      cy="50"
-                      r="45"
-                    ></circle>
-
-                    <circle
-                      className="timer-progress"
-                      cx="50"
-                      cy="50"
-                      r="45"
-                      style={{
-                        strokeDasharray: circumference,
-                        strokeDashoffset: progressOffset,
-                        transition: "stroke-dashoffset 1s linear",
-                      }}
-                    ></circle>
-                  </svg>
-
-                  <div className="timer-text" id="pomodoro-time">
-                    {formatTime()}
-                  </div>
-                </div>
-              </div>
-
-              <div className="btn-container">
-                {!isActive ? (
-                  <Button
-                    className="btn-control-pomodoro btn-start"
-                    onClick={startPlay}
-                  >
-                    <i className="fa-solid fa-play start-icon"></i>
-                    <span className="tooltip-text">Start</span>
-                  </Button>
-                ) : (
-                  <Button
-                    className="btn-control-pomodoro btn-pause"
-                    onClick={pausePlay}
-                  >
-                    <i className="fa-solid fa-pause pause-icon"></i>
-                    <span className="tooltip-text">Pause</span>
-                  </Button>
-                )}
-
-                <Button
-                  className="btn-control-pomodoro btn-skip"
-                  onClick={skipPlay}
-                >
-                  <i className="fa-solid fa-forward skip-icon"></i>
-                  <span className="tooltip-text">Skip</span>
-                </Button>
-
-                <Button
-                  className="btn-control-pomodoro btn-reset"
-                  onClick={resetTimer}
-                >
-                  <i className="fa-solid fa-rotate-left reset-icon"></i>
-                  <span className="tooltip-text">Reset</span>
-                </Button>
-              </div>
-            </Pomodoro>
-
-            <div className="container-task-widget">
-              <CompeledTask
-                className="task-widget compeleted-task"
-                title="Compeled Task"
-                compeledTaskCount={currentCompeledTaskCount}
-              />
-
-              <PendingTask
-                className="task-widget pending-task"
-                title="Pending Task"
-                pendingTaskCount={currentPendingTaskCount}
-              />
-            </div>
-
-            <div className="streak-widget-container">
-              <StreakWidget
-                title="Your Streak"
-                streakCount={currentStreakCount}
-              />
-            </div>
-
-            <QuickNotesWidget className="contentNotes" />
-
-            <div className="process-goal-container">
-              <h3>Target due date</h3>
-              {sortedGoals.map((item) => (
-                <ProcessGoal key={item.id} {...item} />
-              ))}
-            </div>
-          </div>
+          )}
         </Body>
 
         {/* Contact overlay + backdrop */}
-        {activeView === "contact" && (
+        {activeModal === "contact" && (
           <>
             <div
               className="modal-backdrop"
-              onClick={() => handleViewChange("home")}
+              onClick={() => setActiveMoal(null)}
             />
             <div className="contact-overlay" role="dialog" aria-modal="true">
               <Contact />
@@ -618,11 +635,11 @@ function Dashboard() {
           </>
         )}
 
-        {activeView === "aboutus" && (
+        {activeModal === "aboutus" && (
           <>
             <div
               className="modal-backdrop"
-              onClick={() => handleViewChange("home")}
+              onClick={() => setActiveMoal(null)}
             />
             <div className="contact-overlay" role="dialog" aria-modal="true">
               <AboutUs />
@@ -630,7 +647,11 @@ function Dashboard() {
           </>
         )}
         {isShowFormUpdate && (
-          <UpdateTask taskData={taskToUpdate} onClose={handleCloseFormUpdate} onReload={refetch}/>
+          <UpdateTask
+            taskData={taskToUpdate}
+            onClose={handleCloseFormUpdate}
+            onReload={refetch}
+          />
         )}
       </div>
     </>

@@ -30,6 +30,7 @@ html, body, #root {
     background-color: #e9e6e5;
     padding: 10px;
     box-sizing: border-box;
+    z-index: 999 !important;
 }
 
 .text-hello-user {

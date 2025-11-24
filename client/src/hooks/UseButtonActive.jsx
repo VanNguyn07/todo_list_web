@@ -4,7 +4,8 @@ import {buttonClickHandles} from "../components/button/ButtonHandleOnClick";
 export const useButtonActive = (defaultView = "home") => {
   const [activeView, setActiveView] = useState(defaultView);
 
-  const handleViewChange = (viewName) => {
+  const handleTransitionPage = (viewName) => {
+    // kiểm tra danh sách trong buttonClickHandles có hàm nào tên là home không 
     if(buttonClickHandles[viewName]){
       buttonClickHandles[viewName]();
     }else {
@@ -14,6 +15,6 @@ export const useButtonActive = (defaultView = "home") => {
   };
   return {
     activeView,
-    handleViewChange
+    handleTransitionPage
   };
 };
