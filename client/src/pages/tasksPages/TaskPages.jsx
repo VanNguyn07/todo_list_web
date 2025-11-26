@@ -22,7 +22,7 @@ import {
   CheckSquare,
   Clock,
 } from "lucide-react";
-import "./Task.css";
+import "./TaskPages.css";
 
 //Cấu hình số cột: default là 2 cột (theo ý bạn)
 const breakpointColumnsObj = {
@@ -50,7 +50,7 @@ const DUMMY_TASKS = [
     id: 2,
     title: "Thiết kế giao diện Landing Page",
     description: "Sử dụng tông màu Cream và Gold, bố cục hiện đại.",
-    category: "Work",
+    category: "Study",
     deadline: "2023-11-25",
     completed: false,
     expanded: true,
@@ -89,7 +89,7 @@ const DUMMY_TASKS = [
   },
 ];
 
-export const Task = () => {
+export const TaskPages = () => {
   // State giả để test giao diện (Gõ phím, đóng mở modal)
   const [tasks, setTasks] = useState(DUMMY_TASKS);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -182,7 +182,7 @@ export const Task = () => {
                 <i className="fa-solid fa-list-check"></i>
                 <h1>My Task Garden</h1>
               </div>
-              <p>Quản lý công việc nhẹ nhàng & hiệu quả.</p>
+              <p>Manage work easily and efficiently.</p>
             </div>
           </div>
 
@@ -336,7 +336,7 @@ export const Task = () => {
                     ) : (
                       <ChevronDown size={20} />
                     )}
-                    <span className="tooltip-text">
+                    <span className="tooltip-text-for-task">
                       {task.expanded ? "Thu gọn" : "Xem chi tiết"}
                     </span>
                   </button>

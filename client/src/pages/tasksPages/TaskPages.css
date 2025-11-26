@@ -16,8 +16,8 @@
   --cat-work-text: #0369a1; /* Blue */
   --cat-personal-bg: #dcfce7;
   --cat-personal-text: #15803d; /* Green */
-  --cat-study-bg: #f3e8ff;
-  --cat-study-text: #7e22ce; /* Purple */
+  --cat-study-bg: #ffeee8;
+  --cat-study-text: orange; /* Purple */
 
   --success: #10b981;
   --danger: #ef4444;
@@ -31,6 +31,7 @@
   min-height: 100vh;
   height: auto;
   box-sizing: border-box;
+  animation: fadein 0.4s ease-out;
 }
 
 /* --- HEADER SECTION --- */
@@ -44,6 +45,7 @@
   justify-content: center;
   align-items: center;
   gap: 20px;
+  /* text-shadow:  5px 8px 5px var(--text-dark); */
 }
 
 .header-title i {
@@ -59,6 +61,7 @@
   margin: 5px 0 0;
   color: var(--text-light);
   text-align: center;
+  font-size: 16px;
 }
 
 /* Plant Widget */
@@ -72,6 +75,11 @@
   gap: 5px;
   border: 1px solid var(--primary);
   box-shadow: 0 4px 10px rgba(224, 184, 128, 0.15);
+  transition: transform 0.2s;
+}
+
+.plant-widget:hover {
+  transform: translateY(-3px);
 }
 .plant-text-gardent {
   font-size: 20px;
@@ -116,7 +124,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 50px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 .stat-card {
   background: white;
@@ -162,7 +170,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 /* Base style */
@@ -300,7 +308,7 @@
 }
 .task-title-row {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 10px;
   margin-bottom: 6px;
   flex-wrap: wrap;
@@ -317,10 +325,14 @@
 
 /* Category Badges */
 .category-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 0.75rem;
   padding: 3px 10px;
   border-radius: 20px;
   font-weight: 600;
+  width: 60px;
 }
 .category-badge.work {
   background: var(--cat-work-bg);
@@ -391,7 +403,7 @@
 }
 
 /* Tooltip mặc định ẩn đi */
-.tooltip-text {
+.tooltip-text-for-task {
   visibility: hidden;
   width: 90px;
   background-color: rgba(0, 0, 0, 0.8);
@@ -411,7 +423,7 @@
   z-index: 10;
 }
 
-.tooltip-text::after {
+.tooltip-text-for-task::after {
   content: "";
   position: absolute;
   top: auto;
@@ -424,7 +436,7 @@
 }
 
 /* Khi hover vào button thì hiện tooltip lên */
-.tooltip-container:hover .tooltip-text {
+.tooltip-container:hover .tooltip-text-for-task {
   visibility: visible;
   opacity: 1;
   transform: translateX(-50%) translateY(5px);
@@ -792,6 +804,16 @@
   to {
     transform: scale(1);
     opacity: 1;
+  }
+}
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 @keyframes bounce {

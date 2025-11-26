@@ -25,7 +25,9 @@ import { useFetchTaskOnUpdateForm } from "../../hooks/useFetchTaskOnUpdateForm";
 import { TaskDatePicker } from "../../components/datePicker/TaskDatePicker";
 import { UpdateTask } from "../../components/taskCard/updateTask";
 import Contact from "../contact/contact";
-import { Task } from "../tasks/Task";
+import { TaskPages } from "../tasksPages/TaskPages";
+import { PomodoroPages } from "../pomodoroPages/PomodoroPages";
+import { AnalyticsPages } from "../analyticsPages/AnalyticsPages";
 import "./Dashboard.css";
 import AboutUs from "../aboutUs/aboutUs";
 import { X } from "lucide-react";
@@ -545,6 +547,14 @@ function Dashboard() {
                 </div>
 
                 <div className="btn-container">
+                  <Button
+                    className="btn-control-pomodoro btn-skip"
+                    onClick={skipPlay}
+                  >
+                    <i className="fa-solid fa-forward skip-icon"></i>
+                    <span className="tooltip-text">Skip</span>
+                  </Button>
+                  
                   {!isActive ? (
                     <Button
                       className="btn-control-pomodoro btn-start"
@@ -562,14 +572,6 @@ function Dashboard() {
                       <span className="tooltip-text">Pause</span>
                     </Button>
                   )}
-
-                  <Button
-                    className="btn-control-pomodoro btn-skip"
-                    onClick={skipPlay}
-                  >
-                    <i className="fa-solid fa-forward skip-icon"></i>
-                    <span className="tooltip-text">Skip</span>
-                  </Button>
 
                   <Button
                     className="btn-control-pomodoro btn-reset"
@@ -618,10 +620,29 @@ function Dashboard() {
           {/* ======================================================== */}
 
           {activeView === "task" && (
-            <div className="task-page-wrapper">
-              <Task />
+            <div className="task-page-wrapper ">
+              <TaskPages />
             </div>
           )}
+
+          {/* ======================================================== */}
+          {/* KHU VỰC 2: TRANG POMODORO                                    */}
+          {/* ======================================================== */}
+          {activeView === "pomodoro" && (
+            <div className="pomodoro-page-wrapper">
+              <PomodoroPages />
+            </div>
+          )}
+
+          {/* ======================================================== */}
+          {/* KHU VỰC 2: TRANG ANALYTICS                                    */}
+          {/* ======================================================== */}
+          {activeView === "analytics" && (
+            <div className="analytics-page-wrapper">
+              <AnalyticsPages />
+            </div>
+          )}
+
         </Body>
 
         {/* Contact overlay + backdrop */}

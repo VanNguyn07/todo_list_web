@@ -738,3 +738,15 @@
 .btn-save-note:active {
   transform: scale(0.95);
 }
+.btn-reset-stats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid var(--border-color);
+  gap: 5px;
+  font-size: 16px;
+}
+
+.btn-reset-stats:active {
+  transform: scale(0.98);
+}

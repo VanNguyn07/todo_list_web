@@ -1,0 +1,204 @@
+/* AnalyticsDashboard.css */
+:root {
+  /* --- COLOR PALETTE (Light Theme) --- */
+  --bg-body: #f1f5f9; /* Xám xanh rất nhạt */
+  --bg-card: #ffffff; /* Trắng tinh */
+  --text-secondary: #64748b; /* Xám nhạt (Slate 500) */
+  --border-subtle: #e2e8f0; /* Viền mờ */
+  --text-dark: #4a4036; /* Màu chữ chính (Nâu đậm) */
+  --text-light: #8c8174; /* Màu chữ phụ (Xám nâu) */
+
+  /* Brand Colors */
+  --color-indigo: #6366f1;
+  --color-emerald: #d24b0d;
+  --color-rose: #f43f5e;
+  --color-amber: #f59e0b;
+  --color-blue: #3b82f6;
+}
+.dashboard-wrapper {
+  margin-left: 235px;
+  min-height: 100vh;
+  padding: 0px 32px 0px 32px;
+  color: var(--text-primary);
+  animation: fadein 0.4s ease-out;
+}
+
+/* --- HEADER --- */
+.dashboard-header {
+  margin-bottom: 32px;
+}
+.dashboard-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.dashboard-title i {
+  font-size: 50px;
+  color: var(--text-dark);
+}
+
+.text-title {
+  font-size: 50px;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+  color: var(--text-dark);
+}
+
+.dashboard-subtitle {
+  text-align: center;
+  color: var(--text-light);
+  font-size: 16px;
+}
+
+/* --- LAYOUT GRIDS --- */
+/* Hàng 1: 4 Cột KPI */
+.grid-kpi {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+/* Hàng 2: Focus (2 phần) - Habit (1 phần) */
+.grid-focus-habit {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+/* Hàng 3: Burn-down (Full width) */
+.grid-burndown {
+  margin-bottom: 32px;
+}
+
+/* Hàng 4: Balance (1 phần) - Upcoming (2 phần) */
+.grid-balance-upcoming {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 24px;
+}
+
+/* --- CARD COMPONENT --- */
+.card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02),
+    0 2px 4px -1px rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+/* --- CHART WRAPPER --- */
+.chart-box {
+  width: 100%;
+  height: 300px; /* Chiều cao cố định cho biểu đồ */
+}
+.chart-box-lg {
+  height: 350px;
+}
+
+/* --- KPI CARD STYLING --- */
+.kpi-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Các biến thể màu nền icon */
+.bg-indigo-light {
+  background: #e0e7ff;
+  color: var(--color-indigo);
+}
+.bg-rose-light {
+  background: #ffe4e6;
+  color: var(--color-rose);
+}
+.bg-emerald-light {
+  background: #f1740d55;
+  color: var(--color-emerald);
+}
+.bg-amber-light {
+  background: #fef3c7;
+  color: var(--color-amber);
+}
+
+.kpi-stat {
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.kpi-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.badge {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+.badge-up {
+  background: #dcfce7;
+  color: #15803d;
+}
+.badge-down {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* --- RESPONSIVE MEDIA QUERIES --- */
+@media (max-width: 1200px) {
+  .grid-kpi {
+    grid-template-columns: repeat(2, 1fr);
+  } /* Tablet: 2 cột */
+  .grid-focus-habit,
+  .grid-balance-upcoming {
+    grid-template-columns: 1fr;
+  } /* Tablet: Stack dọc */
+}
+
+@media (max-width: 600px) {
+  .dashboard-wrapper {
+    padding: 16px;
+  }
+  .grid-kpi {
+    grid-template-columns: 1fr;
+  } /* Mobile: 1 cột */
+  .card {
+    padding: 16px;
+  }
+}

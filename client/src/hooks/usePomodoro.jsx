@@ -11,7 +11,7 @@ export const usePomodoro = () => {
   const [timeLeft, setTimeLeft] = useState(MODES.FOCUS.time);
 
   // useEffect is người dám sát
-  //useEffect(hàm thực thi, [các giá trị cần theo dõi]) và hàm chỉ thực hiện đúng một lần
+  //useEffect(hàm thực thi, [các giá trị cần theo dõi])
   useEffect(() => {
     let interval = null;
 
@@ -51,10 +51,7 @@ export const usePomodoro = () => {
     //Math.floor để làm tròn số
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
-    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
-      2,
-      "0"
-    )}`;
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2,"0")}`;
   };
 
   // Tính toán vòng tròn SVG (Chu vi ~ 283) vì r = 45
