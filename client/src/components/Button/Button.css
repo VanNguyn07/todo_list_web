@@ -1,5 +1,5 @@
 :root {
-  --primary-color: #e0b880;
+  --primary-color-sidebar: #e0b880;
   --text-color-dark: #343a40; /* Màu chữ tối */
   --text-color-light: #6c757d; /* Màu chữ mờ (inactive) */
   --bg-color-hover: #f1f3f5; /* Màu nền khi hover */
@@ -512,7 +512,7 @@
 /* Đây là trạng thái khi người dùng đang ở trang đó */
 .btn-sidebar.active {
   background-color: var(--bg-color-active);
-  color: var(--primary-color); /* Chữ đổi thành màu chính */
+  color: var(--primary-color-sidebar); /* Chữ đổi thành màu chính */
 }
 
 .btn-quick-add .tooltip-text,

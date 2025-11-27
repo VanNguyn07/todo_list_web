@@ -15,7 +15,6 @@ html, body, #root {
     gap: 8px;
     margin-left: 235px; 
     box-sizing: border-box;
-    background-color: var(--sidebar-bg);
 }
     
 .sidebar-nav {

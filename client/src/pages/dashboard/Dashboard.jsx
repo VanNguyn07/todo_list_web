@@ -28,6 +28,7 @@ import Contact from "../contact/contact";
 import { TaskPages } from "../tasksPages/TaskPages";
 import { PomodoroPages } from "../pomodoroPages/PomodoroPages";
 import { AnalyticsPages } from "../analyticsPages/AnalyticsPages";
+import { QuickNotesPages } from "../quickNotesPages/QuickNotes";
 import "./Dashboard.css";
 import AboutUs from "../aboutUs/aboutUs";
 import { X } from "lucide-react";
@@ -626,7 +627,7 @@ function Dashboard() {
           )}
 
           {/* ======================================================== */}
-          {/* KHU VỰC 2: TRANG POMODORO                                    */}
+          {/* KHU VỰC 3: TRANG POMODORO                                    */}
           {/* ======================================================== */}
           {activeView === "pomodoro" && (
             <div className="pomodoro-page-wrapper">
@@ -635,11 +636,20 @@ function Dashboard() {
           )}
 
           {/* ======================================================== */}
-          {/* KHU VỰC 2: TRANG ANALYTICS                                    */}
+          {/* KHU VỰC 4: TRANG ANALYTICS                                    */}
           {/* ======================================================== */}
           {activeView === "analytics" && (
             <div className="analytics-page-wrapper">
               <AnalyticsPages />
+            </div>
+          )}
+
+          {/* ======================================================== */}
+          {/* KHU VỰC 5: TRANG QUICK NOTES                                    */}
+          {/* ======================================================== */}
+          {activeView === "quick-notes" && (
+            <div className="quick-notes-page-wrapper">
+              <QuickNotesPages />
             </div>
           )}
 

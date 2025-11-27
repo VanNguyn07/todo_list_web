@@ -82,7 +82,7 @@
 }
 
 /* --- CARD COMPONENT --- */
-.card {
+.card-focus-time, .card-habit-radar, .card-burn-down, .card-balance, .card-upcoming {
   background: var(--bg-card);
   border-radius: 16px;
   padding: 24px;
@@ -122,6 +122,17 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 16px;
+}
+
+.card-kpi {
+  background-color: var(--bg-card);
+  padding: 24px;
+  border-radius: 16px;
+  transition: all 0.3s ease-out;
+}
+
+.card-kpi:hover {
+transform: translateY(-4px);
 }
 
 .icon-box {

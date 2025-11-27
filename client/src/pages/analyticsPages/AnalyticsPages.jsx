@@ -77,7 +77,7 @@ const dataUpcoming = [
 
 // Component thẻ KPI nhỏ gọn
 const KPICard = ({ title, value, icon, trend, isUp, bgClass }) => (
-  <div className="card">
+  <div className="card-kpi">
     <div className="kpi-top">
       <div className={`icon-box ${bgClass}`}>{icon}</div>
       <span className={`badge ${isUp ? "badge-up" : "badge-down"}`}>
@@ -144,7 +144,7 @@ export const AnalyticsPages = () => {
       {/* SECTION 2: FOCUS AREA & HABIT RADAR */}
       <div className="grid-focus-habit">
         {/* Left: Focus Chart */}
-        <div className="card">
+        <div className="card-focus-time">
           <div className="card-header">
             <h3 className="card-title">Peak Focus Hours</h3>
           </div>
@@ -194,7 +194,7 @@ export const AnalyticsPages = () => {
         </div>
 
         {/* Right: Habit Radar */}
-        <div className="card">
+        <div className="card-habit-radar">
           <div className="card-header">
             <h3 className="card-title">Habit Tracker</h3>
           </div>
@@ -228,7 +228,7 @@ export const AnalyticsPages = () => {
 
       {/* SECTION 3: BURN-DOWN CHART (Tiến độ dự án) */}
       <div className="grid-burndown">
-        <div className="card">
+        <div className="card-burn-down">
           <div className="card-header">
             <h3 className="card-title">
               Weekly Burn-down Chart
@@ -292,7 +292,7 @@ export const AnalyticsPages = () => {
       {/* SECTION 4: BALANCE & UPCOMING */}
       <div className="grid-balance-upcoming">
         {/* Left: Life Balance */}
-        <div className="card">
+        <div className="card-balance">
           <div className="card-header">
             <h3 className="card-title">Life Balance</h3>
           </div>
@@ -318,7 +318,7 @@ export const AnalyticsPages = () => {
         </div>
 
         {/* Right: Upcoming Stacked Bar */}
-        <div className="card">
+        <div className="card-upcoming">
           <div className="card-header">
             <h3 className="card-title">Upcoming Workload</h3>
           </div>
