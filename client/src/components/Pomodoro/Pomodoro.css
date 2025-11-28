@@ -11,6 +11,7 @@
 .pomodoro-focus-widget {
   background-color: white;
   border-radius: 10px;
+  margin-left: 10px;
 }
 .title-for-pomodoro-widget {
   display: inline-flex;

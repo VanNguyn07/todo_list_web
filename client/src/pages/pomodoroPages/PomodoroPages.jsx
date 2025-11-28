@@ -18,6 +18,7 @@ import {
   Radio,
   ImageIcon,
   Volume2,
+  Timer,
 } from "lucide-react";
 import "./PomodoroPages.css";
 import { usePomodoroPages } from "./usePomodoroPages";
@@ -60,6 +61,16 @@ export const PomodoroPages = () => {
   } = usePomodoroPages();
   return (
     <div className="pomodoro-app" data-mode={mode}>
+      <div className="header-page-pomodoro">
+        <div className="header-page-title-pomodoro">
+          <p>
+            <Timer size={50} /> Focus Flow
+          </p>
+        </div>
+        <div className="header-subtitle-pomodoro">
+          <p>Master your minutes, master your mind.</p>
+        </div>
+      </div>
       <main className="dashboard">
         <section className="timer-section">
           <div className="timer-container">
@@ -141,7 +152,6 @@ export const PomodoroPages = () => {
               />
             </div>
             <div className="card-pomodoro stats-card">
-              
               <h3 className="card-title">Daily Stats</h3>
               <div className="stats-pomodoro">
                 <div className="stat-item">

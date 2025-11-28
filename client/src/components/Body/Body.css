@@ -78,7 +78,6 @@ html, body, #root {
     grid-row: span 3 / span 3;
     grid-column-start: 3;
     grid-row-start: 7;
-    border: 1px solid black;
 }
 
 .container-task-widget {

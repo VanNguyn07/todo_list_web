@@ -8,7 +8,9 @@
   background-color: white;
   font-family: Arial, sans-serif;
   border-radius: 10px;
-  border: 1px solid black;
+  margin-left: 10px;
+  padding: 10px 10px 0px 10px;
+  width: 100%;
 }
 
 /* 2. Phần Top (Icon + Title) */

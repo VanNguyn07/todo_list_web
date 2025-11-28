@@ -7,8 +7,8 @@
   border-radius: 10px;
   background-color: white;
   font-family: 'Arial', sans-serif; 
-  border: 1px solid #333;
   padding: 10px;
+  margin-left: 10px;
 }
 
 .react-calendar__month-view__weekdays__weekday abbr {
