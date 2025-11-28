@@ -162,9 +162,10 @@
   box-shadow: var(--shadow-hover);
 }
 
-.card-actions {
+.card-actions-habit {
     display: flex;
     flex-direction: column;
+    gap: 10px;
 }
 .action-btn-small {
   width: 28px;

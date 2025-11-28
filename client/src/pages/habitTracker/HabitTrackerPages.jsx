@@ -441,7 +441,7 @@ export const HabitTrackerPages = () => {
                   </div>
                 </div>
                 {/* Nút Sửa/Xóa */}
-                <div className="card-actions">
+                <div className="card-actions-habit">
                   <button
                     className="action-btn-small edit"
                     onClick={(e) => {
@@ -451,6 +451,7 @@ export const HabitTrackerPages = () => {
                   >
                     <Pencil size={14} />
                   </button>
+                  
                   <button
                     className="action-btn-small delete"
                     onClick={(e) => {

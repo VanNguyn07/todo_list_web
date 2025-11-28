@@ -30,6 +30,7 @@ import { PomodoroPages } from "../pomodoroPages/PomodoroPages";
 import { AnalyticsPages } from "../analyticsPages/AnalyticsPages";
 import { QuickNotesPages } from "../quickNotesPages/QuickNotesPages";
 import { HabitTrackerPages } from "../habitTracker/HabitTrackerPages";
+import { CalendarPages } from "../calendarPages/CalendarPages";
 import "./Dashboard.css";
 import AboutUs from "../aboutUs/aboutUs";
 import { X } from "lucide-react";
@@ -655,11 +656,20 @@ function Dashboard() {
           )}
 
           {/* ======================================================== */}
-          {/* KHU VỰC 5: TRANG  HABIT TRACKER                                  */}
+          {/* KHU VỰC 6: TRANG  HABIT TRACKER                                  */}
           {/* ======================================================== */}
           {activeView === "habit-tracker" && (
             <div className="habit-tracker-page-wrapper">
               <HabitTrackerPages />
+            </div>
+          )}
+
+          {/* ======================================================== */}
+          {/* KHU VỰC 7: TRANG  CALENDAR                                  */}
+          {/* ======================================================== */}
+          {activeView === "calendar" && (
+            <div className="caledar-page-wrapper">
+              <CalendarPages />
             </div>
           )}
 

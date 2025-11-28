@@ -19,6 +19,7 @@
     "prop-types": "^15.8.1",
     "react": "^19.1.1",
     "react-activity-calendar": "^2.7.15",
+    "react-big-calendar": "^1.19.4",
     "react-calendar": "^6.0.0",
     "react-datepicker": "^8.9.0",
     "react-dom": "^19.1.1",
