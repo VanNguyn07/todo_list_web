@@ -245,18 +245,18 @@
   border-radius: 10px;
   cursor: pointer;
 }
-.btn-add {
+.btn-add-quick-notes {
   background: var(--primary-color);
   color: white;
   border: none;
   padding: 8px;
 }
 
-.btn-add:hover,
-.btn-close:hover {
+.btn-add-quick-notes:hover,
+.btn-close-quick-notes:hover {
   opacity: 0.9;
 }
-.btn-close {
+.btn-close-quick-notes {
   background: rgb(222, 215, 215);
   border: none;
   color: var(--text-secondary);

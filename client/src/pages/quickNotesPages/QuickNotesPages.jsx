@@ -301,8 +301,8 @@ export const QuickNotesPages = () => {
               </div>
 
               <div className="action-buttons">
-                <button className="btn-close" onClick={resetForm}>Cancel</button>
-                <button className="btn-add" onClick={handleSaveNote}>
+                <button className="btn-close-quick-notes" onClick={resetForm}>Cancel</button>
+                <button className="btn-add-quick-notes" onClick={handleSaveNote}>
                   {editingId ? "Update" : "Create"}
                 </button>
               </div>

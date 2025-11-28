@@ -47,6 +47,7 @@ export const CalendarPages = () => {
     });
     return map;
   }, [tasks]);
+  
 
   const getTileContent = ({ date, view }) => {
     if (view === 'month') {
