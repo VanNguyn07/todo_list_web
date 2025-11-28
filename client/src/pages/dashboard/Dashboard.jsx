@@ -28,7 +28,8 @@ import Contact from "../contact/contact";
 import { TaskPages } from "../tasksPages/TaskPages";
 import { PomodoroPages } from "../pomodoroPages/PomodoroPages";
 import { AnalyticsPages } from "../analyticsPages/AnalyticsPages";
-import { QuickNotesPages } from "../quickNotesPages/QuickNotes";
+import { QuickNotesPages } from "../quickNotesPages/QuickNotesPages";
+import { HabitTrackerPages } from "../habitTracker/HabitTrackerPages";
 import "./Dashboard.css";
 import AboutUs from "../aboutUs/aboutUs";
 import { X } from "lucide-react";
@@ -650,6 +651,15 @@ function Dashboard() {
           {activeView === "quick-notes" && (
             <div className="quick-notes-page-wrapper">
               <QuickNotesPages />
+            </div>
+          )}
+
+          {/* ======================================================== */}
+          {/* KHU VỰC 5: TRANG  HABIT TRACKER                                  */}
+          {/* ======================================================== */}
+          {activeView === "habit-tracker" && (
+            <div className="habit-tracker-page-wrapper">
+              <HabitTrackerPages />
             </div>
           )}
 

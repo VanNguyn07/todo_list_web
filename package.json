@@ -12,6 +12,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "canvas-confetti": "^1.9.4",
     "date-fns": "^4.1.0",
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.554.0",

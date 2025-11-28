@@ -6,35 +6,44 @@
   --text-primary: #1e293b;
   --text-secondary: #64748b;
   --radius: 16px;
+  --text-dark: #4a4036;
+  --text-light: #8c8174;
 }
 .app-container {
   overflow: hidden;
   margin-left: 235px;
   display: flex;
   justify-content: space-around;
+  animation: fadein 0.4s ease-out;
 }
 /* --- MAIN CONTENT --- */
 .main-content {
-  padding: 32px 48px;
+  padding: 0px 48px 0px 48px;
   overflow-y: auto;
   scrollbar-width: none;
-  width: 2000px
+  width: 2000px;
 }
 .main-content::-webkit-scrollbar {
   display: none;
 }
 
-.greeting-section {
-  margin-bottom: 24px;
-}
-.greeting-section h1 {
-  font-size: 26px;
-  color: var(--text-primary);
-  margin-bottom: 4px;
-}
 .greeting-section p {
-  color: var(--text-secondary);
-  font-size: 15px;
+  text-align: center;
+  color: var(--text-light);
+  margin-bottom: 25px;
+}
+.title-notes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  color: var(--text-dark);
+  font-size: 50px;
+}
+
+.title-notes h1 {
+  font-size: 50px;
+  color: var(--text-dark);
 }
 
 .header {
@@ -66,6 +75,23 @@
   color: #94a3b8;
 }
 
+.input-create-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+.input-create {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 15px;
+}
+
+.input-create-wrapper .icon-plus {
+  color: #94a3b8;
+}
+
 /* NOTE INPUT AREA */
 .note-input-container {
   background: white;
@@ -92,7 +118,7 @@
   flex: 1;
   border: none;
   outline: none;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 700;
   background: transparent;
   transition: color 0.2s;
@@ -121,6 +147,12 @@
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   overflow: hidden;
+}
+
+.rsw-ce {
+  font-size: 18px;
+  margin-top: 8px;
+  border-radius: 7px;
 }
 .rsw-editor {
   border: none !important;
@@ -176,21 +208,17 @@
 }
 
 /* Color Pickers Group */
-.color-pickers-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
 .color-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 13px;
 }
 .color-label {
   font-size: 11px;
   font-weight: 600;
   color: #94a3b8;
   width: 30px;
+  margin-right: 30px;
 }
 
 .color-dot {
@@ -214,25 +242,25 @@
   display: flex;
   gap: 10px;
   align-items: center;
+  border-radius: 10px;
+  cursor: pointer;
 }
 .btn-add {
   background: var(--primary-color);
   color: white;
   border: none;
-  padding: 10px 24px;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
+  padding: 8px;
 }
-.btn-add:hover {
+
+.btn-add:hover,
+.btn-close:hover {
   opacity: 0.9;
 }
 .btn-close {
-  background: transparent;
+  background: rgb(222, 215, 215);
   border: none;
   color: var(--text-secondary);
-  cursor: pointer;
-  font-weight: 500;
+  padding: 8px;
 }
 
 /* NOTES GRID */
@@ -432,6 +460,7 @@
   border-radius: 8px;
   font-size: 13px;
   padding: 5px;
+  text-transform: uppercase;
 }
 .custom-calendar button:hover {
   background: #e2e8f0;
@@ -488,7 +517,7 @@
 }
 
 .rsw-editor {
-  border: none !important; 
+  border: none !important;
   min-height: 120px;
   font-family: inherit;
   font-size: 15px;
@@ -525,9 +554,4 @@
 .toolbar-color-btn:hover {
   transform: scale(1.2);
   border-color: #94a3b8;
-}
-
-/* Ẩn phần chọn màu chữ cũ ở dưới input-actions đi vì đã đưa lên toolbar */
-.input-actions .color-pickers-group .color-row:last-child {
-    display: none; 
 }

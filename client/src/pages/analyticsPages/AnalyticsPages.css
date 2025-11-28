@@ -25,7 +25,7 @@
 
 /* --- HEADER --- */
 .dashboard-header {
-  margin-bottom: 32px;
+  margin-bottom: 25px;
 }
 .dashboard-title {
   display: flex;
@@ -128,11 +128,12 @@
   background-color: var(--bg-card);
   padding: 24px;
   border-radius: 16px;
-  transition: all 0.3s ease-out;
+  transition: all 0.3s ease;
 }
 
 .card-kpi:hover {
 transform: translateY(-4px);
+box-shadow: 0 10px 20px -5px rgb(0, 0, 0, 0.1);
 }
 
 .icon-box {
