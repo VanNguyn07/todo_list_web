@@ -14,6 +14,7 @@ export const useFetchTaskOnUpdateForm = () => {
       const data = await response.json();
 
       if (data.success) {
+        
         setTasks(data.tasks);
         setIsShowFormUpdate(true);
         console.log("Data when success is: ", data.tasks);

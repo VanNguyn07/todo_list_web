@@ -1,8 +1,8 @@
 :root {
   /* --- COLOR PALETTE (Light/Cream Theme) --- */
   --bg-body: #fbf8f3; /* Màu nền kem rất nhạt */
-  --primary: #e0b880; /* MÀU CHỦ ĐẠO (Vàng/Nâu nhạt) */
-  --primary-hover: #d4a565; /* Màu đậm hơn khi hover */
+  --primary: #f3d077; /* MÀU CHỦ ĐẠO (Vàng/Nâu nhạt) */
+  --primary-hover: #f4c538; /* Màu đậm hơn khi hover */
   --primary-light: #f5ecd9; /* Màu nền nhạt của primary */
 
   --text-dark: #4a4036; /* Màu chữ chính (Nâu đậm) */
@@ -186,13 +186,13 @@
   cursor: pointer;
   background: #f8f9fa;
   color: var(--text-dark);
-  transition: all 0.25s ease;
+  transition: all 0.3s ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 /* Hover effect */
 .task-btn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
   background: #f1f3f5;
 }
@@ -707,10 +707,11 @@
   border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.2s ease-out;
 }
 .btn-cancel:hover {
   background: #e5e7eb;
+  transform: translateY(-3px);
 }
 .btn-save {
   background: var(--primary);
@@ -723,11 +724,12 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: 0.2s;
+  transition: 0.2s ease-out;
 }
 .btn-save:hover {
   background: var(--primary-hover);
   box-shadow: 0 4px 10px rgba(224, 184, 128, 0.4);
+  transform: translateY(-3px);
 }
 
 /* Toast */

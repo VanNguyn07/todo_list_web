@@ -2,7 +2,7 @@
 :root {
   --bg-color: #f3f4f6;
   --sidebar-bg: #ffffff;
-  --primary-color: #6366f1;
+  --primary-color: #f3d077;
   --text-primary: #1e293b;
   --text-secondary: #64748b;
   --radius: 16px;
@@ -250,6 +250,12 @@
   color: white;
   border: none;
   padding: 8px;
+  transition: 0.2s ease-out;
+}
+
+.btn-add-quick-notes:hover{
+  background-color: #f4c538;
+  transform: translateY(-3px);
 }
 
 .btn-add-quick-notes:hover,
@@ -261,6 +267,12 @@
   border: none;
   color: var(--text-secondary);
   padding: 8px;
+  transition: 0.2s ease-out;
+}
+
+.btn-close-quick-notes:hover {
+    background-color: rgb(197, 196, 196);
+  transform: translateY(-3px);
 }
 
 /* NOTES GRID */

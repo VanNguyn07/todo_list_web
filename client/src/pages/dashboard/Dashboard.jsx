@@ -85,6 +85,7 @@ function Dashboard() {
     handleCloseFormUpdate,
   } = useFetchTaskOnUpdateForm();
 
+  const username = localStorage.getItem('my_username');
   return (
     <>
       <div id="dashboard-page">
@@ -358,9 +359,9 @@ function Dashboard() {
           {/* KHU VỰC 1: TRANG HOME      */}
           {/* ======================================================== */}
           {activeView === "home" && (
-            <div className="parent animate__animated animate__fadeIn">
+            <div className="parent">
               <div className="text-hello-user">
-                <h1>Hello..., Start your planning today</h1>
+                <h1>Hello {username}, Start your planning today</h1>
               </div>
 
               <div className="container-add-filter-task">
@@ -469,17 +470,20 @@ function Dashboard() {
                       </div>
 
                       <div className="content-right">
-                        <input
-                          type="checkbox"
-                          name="completed"
-                          id={`completed-${task.idTask}`}
-                        />
+                        <Button
+                          className="btn-task btn-arrow-right"
+                          // onClick={() => handleUpdate(task.idTask)}
+                        >
+                          <i class="fas fa-arrow-right"></i>
+                          <span className="tooltip-text">Detail</span>
+                        </Button>
 
                         <Button
                           className="btn-task btn-pen-to-square"
                           onClick={() => handleUpdate(task.idTask)}
                         >
                           <i className="fa-solid fa-pen-to-square"></i>
+                          <span className="tooltip-text">Update</span>
                         </Button>
 
                         <Button
@@ -488,6 +492,7 @@ function Dashboard() {
                           disabled={isDeleting}
                         >
                           <i className="fa-solid fa-trash"></i>
+                          <span className="tooltip-text">Delete</span>
                         </Button>
                       </div>
                     </TaskCard>

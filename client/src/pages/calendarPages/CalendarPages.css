@@ -3,7 +3,7 @@
 
 /* Scoped Variables: Chỉ ảnh hưởng trong phạm vi file này */
 :root {
-  --cp-primary: #6366f1; /* Indigo */
+  --cp-primary: #f3d077; /* Indigo */
   --cp-primary-hover: #4f46e5;
   --cp-bg-body: #f8fafc; /* Slate 50 */
   --cp-bg-surface: #ffffff;
@@ -87,7 +87,8 @@
 .react-calendar__navigation button {
   font-weight: 700;
   color: var(--cp-text-main);
-  font-size: 1rem;
+  font-size: 20px;
+  text-transform: uppercase;
 }
 
 .react-calendar__month-view__weekdays {
@@ -235,7 +236,7 @@ abbr[title] {
   box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
 }
 .cp-btn-add:hover {
-  background: var(--cp-primary-hover);
+  background: #f4c358;
   transform: translateY(-2px);
 }
 
@@ -454,6 +455,7 @@ abbr[title] {
   color: var(--cp-text-main);
   font-weight: 600;
   cursor: pointer;
+  transition: 0.2s ease-out;
 }
 .cp-btn-save {
   padding: 10px 24px;
@@ -464,6 +466,17 @@ abbr[title] {
   font-weight: 600;
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+  transition: 0.2s ease-out;
+}
+
+ .cp-btn-save:hover {
+  background-color: #f4c358;
+  transform: translateY(-3px);
+}
+
+.cp-btn-cancel:hover {
+    background-color: #e5e7eb;
+  transform: translateY(-3px);
 }
 
 @keyframes cpFadeIn {

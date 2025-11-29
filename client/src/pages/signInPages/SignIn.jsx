@@ -80,7 +80,10 @@ const SignIn = ({ onLoginSuccess, onSwitchToSignUp, onSwitchToForgot }) => {
         const data = await response.json();
 
         if (data.success) {
-          if (onLoginSuccess) onLoginSuccess();
+          if (onLoginSuccess) {
+            localStorage.setItem('my_username', data.username)
+            onLoginSuccess();
+          }
         } else {
           // Xử lý lỗi từ Server trả về
           if (data.field === "username") {

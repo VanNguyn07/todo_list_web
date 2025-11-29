@@ -3,7 +3,7 @@ header('Content-Type: application/json');
 class UserControllerSignIn
 {
     private $userModel;
-
+    private $response = ['success' => false, 'message' => ''];
     // Constructor nhận kết nối Database
     public function __construct($pdo)
     {
@@ -13,8 +13,6 @@ class UserControllerSignIn
     // Hàm chính để xử lý đăng nhập
     public function login()
     {
-        $response = ['success' => false, 'message' => ''];
-
         // Chỉ xử lý khi là POST request
         if ($_SERVER['REQUEST_METHOD'] !== "POST") {
             $response['message'] = 'Invalid Request Method';
@@ -50,17 +48,22 @@ class UserControllerSignIn
         } else {
             // --- ĐĂNG NHẬP THÀNH CÔNG ---
 
-            // Lưu session
-            $_SESSION["loggedin"] = true;
-            $_SESSION["id"] = $user['id'];
-            $_SESSION["username"] = $user['username'];
+            $this->response['success'] = true;
+            $this->response['id'] = $user['id'];
+            $this->response['username'] = $user['username'];
 
-            $response['success'] = true;
-            // Đường dẫn redirect này React sẽ dùng để navigate
-            $response['redirectUrl'] = '../../../client/src/pages/dashboard/Dashboard.jsx';
-            $response['message'] = 'Login successfully!';
+            // // Lưu session
+            // $_SESSION["loggedin"] = true;
+            // $_SESSION["id"] = $user['id'];
+            // $_SESSION["username"] = $user['username'];
+
+            // $response['success'] = true;
+            // // Đường dẫn redirect này React sẽ dùng để navigate
+            // $response['redirectUrl'] = '../../../client/src/pages/dashboard/Dashboard.jsx';
+            // $response['message'] = 'Login successfully!';
         }
 
-        return $response;
+        echo json_encode($this->response);
+        exit();
     }
 }

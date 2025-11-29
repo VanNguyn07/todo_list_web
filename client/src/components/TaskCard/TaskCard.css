@@ -1,67 +1,71 @@
 .subcontainer-task {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
 }
 
-.content-task-1 { 
-    grid-column: span 2 / span 2;
-    grid-row: span 2 / span 2;
-    display: flex;
+.content-task-1 {
+  grid-column: span 2 / span 2;
+  grid-row: span 2 / span 2;
+  display: flex;
 }
 
 .content-task-2 {
-    grid-column: span 2 / span 2;
-    grid-row: span 2 / span 2;
-    grid-column-start: 3;
-    display: flex;
+  grid-column: span 2 / span 2;
+  grid-row: span 2 / span 2;
+  grid-column-start: 3;
+  display: flex;
 }
 
 .content-task-3 {
-    grid-column: span 2 / span 2;
-    grid-row: span 2 / span 2;
-    grid-row-start: 3;
-    display: flex;
+  grid-column: span 2 / span 2;
+  grid-row: span 2 / span 2;
+  grid-row-start: 3;
+  display: flex;
 }
 
-.content-task-4{
-    grid-column: span 2 / span 2;
-    grid-row: span 2 / span 2;
-    grid-column-start: 3;
-    grid-row-start: 3;
-    display: flex;
+.content-task-4 {
+  grid-column: span 2 / span 2;
+  grid-row: span 2 / span 2;
+  grid-column-start: 3;
+  grid-row-start: 3;
+  display: flex;
 }
 
 /* Gộp chung styles để tránh lặp lại */
-.content-task-1, .content-task-2,
-.content-task-3, .content-task-4 {
-    border: 1px solid black;
-    border-radius: 10px;
-    background-color: white;
-    padding: 10px 20px 0px 20px;
-    margin: 0px 20px 20px 0px;
-    transition: all 0.2s ease-in-out;
+.content-task-1,
+.content-task-2,
+.content-task-3,
+.content-task-4 {
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: white;
+  padding: 10px 20px 0px 20px;
+  margin: 0px 20px 20px 0px;
+  transition: all 0.2s ease-in-out;
 }
 
-.content-task-1:hover, .content-task-2:hover,
-.content-task-3:hover, .content-task-4:hover{
-    transform: translateY(-3px);
-    box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.2);
+.content-task-1:hover,
+.content-task-2:hover,
+.content-task-3:hover,
+.content-task-4:hover {
+  transform: translateY(-3px);
+  box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.2);
 }
 
 .content-left {
-    margin-right: 10px;
-    display: flex;
-    align-items: start;
-    flex-direction: column;
+  margin-right: 10px;
+  display: flex;
+  align-items: start;
+  flex-direction: column;
 }
 
 .content-left h2 {
-    margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 .content-left p {
-    margin-left: 20px;
-    margin-bottom: 8px;
+  margin-left: 20px;
+  margin-bottom: 8px;
   /* 1. Ẩn phần nội dung bị tràn ra ngoài */
   overflow: hidden;
 
@@ -78,65 +82,84 @@
 }
 
 .content-right {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
 
-.content-right .btn-task{
-    width: 45px;       
-    height: 45px;     
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    display: flex;     /* Dùng flex để căn icon vào giữa */
-    justify-content: center;
-    align-items: center;
+.content-right .btn-task {
+  width: 45px;
+  height: 45px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  display: flex; /* Dùng flex để căn icon vào giữa */
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
 .content-right .btn-task i {
-    font-size: 27px; 
+  font-size: 27px;
 }
 
 /* Nút "Hoàn thành" (Check Circle) */
 .content-right .fa-pen-to-square {
-    color: #2196F3; 
+  color: #2196f3;
 }
 
 .content-right .fa-trash {
-    color: #F44336; 
+  color: #f44336;
+}
+
+.content-right .fa-arrow-right {
+  color: rgb(17, 210, 17);
 }
 
 .content-right .btn-task:active {
-    transform: scale(0.95); 
+  transform: scale(0.95);
 }
 
-#compeled {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.btn-arrow-right .tooltip-text,
+.btn-pen-to-square .tooltip-text,
+.btn-trash .tooltip-text {
+  visibility: hidden;
+  width: 90px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 6px 8px;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  font-size: 14px;
+  pointer-events: none;
+  z-index: 10;
 }
 
-input[type="checkbox"] {
-  appearance: none;
-  width: 25px;
-  height: 25px;
-  border: 2px solid #4CAF50;
-  border-radius: 50%; /* bo góc rõ ràng */
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.btn-arrow-right .tooltip-text::after,
+.btn-pen-to-square .tooltip-text::after,
+.btn-trash .tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* dưới tooltip */
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
 }
 
-input[type="checkbox"]:checked {
-  background-color: #4CAF50;
-  border-color: #4CAF50;
-}
-
-input[type="checkbox"]:checked::after {
-  content: "✔";
-  color: white;
-  font-size: 18px;
+.btn-arrow-right:hover .tooltip-text,
+.btn-pen-to-square:hover .tooltip-text,
+.btn-trash:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }

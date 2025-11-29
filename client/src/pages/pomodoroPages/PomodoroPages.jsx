@@ -63,7 +63,7 @@ export const PomodoroPages = () => {
     <div className="pomodoro-app" data-mode={mode}>
       <div className="header-page-pomodoro">
         <div className="header-page-title-pomodoro">
-          <p>
+          <p className="header-page-icon-pomodoro">
             <Timer size={50} /> Focus Flow
           </p>
         </div>

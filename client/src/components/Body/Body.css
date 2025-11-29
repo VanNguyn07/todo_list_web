@@ -15,6 +15,7 @@ html, body, #root {
     gap: 8px;
     margin-left: 235px; 
     box-sizing: border-box;
+    animation: fadein 0.4s ease-out;
 }
     
 .sidebar-nav {
@@ -40,10 +41,11 @@ html, body, #root {
 }
 
 .text-hello-user h1 {
-    color: aliceblue;
+    color: #4a4036;
     font-family: cursive;
-    font-size: 30px;
+    font-size: 35px;
     word-spacing: -2px;
+    margin-left: 20px;
 }
 
 .container-add-filter-task{

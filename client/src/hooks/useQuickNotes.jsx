@@ -27,6 +27,7 @@ export const useQuickNotes = () => {
     };
     fetchNotes();
   }, []);
+  
   const handleChange = (e) => {
     setContent(e.target.value);
   };

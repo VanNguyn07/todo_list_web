@@ -1,64 +1,54 @@
 <?php
-// 1. Cấu hình CORS
-header("Access-Control-Allow-Origin: http://localhost:5173");
+
+// 1. Cấu hình CORS & Headers
+header("Access-Control-Allow-Origin: http://localhost:5173"); // Hoặc domain frontend của bạn
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header('Content-Type: application/json');
 
+// Xử lý Preflight request
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 
-// Bật hiển thị lỗi PHP để debug (Tạm thời)
-ini_set('display_errors', 0); // Tắt hiển thị ra HTML để tránh lỗi React
-error_reporting(E_ALL);
+// 2. Kết nối DB & Load Controller
+session_start();
+header('Content-Type: application/json'); // Luôn trả về JSON
 
+// 3. Thực thi
 try {
-    session_start();
-
+    // 1. NẠP FILE VÀ KHỞI TẠO
     $projectRoot = dirname(__DIR__, 2);
 
-    // Định nghĩa đường dẫn các file cần nạp
-    $files = [
-        'DB' => $projectRoot . '/server/config/connectDatabaseOOP.php',
-        'Model' => $projectRoot . '/server/app/models/UserModelSignIn.php',
-        'Controller' => $projectRoot . '/server/app/controllers/UserControllerSignIn.php'
-    ];
+    // Nạp CSDL
+    require_once $projectRoot . '/server/config/connectDatabaseOOP.php';
 
-    // --- KIỂM TRA TỒN TẠI TRƯỚC KHI REQUIRE ---
-    foreach ($files as $name => $path) {
-        if (!file_exists($path)) {
-            // Nếu không tìm thấy, ném lỗi ra ngay lập tức
-            // Hàm realpath giúp bạn nhìn thấy đường dẫn thật mà PHP đang tìm
-            throw new Exception("Lỗi không tìm thấy file $name! \nĐường dẫn đang tìm: " . $path);
-        }
-        require_once $path;
+    // Nạp Model
+    require_once $projectRoot . '/server/app/models/UserModelSignIn.php';
+
+    // Nạp Controller
+    require_once $projectRoot . '/server/app/controllers/UserControllerSignIn.php';
+
+    if (!isset($pdo)) {
+        throw new Exception('Biến $pdo không tồn tại sau khi nạp CSDL.');
     }
-    
-    // 3. XỬ LÝ LOGIC
-    if ($_SERVER['REQUEST_METHOD'] == "POST") {
-        
-        // Kiểm tra class có tồn tại không
-        if (!class_exists('UserControllerSignIn')) {
-            throw new Exception("File Controller đã nạp được, nhưng bên trong không có class 'UserControllerSignIn'. Hãy kiểm tra lại tên class trong file.");
-        }
 
-        $authController = new UserControllerSignIn($pdo);
-        $result = $authController->login();
+    // Khởi tạo Controller với kết nối PDO
+    $controller = new UserControllerSignIn($pdo);
+
+    $action = $_POST['action'] ?? null;
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $result = $controller->login();
+        // Trả kết quả về React
         echo json_encode($result);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Method GET OK. API Ready!']);
     }
-
-} catch (Throwable $e) {
-    // Dùng Throwable để bắt cả Fatal Error (Lỗi cú pháp, lỗi require)
+} catch (Exception $e) {
     echo json_encode([
         'success' => false,
-        'message' => $e->getMessage(),
-        'file_error' => $e->getFile(), // File bị lỗi
-        'line' => $e->getLine()       // Dòng bị lỗi
+        'message' => 'Server Error: ' . $e->getMessage()
     ]);
 }
+
 exit();
-?>

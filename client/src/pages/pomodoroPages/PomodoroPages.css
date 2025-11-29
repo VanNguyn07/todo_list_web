@@ -51,11 +51,19 @@
   align-items: center;
   font-size: 50px;
   color: var(--text-dark);
+  font-weight: bold;
 }
 
 .header-subtitle-pomodoro {
   color: var(--text-light);
   font-size: 16px;
+  margin-left: 80px;
+}
+
+.header-page-icon-pomodoro {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 /* Dashboard Container */
 .dashboard {
