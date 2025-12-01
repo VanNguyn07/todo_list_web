@@ -87,6 +87,27 @@ class TaskModel
         }
     }
 
+    public function getAllTaskList()
+    {
+        $sql = "SELECT * FROM " . $this->table_name . " WHERE deadlineTask >= NOW() ORDER BY deadlineTask ASC";
+        try {
+            $prepareStmt = $this->pdo->prepare($sql);
+            $prepareStmt->execute();
+            $tasksFormDb = $prepareStmt->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($tasksFormDb as &$task) {
+                $task['detailTask'] = !empty($task['detailTask']) ? json_decode($task['detailTask']) : [];
+                $task['completed'] = ($task['completed'] === 'true');
+                $task['expanded'] = ($task['expanded'] === 'true');
+            }
+            return ['success' => true, 'data' => $tasksFormDb];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+
+
     // 3. Xóa công việc
     public function deleteTaskById($taskId)
     {
@@ -118,20 +139,21 @@ class TaskModel
         }
     }
 
-    public function updateTaskById($titleTask, $detailTask, $categoryTask, $deadlineTask, $idTask)
+    public function updateTaskById($titleTask, $detailTask, $categoryTask, $deadlineTask, $description, $idTask)
     {
         // Sửa lại chuỗi SQL cho chuẩn
         $sql = "UPDATE " . $this->table_name . " SET 
             titleTask = ?, 
             detailTask = ?,      
             categoryTask = ?, 
-            deadlineTask = ?    
+            deadlineTask = ?,
+            description = ?
             WHERE idTask = ?";
 
         try {
             $prepareStmt = $this->pdo->prepare($sql);
             // Execute trả về true/false
-            $isSuccess = $prepareStmt->execute([$titleTask, $detailTask, $categoryTask, $deadlineTask, $idTask]);
+            $isSuccess = $prepareStmt->execute([$titleTask, $detailTask, $categoryTask, $deadlineTask, $description, $idTask]);
 
             if ($isSuccess) {
                 return ['success' => true, 'message' => 'Update successfully!'];

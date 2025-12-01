@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import "./style.css";
+import { Link, useNavigate } from "react-router-dom";
 
-const ForgotPassword = ({ onSwitchToSignIn, onSwitchToVerify }) => {
+const ForgotPassword = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState({ text: "", type: "" }); // type: 'success', 'error', 'loading'
   const [isLoading, setIsLoading] = useState(false);
@@ -51,7 +53,7 @@ const ForgotPassword = ({ onSwitchToSignIn, onSwitchToVerify }) => {
 
         // Chuyển trang sau 1.5s
         setTimeout(() => {
-          onSwitchToVerify();
+          navigate("/verifyotp")
         }, 1500);
       } else {
         setMessage({ text: data.message, type: "error" });
@@ -98,19 +100,6 @@ const ForgotPassword = ({ onSwitchToSignIn, onSwitchToVerify }) => {
           {/* Khu vực hiển thị thông báo */}
           <div className={`message-box ${message.type}`}>
             {message.text && <span>{message.text}</span>}
-          </div>
-
-          {/* Nút quay lại trang đăng nhập */}
-          <div className="back-link">
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                onSwitchToSignIn();
-              }}
-            >
-              ← Back to Login
-            </a>
           </div>
         </form>
       </div>

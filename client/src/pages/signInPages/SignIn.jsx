@@ -1,16 +1,20 @@
 import React, { useState } from "react";
 import "./SignIn.css";
+import { Link, useNavigate } from "react-router-dom";
 import "./ResponsiveSignIn.css";
 
 import astronautImg from "../../assets/images/astronaut.png";
 import googleIcon from "../../assets/images/google.png";
 import githubIcon from "../../assets/images/github.png";
 
-const SignIn = ({ onLoginSuccess, onSwitchToSignUp, onSwitchToForgot }) => {
+const SignIn = ({ onLoginSuccess}) => {
+  // Khai báo hook chuyển trang
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     inputUserName: "",
     inputPassword: "",
-    gender: "",
+    gender: "", 
   });
 
   const [errors, setErrors] = useState({
@@ -83,6 +87,8 @@ const SignIn = ({ onLoginSuccess, onSwitchToSignUp, onSwitchToForgot }) => {
           if (onLoginSuccess) {
             localStorage.setItem('my_username', data.username)
             onLoginSuccess();
+            //Lái xe sang trang Dashboard ngay lập tức
+            navigate("/dashboard");
           }
         } else {
           // Xử lý lỗi từ Server trả về
@@ -246,16 +252,7 @@ const SignIn = ({ onLoginSuccess, onSwitchToSignUp, onSwitchToForgot }) => {
             </div>
 
             <div id="forgot-password">
-              {/* 2. Sửa thẻ a như sau: */}
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault(); // Ngăn không cho tải lại trang
-                  onSwitchToForgot(); // Gọi hàm chuyển trang
-                }}
-              >
-                Forgot password?
-              </a>
+              <Link to="/forgotpassword">Forgot password?</Link>
             </div>
 
             <div className="button-stack">
@@ -280,13 +277,7 @@ const SignIn = ({ onLoginSuccess, onSwitchToSignUp, onSwitchToForgot }) => {
               </div>
               <div className="registration">
                 <div id="accountYet">Have no account yet?</div>
-                <button
-                  type="button"
-                  id="button-SignUp"
-                  onClick={onSwitchToSignUp}
-                >
-                  Registration
-                </button>
+                <Link to="/signup" id="button-SignUp" >Registration</Link>
               </div>
             </div>
           </form>

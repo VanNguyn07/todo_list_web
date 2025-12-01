@@ -65,6 +65,12 @@ button:active {
   transform: scale(0.95);
 }
 
+#button-SignUp {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
 /* style for vefity OTP */
 #otp {
   width: 90px;

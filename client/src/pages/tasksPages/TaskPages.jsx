@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import Masonry from "react-masonry-css";
+import DatePicker from "react-datepicker";
+// Import CSS bắt buộc của react-datepicker
+import "react-datepicker/dist/react-datepicker.css";
 import {
   List,
   Timer,
@@ -21,8 +24,12 @@ import {
   BarChart3,
   CheckSquare,
   Clock,
+  Zap,
 } from "lucide-react";
 import "./TaskPages.css";
+import { useFetchTasks } from "../../hooks/useFetchTask";
+import { useUpdateTask } from "../../hooks/useUpdateTask";
+import { useDeleteTask } from "../../hooks/useDeleteTask";
 
 //Cấu hình số cột: default là 2 cột (theo ý bạn)
 const breakpointColumnsObj = {
@@ -30,117 +37,85 @@ const breakpointColumnsObj = {
   1100: 2, // Màn hình lỡ: vẫn 2 cột
   700: 1, // Màn hình điện thoại: về 1 cột cho dễ nhìn
 };
-// --- DỮ LIỆU GIẢ (DUMMY DATA) ĐỂ HIỂN THỊ ---
-const DUMMY_TASKS = [
-  {
-    id: 1,
-    title: "Thiết kế giao diện Landing Page",
-    description: "Sử dụng tông màu Cream và Gold, bố cục hiện đại.",
-    category: "Work",
-    deadline: "2023-11-25",
-    completed: false,
-    expanded: true,
-    subtasks: [
-      { id: 101, title: "Vẽ Wireframe", completed: true },
-      { id: 102, title: "Chọn icon set", completed: false },
-      { id: 103, title: "Prototype trên Figma", completed: false },
-    ],
-  },
-  {
-    id: 2,
-    title: "Thiết kế giao diện Landing Page",
-    description: "Sử dụng tông màu Cream và Gold, bố cục hiện đại.",
-    category: "Study",
-    deadline: "2023-11-25",
-    completed: false,
-    expanded: true,
-    subtasks: [
-      { id: 101, title: "Vẽ Wireframe", completed: true },
-      { id: 102, title: "Chọn icon set", completed: false },
-      { id: 103, title: "Prototype trên Figma", completed: false },
-    ],
-  },
-  {
-    id: 3,
-    title: "Thiết kế giao diện Landing Page",
-    description: "Sử dụng tông màu Cream và Gold, bố cục hiện đại.",
-    category: "Work",
-    deadline: "2023-11-25",
-    completed: false,
-    expanded: true,
-    subtasks: [
-      { id: 101, title: "Vẽ Wireframe", completed: true },
-      { id: 102, title: "Chọn icon set", completed: false },
-      { id: 103, title: "Prototype trên Figma", completed: false },
-    ],
-  },
-  {
-    id: 4,
-    title: "Đi siêu thị cuối tuần",
-    description: "Mua đồ ăn cho cả tuần và đồ dùng nhà bếp.",
-    category: "Personal",
-    deadline: "2023-11-26",
-    completed: true,
-    expanded: false,
-    subtasks: [
-      { id: 201, title: "Mua rau củ", completed: true },
-      { id: 202, title: "Mua thịt cá", completed: true },
-    ],
-  },
-];
 
-export const TaskPages = () => {
-  // State giả để test giao diện (Gõ phím, đóng mở modal)
-  const [tasks, setTasks] = useState(DUMMY_TASKS);
+export const TaskPages = ({onTaskUpdate}) => {
+  const { tasks, setTasks, refetch } = useFetchTasks("get_all_task_list");
+
+  const { handleSubmitUpdate } = useUpdateTask();
+  const { handleDelete } = useDeleteTask({
+    onSuccess: () => {
+     // refetch dữ liệu của TaskPages
+      refetch();
+      // nếu Dashboard truyền callback thì gọi để Dashboard refetch
+      if (typeof onTaskUpdate === "function") onTaskUpdate();
+    },
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // State cho Form trong Modal (Để bạn gõ được chữ)
   const [formState, setFormState] = useState({
-    title: "",
-    category: "Work",
-    deadline: "",
+    idTask: "",
+    titleTask: "",
+    detailTask: [],
+    categoryTask: "",
+    deadlineTask: new Date(),
     description: "",
-    subtasks: [],
   });
+
   const [subtaskInput, setSubtaskInput] = useState("");
 
-  // --- HÀM GIẢ LẬP UI (CHỈ ĐỂ TEST GIAO DIỆN) ---
   const handleOpenAddModal = () => {
     setFormState({
-      title: "",
-      category: "Work",
-      deadline: "",
+      idTask: "",
+      titleTask: "",
+      detailTask: [],
+      categoryTask: "",
+      deadlineTask: null,
       description: "",
-      subtasks: [],
     });
     setIsModalOpen(true);
   };
 
-  // const handleOpenEditModal = (task) => {
-  //   setFormState(task); // Đổ dữ liệu giả vào form
-  //   setIsModalOpen(true);
-  // };
+  const handleOpenEditModal = (task) => {
+    setFormState({
+    // sao chép các field, nhưng ép deadlineTask thành Date hoặc null
+    idTask: task.idTask,
+    titleTask: task.titleTask || "",
+    detailTask: Array.isArray(task.detailTask) ? task.detailTask : (task.detailTask ? JSON.parse(task.detailTask) : []),
+    categoryTask: task.categoryTask || "",
+    deadlineTask: task.deadlineTask ? new Date(task.deadlineTask) : null,
+    description: task.description || "",
+    // ... bất kỳ field nào khác
+  });
+  setIsModalOpen(true);
+  };
 
   const closeModal = () => setIsModalOpen(false);
 
-  // Hàm giả để gõ được vào input
   const handleInputChange = (e) => {
-    setFormState({ ...formState, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormState({ ...formState, [name]: value });
   };
 
-  // Hàm giả để gõ subtask input
+  const handleDateChange = (date) => {
+    setFormState({ ...formState, deadlineTask: date });
+  };
+
+
   const handleSubtaskNameChange = (id, value) => {
-    const updatedSubs = formState.subtasks.map((s) =>
-      s.id === id ? { ...s, title: value } : s
+    const updatedSubs = formState.detailTask.map((subtask) =>
+      subtask.id === id ? { ...subtask, title: value } : subtask
     );
-    setFormState({ ...formState, subtasks: updatedSubs });
+    setFormState({ ...formState, detailTask: updatedSubs });
   };
 
   // Hàm giả thêm subtask (Enter)
   const handleAddSubtask = (e) => {
     if (e.key === "Enter" && subtaskInput.trim()) {
       const newSub = { id: Date.now(), title: subtaskInput, completed: false };
-      setFormState({ ...formState, subtasks: [...formState.subtasks, newSub] });
+      setFormState({
+        ...formState,
+        detailTask: [...formState.detailTask, newSub],
+      });
       setSubtaskInput("");
     }
   };
@@ -149,7 +124,7 @@ export const TaskPages = () => {
   const handleDeleteSubtask = (id) => {
     setFormState({
       ...formState,
-      subtasks: formState.subtasks.filter((s) => s.id !== id),
+      detailTask: formState.detailTask.filter((s) => s.id !== id),
     });
   };
 
@@ -158,7 +133,7 @@ export const TaskPages = () => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
         // Nếu đúng ID thì đảo ngược trạng thái expanded (true -> false, false -> true)
-        task.id === taskId ? { ...task, expanded: !task.expanded } : task
+        task.idTask === taskId ? { ...task, expanded: !task.expanded } : task
       )
     );
   };
@@ -166,12 +141,6 @@ export const TaskPages = () => {
   return (
     // <div className="SCOPE_TASK_PAGE">
     <div className="app-wrapper">
-      {/* Toast Thông báo (Demo hiển thị)
-      <div className="toast-container">
-        <div className="toast-item success">
-          <CheckCircle size={18} /> <span>Chào mừng trở lại!</span>
-        </div>
-      </div> */}
 
       <div className="main-container">
         {/* HEADER & STATS */}
@@ -252,129 +221,141 @@ export const TaskPages = () => {
         </div>
 
         {/* DANH SÁCH TASK (TASK LIST) */}
-        <Masonry
-          breakpointCols={breakpointColumnsObj}
-          className="my-masonry-grid"
-          columnClassName="my-masonry-grid_column"
-        >
-          {tasks.map((task) => (
-            <div
-              key={task.id}
-              className={`task-card ${task.completed ? "completed" : ""}`}
-            >
-              <div className="card-main">
-                {/* Checkbox & Info */}
-                <div className="card-left">
-                  <button
-                    className={`checkbox-custom ${
-                      task.completed ? "checked" : ""
-                    }`}
-                  >
-                    {task.completed && <Check size={14} strokeWidth={4} />}
-                  </button>
+        {tasks && tasks.length > 0 && (
+          <Masonry
+            breakpointCols={breakpointColumnsObj}
+            className="my-masonry-grid"
+            columnClassName="my-masonry-grid_column"
+          >
+            {tasks.map((task) => (
+              <div
+                key={task.idTask}
+                className={`task-card ${task.completed ? "completed" : ""}`}
+              >
+                <div className="card-main">
+                  {/* Checkbox & Info */}
+                  <div className="card-left">
+                    <button
+                      className={`checkbox-custom ${
+                        task.completed ? "checked" : ""
+                      }`}
+                    >
+                      {task.completed && <Check size={14} strokeWidth={4} />}
+                    </button>
 
-                  <div className="task-info">
-                    <div className="task-title-row">
-                      <h3
-                        className={task.completed ? "text-strikethrough" : ""}
-                      >
-                        {task.title}
-                      </h3>
-                      <span
-                        className={`category-badge ${task.category.toLowerCase()}`}
-                      >
-                        {task.category}
-                      </span>
-                    </div>
-
-                    {/* Progress Bar Subtask */}
-                    <div className="progress-wrapper">
-                      <div className="progress-bar-bg">
-                        <div
-                          className="progress-bar-fill"
-                          style={{
-                            width: `${
-                              (task.subtasks.filter((s) => s.completed).length /
-                                task.subtasks.length) *
-                              100
-                            }%`,
-                          }}
-                        ></div>
+                    <div className="task-info">
+                      <div className="task-title-row">
+                        <h3
+                          className={task.completed ? "text-strikethrough" : ""}
+                        >
+                          {task.titleTask}
+                        </h3>
+                        <span
+                          className={`category-badge ${task.categoryTask.toLowerCase()}`}
+                        >
+                          {task.categoryTask}
+                        </span>
                       </div>
-                      <span className="progress-text">
-                        {task.subtasks.filter((s) => s.completed).length}/
-                        {task.subtasks.length} subtasks
-                      </span>
+
+                      {/* Progress Bar Subtask */}
+                      <div className="progress-wrapper">
+                        <div className="progress-bar-bg">
+                          <div
+                            className="progress-bar-fill"
+                            style={{
+                              width: `${
+                                (task.detailTask.filter((s) => s.completed)
+                                  .length /
+                                  task.detailTask.length) *
+                                100
+                              }%`,
+                            }}
+                          ></div>
+                        </div>
+                        <span className="progress-text">
+                          {task.detailTask.filter((s) => s.completed).length}/
+                          {task.detailTask.length} SubTask
+                        </span>
+                      </div>
                     </div>
+                  </div>
+
+                  {/* Actions Buttons */}
+                  <div className="card-actions">
+                    {/* Các nút Edit, Delete giữ nguyên */}
+                    <button
+                      onClick={() => handleOpenEditModal(task)}
+                      className="action-btn edit"
+                    >
+                      <Edit2 size={18} />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(task.idTask)}
+                      
+                      className="action-btn delete"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+
+                    {/* --- NÚT MŨI TÊN (SỬA ĐOẠN NÀY) --- */}
+                    <button
+                      className="action-btn expand tooltip-container"
+                      onClick={() => toggleExpand(task.idTask)}
+                    >
+                      {/* Logic: Nếu đang mở (expanded=true) thì hiện mũi tên LÊN, ngược lại hiện mũi tên XUỐNG */}
+                      {task.expanded ? (
+                        <ChevronUp size={20} />
+                      ) : (
+                        <ChevronDown size={20} />
+                      )}
+                      <span className="tooltip-text-for-task">
+                        {task.expanded ? "Thu gọn" : "Xem chi tiết"}
+                      </span>
+                    </button>
+
+                    <button className="action-btn takeNow tooltip-container">
+                      <Zap size={20} />
+                      <span className="tooltip-text-for-task">Do it now</span>
+                    </button>
                   </div>
                 </div>
 
-                {/* Actions Buttons */}
-                <div className="card-actions">
-                  {/* Các nút Edit, Delete giữ nguyên */}
-                  <button
-                    // onClick={() => openEditModal(task)}
-                    className="action-btn edit"
-                  >
-                    <Edit2 size={18} />
-                  </button>
-                  <button
-                    // onClick={() => deleteTask(task.id)}
-                    className="action-btn delete"
-                  >
-                    <Trash2 size={18} />
-                  </button>
-
-                  {/* --- NÚT MŨI TÊN (SỬA ĐOẠN NÀY) --- */}
-                  <button
-                    className="action-btn expand tooltip-container"
-                    onClick={() => toggleExpand(task.id)}
-                  >
-                    {/* Logic: Nếu đang mở (expanded=true) thì hiện mũi tên LÊN, ngược lại hiện mũi tên XUỐNG */}
-                    {task.expanded ? (
-                      <ChevronUp size={20} />
-                    ) : (
-                      <ChevronDown size={20} />
-                    )}
-                    <span className="tooltip-text-for-task">
-                      {task.expanded ? "Thu gọn" : "Xem chi tiết"}
+                {/* Phần mở rộng (Subtasks & Detail) */}
+                <div className={`card-details ${task.expanded ? "show" : ""}`}>
+                  <p className="desc">
+                    {task.description || "Don't have descriptions"}
+                  </p>
+                  <div className="meta-info">
+                    <span>
+                      <Calendar size={14} /> Deadline:{" "}
+                      {task.deadlineTask || "Don't have deadline"}
                     </span>
-                  </button>
-                </div>
-              </div>
+                  </div>
 
-              {/* Phần mở rộng (Subtasks & Detail) */}
-              <div className={`card-details ${task.expanded ? "show" : ""}`}>
-                <p className="desc">{task.description || "Không có mô tả."}</p>
-                <div className="meta-info">
-                  <span>
-                    <Calendar size={14} /> Deadline:{" "}
-                    {task.deadline || "No deadline"}
-                  </span>
-                </div>
-
-                <div className="subtask-display-list">
-                  {task.subtasks.map((sub) => (
-                    <div key={sub.id} className="subtask-row">
-                      <div
-                        className={`mini-checkbox ${
-                          sub.completed ? "checked" : ""
-                        }`}
-                      >
-                        {sub.completed && <Check size={12} strokeWidth={4} />}
+                  {/* subtask */}
+                  <div className="subtask-display-list">
+                    {task.detailTask.map((sub) => (
+                      <div key={sub.id} className="subtask-row">
+                        <div
+                          className={`mini-checkbox ${
+                            sub.completed ? "checked" : ""
+                          }`}
+                        >
+                          {sub.completed && <Check size={12} strokeWidth={4} />}
+                        </div>
+                        <span
+                          className={sub.completed ? "text-strikethrough" : ""}
+                        >
+                          {sub.title}
+                        </span>
                       </div>
-                      <span
-                        className={sub.completed ? "text-strikethrough" : ""}
-                      >
-                        {sub.title}
-                      </span>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </Masonry>
+            ))}
+          </Masonry>
+        )}
       </div>
 
       {/* --- MODAL (ADD / EDIT TASK) --- */}
@@ -387,7 +368,9 @@ export const TaskPages = () => {
             }}
           >
             <div className="modal-header">
-              <h2>{formState.id ? "✏️ Cập Nhật Task" : "✨ Thêm Task Mới"}</h2>
+              <h2>
+                {formState.idTask ? "✏️ Update Your Task" : "✨ Create New Task"}
+              </h2>
               <button onClick={closeModal} className="modal-close-btn">
                 <X size={24} />
               </button>
@@ -396,11 +379,11 @@ export const TaskPages = () => {
             <div className="modal-body">
               {/* Title Input */}
               <div className="input-group">
-                <label>Tiêu đề công việc</label>
+                <label>Wotk title</label>
                 <input
                   type="text"
-                  name="title"
-                  value={formState.title}
+                  name="titleTask"
+                  value={formState.titleTask}
                   onChange={handleInputChange}
                   placeholder="Nhập tên task..."
                 />
@@ -409,35 +392,48 @@ export const TaskPages = () => {
               {/* Category & Date */}
               <div className="row-group">
                 <div className="input-group">
-                  <label>Danh mục</label>
+                  <label>Category</label>
                   <select
-                    name="category"
-                    value={formState.category}
+                    name="categoryTask"
+                    value={formState.categoryTask}
                     onChange={handleInputChange}
                   >
+                    <option value="" disabled selected>
+                      Category
+                    </option>
                     <option value="Work">Work</option>
                     <option value="Personal">Personal</option>
                     <option value="Study">Study</option>
                   </select>
                 </div>
                 <div className="input-group">
-                  <label>Hạn chót</label>
-                  <input
-                    type="date"
-                    name="deadline"
-                    value={formState.deadline}
-                    onChange={handleInputChange}
-                  />
+                  <label>Deadline:</label>
+                  <DatePicker
+                    selected={formState.deadlineTask}
+                    onChange={handleDateChange}
+                    placeholderText="Click to select date"
+                    showTimeSelect
+                    dateFormat="dd/MM/yyyy HH:mm"
+                    minDate={new Date()} // Không cho chọn ngày trong quá khứ
+                    isClearable // Hiển thị nút (x) để xóa ngày đã chọn
+                    // Chỉ hiển thị lịch khi bấm vào icon
+                    showIcon
+                    icon="fa fa-calendar"
+                    // Hiển thị tháng và năm để chọn nhanh
+                    showYearDropdown
+                    showMonthDropdown
+                    dropdownMode="select"
+                  ></DatePicker>
                 </div>
               </div>
 
               {/* Description */}
               <div className="input-group">
-                <label>Mô tả chi tiết</label>
+                <label>Descriptions</label>
                 <textarea
                   name="description"
                   rows="2"
-                  value={formState.description}
+                  value={formState.description || ""}
                   onChange={handleInputChange}
                   placeholder="Ghi chú thêm..."
                 />
@@ -445,14 +441,14 @@ export const TaskPages = () => {
 
               {/* --- SUBTASK MANAGER (PHẦN QUAN TRỌNG) --- */}
               <div className="subtask-manager-section">
-                <label>Danh sách việc nhỏ (Subtasks)</label>
+                <label>Work list (Subtasks)</label>
 
                 {/* Input thêm mới */}
                 <div className="add-subtask-row">
                   <Plus size={18} className="add-icon-input" />
                   <input
                     type="text"
-                    placeholder="Nhập tên việc nhỏ rồi nhấn Enter..."
+                    placeholder="Type a sub-task and press Enter..."
                     value={subtaskInput}
                     onChange={(e) => setSubtaskInput(e.target.value)}
                     onKeyDown={handleAddSubtask}
@@ -461,7 +457,7 @@ export const TaskPages = () => {
 
                 {/* List Subtask có thể sửa/xóa */}
                 <div className="modal-subtask-list">
-                  {formState.subtasks.map((sub) => (
+                  {formState.detailTask.map((sub) => (
                     <div key={sub.id} className="modal-subtask-item">
                       {/* Checkbox giả */}
                       <div
@@ -491,8 +487,8 @@ export const TaskPages = () => {
                       </button>
                     </div>
                   ))}
-                  {formState.subtasks.length === 0 && (
-                    <p className="empty-subtask-text">Chưa có subtask nào.</p>
+                  {formState.detailTask.length === 0 && (
+                    <p className="empty-subtask-text">Don't have sub-task created</p>
                   )}
                 </div>
               </div>
@@ -500,10 +496,22 @@ export const TaskPages = () => {
 
             <div className="modal-footer">
               <button className="btn-cancel" onClick={closeModal}>
-                Hủy bỏ
+                Cancel
               </button>
-              <button className="btn-save" onClick={closeModal}>
-                <Save size={18} /> Lưu Lại
+              <button
+                className="btn-save"
+                onClick={() =>
+                  handleSubmitUpdate({
+                    idTask: formState.idTask,
+                    taskForm: formState,
+                  }, () => {
+                    closeModal();
+                    refetch();
+                    if(onTaskUpdate) onTaskUpdate();// <-- Gọi callback refetch Dashboard
+                  })
+                }
+              >
+                <Save size={18} /> Save
               </button>
             </div>
           </div>

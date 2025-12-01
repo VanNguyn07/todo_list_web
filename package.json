@@ -24,6 +24,7 @@
     "react-datepicker": "^8.9.0",
     "react-dom": "^19.1.1",
     "react-masonry-css": "^1.0.16",
+    "react-router-dom": "^7.9.6",
     "react-simple-wysiwyg": "^3.4.1",
     "recharts": "^3.3.0",
     "sass": "^1.94.2"

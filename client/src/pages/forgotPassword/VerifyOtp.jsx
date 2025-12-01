@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './style.css'; 
 
-const VerifyOtp = ({ onVerifySuccess, onBack }) => {
+const VerifyOtp = () => {
+    const navigate = useNavigate();
     const [otp, setOtp] = useState('');
     const [message, setMessage] = useState({ text: '', type: '' });
     const [isLoading, setIsLoading] = useState(false);
@@ -50,9 +52,7 @@ const VerifyOtp = ({ onVerifySuccess, onBack }) => {
                 
                 // Chuyển sang trang Reset Password sau 1.5s
                 setTimeout(() => {
-                    if (onVerifySuccess) {
-                        onVerifySuccess(); // Gọi hàm từ App.jsx để chuyển trang
-                    }
+                    navigate("/resetpassword")
                 }, 1500);
 
             } else {
@@ -98,13 +98,6 @@ const VerifyOtp = ({ onVerifySuccess, onBack }) => {
 
                     <div className={`message-box ${message.type}`}>
                         {message.text && <span>{message.text}</span>}
-                    </div>
-
-                    {/* Nút quay lại nếu muốn nhập lại email */}
-                    <div className="back-link">
-                         <a href="#" onClick={(e) => { e.preventDefault(); onBack(); }}>
-                            ← Back
-                        </a>
                     </div>
                 </form>
             </div>

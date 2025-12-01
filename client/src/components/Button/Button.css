@@ -476,7 +476,7 @@
 }
 
 /* Button for sidebar */
-.btn-sidebar {
+.btn-sidebar, .btn-logout {
   background: none;
   border: none;
   cursor: pointer;
@@ -492,10 +492,11 @@
   color: var(--text-color-light); /* Màu chữ mờ cho nút không active */
   /* Hiệu ứng chuyển động */
   transition: all 0.2s ease-in-out;
+  text-decoration: none;
 }
 
 /* --- Thiết kế cho Icon --- */
-.btn-sidebar i {
+.btn-sidebar i, .btn-logout i {
   width: 20px; /* Cho icon một không gian cố định */
   margin-right: 14px; /* Khoảng cách giữa icon và chữ */
   font-size: 18px; /* Kích thước icon */
@@ -503,7 +504,7 @@
 }
 
 /* --- Hiệu ứng khi di chuột (Hover) --- */
-.btn-sidebar:hover {
+.btn-sidebar:hover, .btn-logout:hover {
   background-color: var(--bg-color-hover); /* Đổi màu nền */
   transform: translateY(-5px);
 }
@@ -515,6 +516,9 @@
   color: var(--primary-color-sidebar); /* Chữ đổi thành màu chính */
 }
 
+.btn-logout {
+font-weight: bold;
+}
 .btn-quick-add .tooltip-text,
 .btn-noti .tooltip-text,
 .btn-user .tooltip-text {

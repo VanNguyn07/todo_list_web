@@ -27,6 +27,7 @@ export const useUpdateTask = () => {
       const localDateTimeString = `${Y}-${M}-${D} ${h}:${m}:${s}`;
 
       formData.append("deadlineTask", localDateTimeString);
+      formData.append("description", taskForm.description);
     }
 
     console.log("Sending data: ", Object.fromEntries(formData));

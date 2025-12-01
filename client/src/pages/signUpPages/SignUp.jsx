@@ -4,9 +4,11 @@ import "./ResponsiveSignUp.css";
 
 // Import hình ảnh
 import astronautImg from "../../assets/images/astronaut.png";
+import {Link, useNavigate } from "react-router-dom";
 
 // Component nhận 1 prop: hàm để quay lại trang SignIn
-const SignUp = ({ onSwitchToSignIn }) => {
+const SignUp = () => {
+  const navigate = useNavigate();
   // State lưu dữ liệu form
   const [formData, setFormData] = useState({
     inputUserName: "",
@@ -113,7 +115,7 @@ const SignUp = ({ onSwitchToSignIn }) => {
 
         if (data.success) {
           alert("Đăng ký thành công! Vui lòng đăng nhập.");
-          if (onSwitchToSignIn) onSwitchToSignIn(); // Quay lại trang login
+          navigate("/signin");
         } else {
           // Hiển thị lỗi từ server (ví dụ: "Email đã tồn tại")
           setErrors({ server: data.message || "Đăng ký thất bại" });
@@ -288,9 +290,7 @@ const SignUp = ({ onSwitchToSignIn }) => {
               {/* Nút quay lại Login */}
               <div className="registration">
                 <div id="accountYet" style={{ cursor: "pointer" }}>
-                  <a href="../signInPages/SignIn.jsx">
-                    Already have an account? Sign In
-                  </a>
+                  <Link to="/signin">Already have an account? Sign In</Link>
                 </div>
               </div>
 

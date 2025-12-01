@@ -112,6 +112,19 @@
             exit();
         }
 
+        public function handleGetAllTaskList(){
+            $taskForm = $this->taskModel->getAllTaskList();
+            if($taskForm !== null){
+                $this->response['success'] = true;
+                $this->response['taskForm'] = $taskForm['data'];
+            }else {
+                $this->response['message'] = "Lỗi khi lấy danh sách task";
+            }
+
+            echo json_encode($this->response);
+            exit();
+        }
+
         public function handleDeleteTask()
         {
             // Lấy dữ liệu từ POST
@@ -141,16 +154,18 @@
             $detailTask = trim($_POST['detailTask'] ?? '');
             $categoryTask = trim($_POST['categoryTask'] ?? '');
             $deadlineTask = trim($_POST['deadlineTask'] ?? '');
+            $description = trim($_POST['description'] ?? '');
 
-            $result = $this->taskModel->updateTaskById($titleTask, $detailTask, $categoryTask, $deadlineTask, $idTask);
+            $result = $this->taskModel->updateTaskById($titleTask, $detailTask, $categoryTask, $deadlineTask, $description, $idTask);
 
-            if ($result !== null) {
-                // 2. Trả về JSON thành công
+            // Expecting $result to be an array with 'success' boolean
+            if (is_array($result) && isset($result['success']) && $result['success'] === true) {
                 $this->response['success'] = true;
                 $this->response['message'] = "Update your task successfully!";
             } else {
                 $this->response['success'] = false;
-                $this->response['message'] = 'Lỗi DB: ' . $result['message'];
+                $errMsg = is_array($result) && isset($result['message']) ? $result['message'] : 'Unknown DB error';
+                $this->response['message'] = 'Lỗi DB: ' . $errMsg;
             }
 
             echo json_encode($this->response);

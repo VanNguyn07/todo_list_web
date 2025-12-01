@@ -34,6 +34,7 @@ import { CalendarPages } from "../calendarPages/CalendarPages";
 import "./Dashboard.css";
 import AboutUs from "../aboutUs/aboutUs";
 import { X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function Dashboard() {
   const currentStreakCount = 10;
@@ -51,7 +52,8 @@ function Dashboard() {
   const { activeView, handleTransitionPage } = useButtonActive("home");
   const [activeModal, setActiveMoal] = useState(null);
   // 1. Gọi hook fetch, lấy ra hàm 'refetch'
-  const { tasks, refetch } = useFetchTasks();
+  const { tasks, refetch } = useFetchTasks("get_nearest_tasks");
+
   const {
     taskForm,
     subTask,
@@ -85,7 +87,14 @@ function Dashboard() {
     handleCloseFormUpdate,
   } = useFetchTaskOnUpdateForm();
 
-  const username = localStorage.getItem('my_username');
+  const username = localStorage.getItem("my_username") || "User";
+
+  const handleLogOut = () => {
+    localStorage.removeItem("my_username");
+    ///Cách nhanh nhất để reset toàn bộ app:
+    window.location.href = "/signin";
+  };
+
   return (
     <>
       <div id="dashboard-page">
@@ -173,16 +182,10 @@ function Dashboard() {
               <span>Calendar</span>
             </Button>
 
-            <Button
-              className={`btn-sidebar btn-settings ${
-                activeView === "settings" ? "active" : ""
-              }`}
-              id="settingsButton"
-              onClick={() => handleTransitionPage("settings")}
-            >
-              <i className="fa-solid fa-gear"></i>
-              <span>Settings</span>
-            </Button>
+            <Link className="btn-logout" onClick={handleLogOut}>
+              <i className="fa-solid fa-right-from-bracket"></i>
+              <span>Log out</span>
+            </Link>
           </nav>
           <div className="header-page">
             <div className="content-header">
@@ -562,7 +565,7 @@ function Dashboard() {
                     <i className="fa-solid fa-forward skip-icon"></i>
                     <span className="tooltip-text">Skip</span>
                   </Button>
-                  
+
                   {!isActive ? (
                     <Button
                       className="btn-control-pomodoro btn-start"
@@ -629,7 +632,7 @@ function Dashboard() {
 
           {activeView === "task" && (
             <div className="task-page-wrapper ">
-              <TaskPages />
+              <TaskPages onTaskUpdate={refetch}/>
             </div>
           )}
 
@@ -677,7 +680,6 @@ function Dashboard() {
               <CalendarPages />
             </div>
           )}
-
         </Body>
 
         {/* Contact overlay + backdrop */}

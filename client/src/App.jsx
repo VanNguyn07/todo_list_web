@@ -1,47 +1,36 @@
 import { useState } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Dashboard from "./pages/dashboard/Dashboard.jsx";
 import SignIn from "./pages/signInPages/SignIn.jsx";
 import SignUp from "./pages/signUpPages/SignUp.jsx";
-import Dashboard from "./pages/dashboard/Dashboard.jsx";
 import ForgotPassword from "./pages/forgotPassword/ForgotPassword.jsx";
 import VerifyOtp from "./pages/forgotPassword/VerifyOtp.jsx";
 import ResetPassword from "./pages/forgotPassword/ResetPassword.jsx";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
-  // Các trạng thái trang: 'signin', 'signup', 'forgot', 'verify_otp', 'reset'
-  const [currentPage, setCurrentPage] = useState("signin");
+  const [isLoggedIn, setIsLoggedIn] = useState(() =>{
+    return localStorage.getItem('my_username') !== null;
+  });
 
   return (
-    <>
-      {isLoggedIn ? (
-        <Dashboard />
-      ) : currentPage === "signin" ? (
-        <SignIn
-          onLoginSuccess={() => setIsLoggedIn(true)}
-          onSwitchToSignUp={() => setCurrentPage("signup")}
-          onSwitchToForgot={() => setCurrentPage("forgot")}
-        />
-      ) : currentPage === "signup" ? (
-        <SignUp onSwitchToSignIn={() => setCurrentPage("signin")} />
-      ) : currentPage === "forgot" ? (
-        <ForgotPassword 
-            onSwitchToSignIn={() => setCurrentPage("signin")}
-            // Nếu gửi email thành công -> chuyển sang trang Verify OTP
-            onSwitchToVerify={() => setCurrentPage("verify_otp")} 
-        />
-      ) : currentPage === "verify_otp" ? (
-        <VerifyOtp 
-            // Nếu nhập đúng OTP -> chuyển sang trang Reset Password
-            onVerifySuccess={() => setCurrentPage("reset")}
-            // Nút Back quay lại nhập Email
-            onBack={() => setCurrentPage("forgot")}
-        />
-      ) : (
-        // Trang Reset Password
-        <ResetPassword onResetSuccess={() => setCurrentPage("signin")} />
-      )}
-    </>
+    <Routes>
+      {/* path="/dashboard": Khi trình duyệt là localhost:3000/dashboard
+         element={<Dashboard />}: Thì hiện component Dashboard
+       */}
+      <Route path="/" element={isLoggedIn ? <Navigate to="/dashboard" replace /> : <Navigate to="/signin" replace/>} />
+      <Route
+        path="/signin"
+        element={<SignIn onLoginSuccess={() => setIsLoggedIn(true)} />}
+      />
+      <Route
+        path="/dashboard"
+        element={isLoggedIn ? <Dashboard /> : <Navigate to="/signin" replace />}
+      />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/forgotpassword" element={<ForgotPassword />} />
+      <Route path="/verifyotp" element={<VerifyOtp />} />
+      <Route path="/resetpassword" element={<ResetPassword />} />
+    </Routes>
   );
 }
 

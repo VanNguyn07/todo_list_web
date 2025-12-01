@@ -3,7 +3,6 @@ header('Content-Type: application/json');
 class UserControllerSignIn
 {
     private $userModel;
-    private $response = ['success' => false, 'message' => ''];
     // Constructor nhận kết nối Database
     public function __construct($pdo)
     {
@@ -13,10 +12,16 @@ class UserControllerSignIn
     // Hàm chính để xử lý đăng nhập
     public function login()
     {
+        $response = [
+            'success' => false,
+            'message' => '',
+            'field' => '' // Thêm field để React biết lỗi ở input nào
+        ];
         // Chỉ xử lý khi là POST request
         if ($_SERVER['REQUEST_METHOD'] !== "POST") {
             $response['message'] = 'Invalid Request Method';
-            return $response;
+            echo json_encode($response);
+            exit();
         }
 
         // Lấy dữ liệu từ POST (Dùng toán tử null coalescing ?? để tránh lỗi undefined index)
@@ -27,7 +32,8 @@ class UserControllerSignIn
         // 1. Validate dữ liệu rỗng
         if (empty($username) || empty($password) || empty($gender)) {
             $response['message'] = 'Please enter full field!';
-            return $response;
+            echo json_encode($response);
+            exit();
         }
 
         // 2. Tìm user trong database
@@ -48,9 +54,10 @@ class UserControllerSignIn
         } else {
             // --- ĐĂNG NHẬP THÀNH CÔNG ---
 
-            $this->response['success'] = true;
-            $this->response['id'] = $user['id'];
-            $this->response['username'] = $user['username'];
+            $response['success'] = true;
+            $response['message'] = 'Login successfully';
+            $response['id'] = $user['id'];
+            $response['username'] = $user['username'];
 
             // // Lưu session
             // $_SESSION["loggedin"] = true;
@@ -63,7 +70,7 @@ class UserControllerSignIn
             // $response['message'] = 'Login successfully!';
         }
 
-        echo json_encode($this->response);
+        echo json_encode($response);
         exit();
     }
 }

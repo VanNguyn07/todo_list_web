@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./style.css";
 
-const ResetPassword = ({ onResetSuccess }) => {
+const ResetPassword = () => {
+  const navigate = useNavigate();
   const [passwords, setPasswords] = useState({
     new_password: "",
     confirm_password: "",
@@ -82,13 +84,7 @@ const ResetPassword = ({ onResetSuccess }) => {
 
         // Chuyển trang sau 1.5s
         setTimeout(() => {
-          if (data.redirectUrl) {
-            // Nếu server trả về URL, dùng URL đó
-            window.location.href = "/sign-in"; // Hoặc điều hướng về trang đăng nhập
-          } else if (onResetSuccess) {
-            // Hoặc dùng callback để chuyển trang trong React
-            onResetSuccess();
-          }
+          navigate("/signin");
         }, 1500);
       } else {
         setMessage({ text: data.message, type: "error" });
@@ -110,7 +106,7 @@ const ResetPassword = ({ onResetSuccess }) => {
           <h2 id="titleForSet-Forgot-Reset-Verify">Reset Your Password</h2>
 
           <div className="content-reset-pass">
-            <div className="input-group">
+            <div className="input-group-reset-pass">
               <label htmlFor="new_password">New password:</label>
               <input
                 type="password"
@@ -124,7 +120,7 @@ const ResetPassword = ({ onResetSuccess }) => {
               />
             </div>
 
-            <div className="input-group">
+            <div className="input-group-reset-pass">
               <label htmlFor="confirm_password">Confirm password:</label>
               <input
                 type="password"

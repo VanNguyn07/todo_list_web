@@ -351,6 +351,7 @@
 .progress-wrapper {
   display: flex;
   align-items: center;
+  justify-content: space-around;
   gap: 10px;
   margin-top: 8px;
 }
@@ -395,6 +396,10 @@
 .action-btn.delete:hover {
   background: #fee2e2;
   color: var(--danger);
+}
+.action-btn.edit:hover {
+  background: #f3f6f6;
+  color: rgb(0, 166, 255);
 }
 
 /* Button cha cần position relative */
@@ -762,6 +767,9 @@
   border: 1px solid #e2e8f0;
 }
 
+.input-group input {
+  width: 80%;
+}
 /* Khi click vào ô input (Focus) */
 .input-group input:focus,
 .input-group textarea:focus,

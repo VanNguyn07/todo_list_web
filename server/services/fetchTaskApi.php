@@ -45,6 +45,10 @@ try {
                 $fetchedIdTask = $_GET['idTask'];
                 $controller->handleGetTasksToUpdate($fetchedIdTask);
                 break;
+            
+            case 'get_all_task_list':
+                $controller->handleGetAllTaskList();
+                break;
                 
             default:
                 echo json_encode(['success' => false, 'message' => 'Hành động không hợp lệ.']);

@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import Button from "../button/Button";
 import "./UpdateTask.css";
+import { Plus, Trash2, X, Check, Save } from "lucide-react";
 // Import CSS bắt buộc của react-datepicker
 import "react-datepicker/dist/react-datepicker.css";
-import {useUpdateTask } from "../../hooks/useUpdateTask";
+import { useUpdateTask } from "../../hooks/useUpdateTask";
 
 export const UpdateTask = ({ taskData, onClose, onReload }) => {
   //Tạo state nội bộ để quản lý các ô input
@@ -13,6 +14,7 @@ export const UpdateTask = ({ taskData, onClose, onReload }) => {
     detailTask: [],
     categoryTask: "",
     deadlineTask: new Date(),
+    description: "",
   });
 
   useEffect(() => {
@@ -37,6 +39,7 @@ export const UpdateTask = ({ taskData, onClose, onReload }) => {
         deadlineTask: taskData.deadlineTask
           ? new Date(taskData.deadlineTask)
           : new Date(),
+          description: taskData.description || "",
       });
     }
   }, [taskData]);
@@ -50,77 +53,78 @@ export const UpdateTask = ({ taskData, onClose, onReload }) => {
     setFormData({ ...formData, deadlineTask: date });
   };
 
-  const handleSubTasksChange = (index, newValue) => {
-    // Copy mảng subtasks cũ ra
-    const updatedSubTasks = [...formData.detailTask];
-    //Sửa title của phần tử tại vị trí index
-    if (updatedSubTasks[index].title !== undefined) {
-      updatedSubTasks[index].title = newValue;
-    } else {
-      updatedSubTasks[index].title = newValue;
-    }
+  const handleSubTasksChange = (id, newValue) => {
+    // Duyệt qua mảng, tìm đúng cái subtask có id trùng khớp để sửa title
+    const updatedSubTasks = formData.detailTask.map((sub) => 
+      sub.id === id ? { ...sub, title: newValue } : sub
+    );
 
-    //Cập nhật lại state chung
     setFormData({
       ...formData,
       detailTask: updatedSubTasks,
+    })
+  };
+
+  const { handleSubmitUpdate } = useUpdateTask();
+
+  const handleDeleteSubtask = (id) => {
+    setFormData({
+      ...formData,
+      detailTask: formData.detailTask.filter((sub) => sub.id !== id),
     });
   };
 
-  const {handleSubmitUpdate} = useUpdateTask();
+  const [subtaskInput, setSubtaskInput] = useState("");
+
+  // Hàm giả thêm subtask (Enter)
+  const handleAddSubtask = (e) => {
+    if (e.key === "Enter" && subtaskInput.trim()) {
+      const newSub = { id: Date.now(), title: subtaskInput, completed: false };
+      setFormData({
+        ...formData,
+        detailTask: [...formData.detailTask, newSub],
+      });
+      setSubtaskInput("");
+    }
+  };
 
   //onClick={(e) => e.stopPropagation()} vào cái Form (lớp bên trong).
   // Tại sao? Để khi bạn click vào ô input để gõ chữ, sự kiện click đó không "nổi bong bóng" (bubble) ra ngoài Overlay, tránh việc đang gõ thì form bị đóng.
   return (
-    <div className="modal-overlay-for-update" onClick={onClose}>
-      <div className="form-update" onClick={(e) => e.stopPropagation()}>
-        <div className="content-top-update">
-          <h1 id="update-title-text">Update your task</h1>
-          <i className="fa-solid fa-pen"></i>
+    <div className="modal-backdrop-task" onClick={onClose}>
+      <div
+        className="modal-container"
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        <div className="modal-header">
+          <h2>
+            <h1 id="update-title-text">✏️ Update your task</h1>
+          </h2>
+          <button onClick={onClose} className="modal-close-btn">
+            <X size={24} />
+          </button>
         </div>
-        <div className="content-body">
-          <div className="update-input-task-name">
-            <label htmlFor="update-input-name">Task Name: </label>
+
+        <div className="modal-body">
+          {/* Title Input */}
+          <div className="input-group">
+            <label>Work title</label>
             <input
               type="text"
               name="titleTask"
-              id="update-input-name"
-              spellCheck="false"
-              placeholder="Update your name task"
               value={formData.titleTask}
               onChange={handleChange}
+              placeholder="Nhập tên task..."
             />
           </div>
-          <div className="update-sub-task">
-            <label htmlFor="sub-task">Sub tasks: </label>
-            {formData.detailTask && formData.detailTask.length > 0 ? (
-              <div className="sub-tasks-list">
-                {formData.detailTask.map((item, index) => (
-                  <div className="sub-tasks-item" key={item.idTask || index}>
-                    <input
-                      type="text"
-                      name=""
-                      spellCheck="false"
-                      id="sub-tasks-item-input"
-                      value={item.title}
-                      onChange={(e) =>
-                      handleSubTasksChange(index, e.target.value)
-                      }
-                    />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p style={{ color: "#888", fontStyle: "italic" }}>
-                Không có subtask nào
-              </p>
-            )}
-          </div>
 
-          <div className="update-category-and-deadline">
-            <div className="update-select-wrapper">
+          {/* Category & Date */}
+          <div className="row-group">
+            <div className="input-group">
+              <label>Category</label>
               <select
-                className="update-category-select"
                 name="categoryTask"
                 value={formData.categoryTask}
                 onChange={handleChange}
@@ -128,15 +132,13 @@ export const UpdateTask = ({ taskData, onClose, onReload }) => {
                 <option value="" disabled selected>
                   Category
                 </option>
-                <option value="work">Work</option>
-                <option value="personal">Personal</option>
-                <option value="study">Study</option>
+                <option value="Work">Work</option>
+                <option value="Personal">Personal</option>
+                <option value="Study">Study</option>
               </select>
-              <i className="fa-solid fa-chevron-down"></i>
             </div>
-
-            <div className="update-datepicker-wrapper">
-              <p id="update-deadline-text">Deadline:</p>
+            <div className="input-group">
+              <label>Deadline:</label>
               <DatePicker
                 selected={formData.deadlineTask}
                 onChange={handleDateChange}
@@ -147,7 +149,7 @@ export const UpdateTask = ({ taskData, onClose, onReload }) => {
                 isClearable // Hiển thị nút (x) để xóa ngày đã chọn
                 // Chỉ hiển thị lịch khi bấm vào icon
                 showIcon
-                icon="fa fa-calendar" // Cần cài thêm Font Awesome nếu dùng
+                icon="fa fa-calendar"
                 // Hiển thị tháng và năm để chọn nhanh
                 showYearDropdown
                 showMonthDropdown
@@ -155,12 +157,91 @@ export const UpdateTask = ({ taskData, onClose, onReload }) => {
               ></DatePicker>
             </div>
           </div>
-          <div className="btn-group">
-            <Button onClick={() => handleSubmitUpdate({idTask: taskData.idTask, taskForm: formData}, () => {
-              onClose();
-              if(onReload) onReload();
-            })}>Update</Button>
+
+          {/* Description */}
+          <div className="input-group">
+            <label>Descriptions</label>
+            <textarea
+              name="description"
+              rows="2"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="More notes..."
+            />
           </div>
+
+          {/* --- SUBTASK MANAGER (PHẦN QUAN TRỌNG) --- */}
+          <div className="subtask-manager-section">
+            <label>Work list(Subtasks)</label>
+
+            {/* Input thêm mới */}
+            <div className="add-subtask-row">
+              <Plus size={18} className="add-icon-input" />
+              <input
+                type="text"
+                placeholder="Type a sub-task and press Enter..."
+                value={subtaskInput}
+                onChange={(e) => setSubtaskInput(e.target.value)}
+                onKeyDown={handleAddSubtask}
+              />
+            </div>
+
+            {/* List Subtask có thể sửa/xóa */}
+            <div className="modal-subtask-list">
+              {formData.detailTask.map((sub) => (
+                <div key={sub.id} className="modal-subtask-item">
+                  {/* Checkbox giả */}
+                  <div
+                    className={`mini-checkbox ${
+                      sub.completed ? "checked" : ""
+                    }`}
+                  >
+                    {sub.completed && <Check size={12} strokeWidth={4} />}
+                  </div>
+
+                  {/* Input sửa tên trực tiếp */}
+                  <input
+                    type="text"
+                    className="edit-sub-input"
+                    value={sub.title}
+                    onChange={(e) =>
+                      handleSubTasksChange(sub.id, e.target.value)
+                    }
+                  />
+
+                  {/* Nút xóa subtask */}
+                  <button
+                    className="btn-mini delete"
+                    onClick={() => handleDeleteSubtask(sub.id)}
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              ))}
+              {formData.detailTask.length === 0 && (
+                <p className="empty-subtask-text">Don't have sub-task created!</p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="modal-footer">
+          <button className="btn-cancel" onClick={onClose}>
+            Cancel
+          </button>
+          <Button className="btn-save"
+            onClick={() =>
+              handleSubmitUpdate(
+                { idTask: taskData.idTask, taskForm: formData },
+                () => {
+                  onClose();
+                  if (onReload) onReload();
+                }
+              )
+            }
+          >
+            <Save size={18} /> Save
+          </Button>
         </div>
       </div>
     </div>
