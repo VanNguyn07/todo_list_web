@@ -38,13 +38,13 @@ const breakpointColumnsObj = {
   700: 1, // Màn hình điện thoại: về 1 cột cho dễ nhìn
 };
 
-export const TaskPages = ({onTaskUpdate}) => {
+export const TaskPages = ({ onTaskUpdate }) => {
   const { tasks, setTasks, refetch } = useFetchTasks("get_all_task_list");
 
   const { handleSubmitUpdate } = useUpdateTask();
   const { handleDelete } = useDeleteTask({
     onSuccess: () => {
-     // refetch dữ liệu của TaskPages
+      // refetch dữ liệu của TaskPages
       refetch();
       // nếu Dashboard truyền callback thì gọi để Dashboard refetch
       if (typeof onTaskUpdate === "function") onTaskUpdate();
@@ -77,16 +77,20 @@ export const TaskPages = ({onTaskUpdate}) => {
 
   const handleOpenEditModal = (task) => {
     setFormState({
-    // sao chép các field, nhưng ép deadlineTask thành Date hoặc null
-    idTask: task.idTask,
-    titleTask: task.titleTask || "",
-    detailTask: Array.isArray(task.detailTask) ? task.detailTask : (task.detailTask ? JSON.parse(task.detailTask) : []),
-    categoryTask: task.categoryTask || "",
-    deadlineTask: task.deadlineTask ? new Date(task.deadlineTask) : null,
-    description: task.description || "",
-    // ... bất kỳ field nào khác
-  });
-  setIsModalOpen(true);
+      // sao chép các field, nhưng ép deadlineTask thành Date hoặc null
+      idTask: task.idTask,
+      titleTask: task.titleTask || "",
+      detailTask: Array.isArray(task.detailTask)
+        ? task.detailTask
+        : task.detailTask
+        ? JSON.parse(task.detailTask)
+        : [],
+      categoryTask: task.categoryTask || "",
+      deadlineTask: task.deadlineTask ? new Date(task.deadlineTask) : null,
+      description: task.description || "",
+      // ... bất kỳ field nào khác
+    });
+    setIsModalOpen(true);
   };
 
   const closeModal = () => setIsModalOpen(false);
@@ -99,7 +103,6 @@ export const TaskPages = ({onTaskUpdate}) => {
   const handleDateChange = (date) => {
     setFormState({ ...formState, deadlineTask: date });
   };
-
 
   const handleSubtaskNameChange = (id, value) => {
     const updatedSubs = formState.detailTask.map((subtask) =>
@@ -141,7 +144,6 @@ export const TaskPages = ({onTaskUpdate}) => {
   return (
     // <div className="SCOPE_TASK_PAGE">
     <div className="app-wrapper">
-
       <div className="main-container">
         {/* HEADER & STATS */}
         <header className="app-header">
@@ -291,7 +293,6 @@ export const TaskPages = ({onTaskUpdate}) => {
                     </button>
                     <button
                       onClick={() => handleDelete(task.idTask)}
-                      
                       className="action-btn delete"
                     >
                       <Trash2 size={18} />
@@ -369,7 +370,9 @@ export const TaskPages = ({onTaskUpdate}) => {
           >
             <div className="modal-header">
               <h2>
-                {formState.idTask ? "✏️ Update Your Task" : "✨ Create New Task"}
+                {formState.idTask
+                  ? "✏️ Update Your Task"
+                  : "✨ Create New Task"}
               </h2>
               <button onClick={closeModal} className="modal-close-btn">
                 <X size={24} />
@@ -488,7 +491,9 @@ export const TaskPages = ({onTaskUpdate}) => {
                     </div>
                   ))}
                   {formState.detailTask.length === 0 && (
-                    <p className="empty-subtask-text">Don't have sub-task created</p>
+                    <p className="empty-subtask-text">
+                      Don't have sub-task created
+                    </p>
                   )}
                 </div>
               </div>
@@ -501,17 +506,28 @@ export const TaskPages = ({onTaskUpdate}) => {
               <button
                 className="btn-save"
                 onClick={() =>
-                  handleSubmitUpdate({
-                    idTask: formState.idTask,
-                    taskForm: formState,
-                  }, () => {
-                    closeModal();
-                    refetch();
-                    if(onTaskUpdate) onTaskUpdate();// <-- Gọi callback refetch Dashboard
-                  })
+                  handleSubmitUpdate(
+                    {
+                      idTask: formState.idTask,
+                      taskForm: formState,
+                    },
+                    () => {
+                      closeModal();
+                      refetch();
+                      if (onTaskUpdate) onTaskUpdate(); // <-- Gọi callback refetch Dashboard
+                    }
+                  )
                 }
               >
-                <Save size={18} /> Save
+                {formState.idTask ? (
+                  <>
+                    <Save size={18} /> Save
+                  </>
+                ) : (
+                  <>
+                    <Plus size={18} /> Create
+                  </>
+                )}
               </button>
             </div>
           </div>

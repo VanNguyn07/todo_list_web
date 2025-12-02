@@ -35,6 +35,7 @@ import "./Dashboard.css";
 import AboutUs from "../aboutUs/aboutUs";
 import { X } from "lucide-react";
 import { Link } from "react-router-dom";
+import { ProfileModal } from "../profile/ProfileModal";
 
 function Dashboard() {
   const currentStreakCount = 10;
@@ -88,6 +89,7 @@ function Dashboard() {
   } = useFetchTaskOnUpdateForm();
 
   const username = localStorage.getItem("my_username") || "User";
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const handleLogOut = () => {
     localStorage.removeItem("my_username");
@@ -347,7 +349,7 @@ function Dashboard() {
                     <span className="tooltip-text">Notification</span>
                   </Button>
 
-                  <Button className="btn-modern btn-user">
+                  <Button className="btn-modern btn-user" onClick={() => setIsProfileOpen(true)}>
                     <i className="fa-solid fa-user"></i>
                     <span className="tooltip-text">Profile</span>
                   </Button>
@@ -356,6 +358,13 @@ function Dashboard() {
             </div>
           </div>
         </Header>
+
+        <ProfileModal 
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        username={username}
+        onLogout={handleLogOut}
+        />
 
         <Body>
           {/* ======================================================== */}
