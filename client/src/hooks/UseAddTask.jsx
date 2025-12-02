@@ -10,6 +10,7 @@ export const useAddTask = ({ onSuccess }) => {
     titleTask: "",
     categoryTask: "",
     deadlineTask: null,
+    description: "",
   });
 
   const [subTask, setSubTask] = useState([]);// Mảng chứa các task con
@@ -110,6 +111,7 @@ export const useAddTask = ({ onSuccess }) => {
       const localDateTimeString = `${Y}-${M}-${D} ${h}:${m}:${s}`;
 
       formData.append("deadlineTask", localDateTimeString);
+      formData.append("description", taskForm.description);
     }
 
     console.log("Sending data: ", Object.fromEntries(formData));

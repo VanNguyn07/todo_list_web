@@ -59,6 +59,8 @@
   color: var(--text-gray);
   font-size: 16px;
   margin-top: 5px;
+  text-align: center;
+  margin-right: 50px;
 }
 
 .weather-widget {

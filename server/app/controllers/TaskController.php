@@ -19,6 +19,7 @@
             $detailTask = trim($_POST['detailTask'] ?? '');
             $categoryTask = trim($_POST['categoryTask'] ?? '');
             $deadlineTask = trim($_POST['deadlineTask'] ?? '');
+            $description = trim($_POST['description'] ?? '');
 
             // Validation
             if (empty($titleTask)) {
@@ -81,7 +82,8 @@
                     $titleTask,
                     $detailTask,
                     $categoryTask,
-                    $deadlineTask
+                    $deadlineTask,
+                    $description
                 );
 
                 if ($isSuccess) {

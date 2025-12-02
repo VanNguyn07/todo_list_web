@@ -21,6 +21,7 @@ import { useButtonActive } from "../../hooks/UseButtonActive";
 import { useFetchTasks } from "../../hooks/useFetchTask";
 import { useDeleteTask } from "../../hooks/useDeleteTask";
 import { usePomodoro } from "../../hooks/usePomodoro";
+import { useTaskPages } from "../../hooks/useTaskPages";
 import { useFetchTaskOnUpdateForm } from "../../hooks/useFetchTaskOnUpdateForm";
 import { TaskDatePicker } from "../../components/datePicker/TaskDatePicker";
 import { UpdateTask } from "../../components/taskCard/updateTask";
@@ -36,6 +37,7 @@ import AboutUs from "../aboutUs/aboutUs";
 import { X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ProfileModal } from "../profile/ProfileModal";
+import { UpdateAndCreateTask } from "../modalPopup/updateAndCreateTaskModal";
 
 function Dashboard() {
   const currentStreakCount = 10;
@@ -88,8 +90,13 @@ function Dashboard() {
     handleCloseFormUpdate,
   } = useFetchTaskOnUpdateForm();
 
+  const taskPageData = useTaskPages();
+  const {handleOpenAddModal, isModalOpen} = taskPageData;
+
   const username = localStorage.getItem("my_username") || "User";
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+  const {handleSubmitForm} = UpdateAndCreateTask(taskPageData ,refetch);
 
   const handleLogOut = () => {
     localStorage.removeItem("my_username");
@@ -339,7 +346,8 @@ function Dashboard() {
                     <span>About us</span>
                   </Button>
 
-                  <Button className="btn-modern btn-quick-add">
+                  <Button className="btn-modern btn-quick-add"
+                  onClick={handleOpenAddModal}>
                     <i class="fa-solid fa-plus"></i>
                     <span className="tooltip-text">Add Task</span>
                   </Button>
@@ -484,7 +492,7 @@ function Dashboard() {
                       <div className="content-right">
                         <Button
                           className="btn-task btn-arrow-right"
-                          // onClick={() => handleUpdate(task.idTask)}
+                          // show detail
                         >
                           <i class="fas fa-arrow-right"></i>
                           <span className="tooltip-text">Detail</span>
@@ -721,6 +729,10 @@ function Dashboard() {
             onClose={handleCloseFormUpdate}
             onReload={refetch}
           />
+        )}
+
+        {isModalOpen && (
+          handleSubmitForm()
         )}
       </div>
     </>

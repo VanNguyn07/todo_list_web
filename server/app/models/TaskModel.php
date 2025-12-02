@@ -11,17 +11,16 @@ class TaskModel
     }
 
     // 1. Thêm công việc mới
-    public function insertTaskIntoDatabase($title, $detail, $category, $deadline)
+    public function insertTaskIntoDatabase($title, $detail, $category, $deadline, $description)
     {
-        // ⚠️ Lưu ý: Kiểm tra lại tên cột trong DB của bạn xem đã đổi thành title, description... chưa
-        // hay vẫn là titleTask, detailTask. Dưới đây mình để theo tên cũ trong code của bạn:
-        $sql = "INSERT INTO " . $this->table_name . " (titleTask, detailTask, categoryTask, deadlineTask) VALUES (?, ?, ?, ?)";
+        
+        $sql = "INSERT INTO " . $this->table_name . " (titleTask, detailTask, categoryTask, deadlineTask, description) VALUES (?, ?, ?, ?, ?)";
 
         try {
             $stmt = $this->pdo->prepare($sql);
 
             // PDO không cần "ssss" loằng ngoằng, chỉ cần truyền mảng vào execute là xong
-            $result = $stmt->execute([$title, $detail, $category, $deadline]);
+            $result = $stmt->execute([$title, $detail, $category, $deadline, $description]);
 
             if ($result) {
                 return ['success' => true];

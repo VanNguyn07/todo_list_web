@@ -62,6 +62,7 @@
   color: var(--text-light);
   text-align: center;
   font-size: 16px;
+  margin-right: 60px;
 }
 
 /* Plant Widget */
@@ -203,27 +204,27 @@
 }
 
 /* === CUSTOM COLOR FOR EACH BUTTON (pastel) === */
-.task-btn.all {
+.task-btn.total {
   background: #eaf4ff; /* xanh nhạt */
   border-color: #d0e4ff;
 }
-.task-btn.all:hover {
+.task-btn.total:hover {
   background: #d7e9ff;
 }
 
-.task-btn.taking {
+.task-btn.pending {
   background: #fff6da; /* vàng pastel */
   border-color: #ffe7a3;
 }
-.task-btn.taking:hover {
+.task-btn.pending:hover {
   background: #ffeeb7;
 }
 
-.task-btn.done {
+.task-btn.completed {
   background: #e8fbe9; /* xanh lá pastel */
   border-color: #c9f1cb;
 }
-.task-btn.done:hover {
+.task-btn.completed:hover {
   background: #d8f4da;
 }
 

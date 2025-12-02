@@ -348,7 +348,7 @@ export const ProfileModal = ({ isOpen, onClose, username: usernameProp, onLogout
         <div className="profile-modal-footer-modern">
           <button onClick={() => { if (typeof onLogout === "function") onLogout(); }} className="btn-logout-modern">
             <LogOut size={18} />
-            <span>Sign Out</span>
+            <span>Log Out</span>
           </button>
         </div>
       </div>
