@@ -205,7 +205,7 @@ export const CalendarPages = () => {
             </div>
 
             <button className="cp-btn-add" onClick={openModal}>
-              <Plus size={20} /> Add New Task
+              <Plus size={20} /> Add Event
             </button>
           </div>
 

@@ -68,10 +68,10 @@ export const useAddTask = ({ onSuccess }) => {
       alert("Please enter a task title!");
       return;
     }
-    if (subTask.length === 0 && !currentDetailInput.trim()) {
-      alert("Please enter at least one detail/sub-task!");
-      return;
-    }
+    // if (subTask.length === 0 && !currentDetailInput.trim()) {
+    //   alert("Please enter at least one detail/sub-task!");
+    //   return;
+    // }
     if (!taskForm.categoryTask) {
       alert("Please select a task category!");
       return;

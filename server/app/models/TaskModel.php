@@ -99,7 +99,7 @@ class TaskModel
                 $task['completed'] = ($task['completed'] === 'true');
                 $task['expanded'] = ($task['expanded'] === 'true');
             }
-            return ['success' => true, 'data' => $tasksFormDb];
+            return ['success' => true, 'data' => $tasksFormDb]; 
         } catch (PDOException $e) {
             return ['success' => false, 'message' => $e->getMessage()];
         }

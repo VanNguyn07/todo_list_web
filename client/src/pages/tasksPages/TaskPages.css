@@ -205,35 +205,56 @@
 
 /* === CUSTOM COLOR FOR EACH BUTTON (pastel) === */
 .task-btn.total {
-  background: #eaf4ff; /* xanh nhạt */
+  background-color: #eaf4ff; /* xanh nhạt */
   border-color: #d0e4ff;
 }
+
+.task-btn.total.active {
+  background-color: #accef8;
+  border-color: #929191;
+  box-shadow: 2px 2px 5px rgb(141, 140, 140);
+}
+
 .task-btn.total:hover {
-  background: #d7e9ff;
+  background-color: #d7e9ff;
 }
 
 .task-btn.pending {
-  background: #fff6da; /* vàng pastel */
+  background-color: #fff6da; /* vàng pastel */
   border-color: #ffe7a3;
 }
+
+.task-btn.pending.active{
+  background-color: #f6db84;
+  border-color: #929191;
+  box-shadow: 2px 2px 5px rgb(141, 140, 140);
+}
+
 .task-btn.pending:hover {
-  background: #ffeeb7;
+  background-color: #ffeeb7;
 }
 
 .task-btn.completed {
-  background: #e8fbe9; /* xanh lá pastel */
+  background-color: #e8fbe9; /* xanh lá pastel */
   border-color: #c9f1cb;
 }
+
+.task-btn.completed.active{
+  background-color: #8bfe93;
+  border-color: #929191;
+  box-shadow: 2px 2px 5px rgb(141, 140, 140);
+}
+
 .task-btn.completed:hover {
-  background: #d8f4da;
+  background-color: #d8f4da;
 }
 
 .task-btn.add-new {
-  background: #f3e9ff; /* tím pastel nhẹ */
+  background-color: #f3e9ff; /* tím pastel nhẹ */
   border-color: #e1ccff;
 }
 .task-btn.add-new:hover {
-  background: #ead9ff;
+  background-color: #ead9ff;
 }
 
 /* --- TASK CARD --- */
@@ -464,11 +485,12 @@
   padding-top: 15px;
   border-top: 1px solid #f0f0f0;
 }
-.desc {
+.description, .text-no-sub-task {
   color: var(--text-light);
   font-size: 0.95rem;
   margin-bottom: 12px;
   line-height: 1.5;
+  text-align: center;
 }
 .meta-info {
   display: flex;
@@ -738,6 +760,7 @@
   transform: translateY(-3px);
 }
 
+
 /* Toast */
 .toast-container {
   position: fixed;
@@ -835,4 +858,68 @@
   50% {
     transform: translateY(-5px);
   }
+}
+
+.task-card.active-highlight {
+  /* Biến màu để bạn dễ quản lý */
+  --gold-primary: #f3d077;
+  --gold-light: #f6e8c4;
+
+  border-left: 8px solid var(--gold-primary) !important;
+  background-color: var(--gold-light); /* Màu nền sau khi kết thúc animation */
+  
+  /* Hiệu ứng bóng đổ để thẻ trông như nổi lên khỏi mặt phẳng */
+  box-shadow: 0 8px 20px rgba(243, 208, 119, 0.25);
+  
+  /* Animation highlight */
+  animation: highlight-fade 2.5s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  position: relative;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+@keyframes highlight-fade {
+  0% {
+    /* Bắt đầu: Màu nền đậm rực rỡ */
+    background-color: var(--gold-primary);
+    /* Tạo hiệu ứng nhấn nhẹ bằng cách phóng to 1 chút */
+    transform: scale(1.03);
+    box-shadow: 0 0 30px rgba(243, 208, 119, 0.5);
+  }
+  20% {
+    /* Giữ màu đậm một chút để user kịp nhận ra */
+    background-color: var(--gold-primary);
+    transform: scale(1.03);
+  }
+  100% {
+    /* Kết thúc: Trở về màu nhạt và kích thước cũ */
+    background-color: var(--gold-light);
+    transform: scale(1);
+    box-shadow: 0 8px 20px rgba(243, 208, 119, 0.25);
+  }
+}
+
+.empty-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  border: 2px dashed #f3d077; /* Dùng màu vàng kim của bạn */
+  margin-top: 20px;
+}
+
+.empty-state-container h3 {
+  color: #5d4037;
+  margin-top: 15px;
+  font-size: 1.2rem;
+}
+
+.empty-state-container p {
+  color: #8d6e63;
+  font-size: 0.9rem;
 }

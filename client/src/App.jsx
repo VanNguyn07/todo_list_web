@@ -8,8 +8,8 @@ import VerifyOtp from "./pages/forgotPassword/VerifyOtp.jsx";
 import ResetPassword from "./pages/forgotPassword/ResetPassword.jsx";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(() =>{
-    return localStorage.getItem('my_username') !== null;
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem("my_username") !== null;
   });
 
   return (
@@ -17,7 +17,16 @@ function App() {
       {/* path="/dashboard": Khi trình duyệt là localhost:3000/dashboard
          element={<Dashboard />}: Thì hiện component Dashboard
        */}
-      <Route path="/" element={isLoggedIn ? <Navigate to="/dashboard" replace /> : <Navigate to="/signin" replace/>} />
+      <Route
+        path="/"
+        element={
+          isLoggedIn ? (
+            <Navigate to="/dashboard" replace />
+          ) : (
+            <Navigate to="/signin" replace />
+          )
+        }
+      />
       <Route
         path="/signin"
         element={<SignIn onLoginSuccess={() => setIsLoggedIn(true)} />}

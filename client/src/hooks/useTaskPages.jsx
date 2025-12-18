@@ -5,11 +5,23 @@ export const useTaskPages = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [isActive, setIsACtive] = useState("task-total");
+
+  const handleTransition = (view) => {
+    setIsACtive(view);
+  }
+
+  const filteredTask = tasks?.filter((task) => {
+    if(isActive === "task-completed") return task.completed === true;
+    if(isActive === "task-pending") return task.completed === false;
+    return true; // total Task
+  }) || [];
+
   const [formState, setFormState] = useState({
     idTask: "",
     titleTask: "",
     detailTask: [],
-    categoryTask: "",
+    categoryTask: "", 
     deadlineTask: new Date(),
     description: "",
   });
@@ -28,6 +40,7 @@ export const useTaskPages = () => {
     setIsModalOpen(true);
   };
 
+  
   const handleOpenEditModal = (task) => {
     setFormState({
       // sao chép các field, nhưng ép deadlineTask thành Date hoặc null
@@ -108,5 +121,8 @@ export const useTaskPages = () => {
     handleSubtaskNameChange,
     handleDeleteSubtask,
     toggleExpand,
+    isActive,
+    handleTransition,
+    filteredTask
   };
 };

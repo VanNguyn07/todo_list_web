@@ -12,6 +12,7 @@ export const CalendarWidget = () => {
             <Calendar
                 onChange={setDate}
                 value={date}
+                locale="en-US"
             />
         </div>
     );

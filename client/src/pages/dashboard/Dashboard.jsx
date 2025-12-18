@@ -52,7 +52,7 @@ function Dashboard() {
     (a, b) => new Date(a.deadline) - new Date(b.deadline)
   );
 
-  const { activeView, handleTransitionPage } = useButtonActive("home");
+  const { activeView, activeTaskId, handleTransitionPage } = useButtonActive("home");
   const [activeModal, setActiveMoal] = useState(null);
   // 1. Gọi hook fetch, lấy ra hàm 'refetch'
   const { tasks, refetch } = useFetchTasks("get_nearest_tasks");
@@ -91,18 +91,19 @@ function Dashboard() {
   } = useFetchTaskOnUpdateForm();
 
   const taskPageData = useTaskPages();
-  const {handleOpenAddModal, isModalOpen} = taskPageData;
+  const { handleOpenAddModal, isModalOpen } = taskPageData;
 
   const username = localStorage.getItem("my_username") || "User";
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-  const {handleSubmitForm} = UpdateAndCreateTask(taskPageData ,refetch);
+  const { handleSubmitForm } = UpdateAndCreateTask(taskPageData, refetch);
 
   const handleLogOut = () => {
     localStorage.removeItem("my_username");
     ///Cách nhanh nhất để reset toàn bộ app:
     window.location.href = "/signin";
   };
+
 
   return (
     <>
@@ -346,8 +347,10 @@ function Dashboard() {
                     <span>About us</span>
                   </Button>
 
-                  <Button className="btn-modern btn-quick-add"
-                  onClick={handleOpenAddModal}>
+                  <Button
+                    className="btn-modern btn-quick-add"
+                    onClick={handleOpenAddModal}
+                  >
                     <i class="fa-solid fa-plus"></i>
                     <span className="tooltip-text">Add Task</span>
                   </Button>
@@ -357,7 +360,10 @@ function Dashboard() {
                     <span className="tooltip-text">Notification</span>
                   </Button>
 
-                  <Button className="btn-modern btn-user" onClick={() => setIsProfileOpen(true)}>
+                  <Button
+                    className="btn-modern btn-user"
+                    onClick={() => setIsProfileOpen(true)}
+                  >
                     <i className="fa-solid fa-user"></i>
                     <span className="tooltip-text">Profile</span>
                   </Button>
@@ -367,11 +373,11 @@ function Dashboard() {
           </div>
         </Header>
 
-        <ProfileModal 
-        isOpen={isProfileOpen}
-        onClose={() => setIsProfileOpen(false)}
-        username={username}
-        onLogout={handleLogOut}
+        <ProfileModal
+          isOpen={isProfileOpen}
+          onClose={() => setIsProfileOpen(false)}
+          username={username}
+          onLogout={handleLogOut}
         />
 
         <Body>
@@ -492,7 +498,7 @@ function Dashboard() {
                       <div className="content-right">
                         <Button
                           className="btn-task btn-arrow-right"
-                          // show detail
+                          onClick={() => handleTransitionPage('task', task.idTask)}
                         >
                           <i class="fas fa-arrow-right"></i>
                           <span className="tooltip-text">Detail</span>
@@ -648,8 +654,8 @@ function Dashboard() {
           {/* ======================================================== */}
 
           {activeView === "task" && (
-            <div className="task-page-wrapper ">
-              <TaskPages onTaskUpdate={refetch}/>
+            <div className="task-page-wrapper">
+              <TaskPages onTaskUpdate={refetch} activeTaskId={activeTaskId}/>
             </div>
           )}
 
@@ -731,9 +737,7 @@ function Dashboard() {
           />
         )}
 
-        {isModalOpen && (
-          handleSubmitForm()
-        )}
+        {isModalOpen && handleSubmitForm()}
       </div>
     </>
   );

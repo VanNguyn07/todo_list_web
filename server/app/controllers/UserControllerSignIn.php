@@ -38,6 +38,7 @@ class UserControllerSignIn
 
         // 2. Tìm user trong database
         $user = $this->userModel->findByUserName($username);
+        // user là array dạng key-value như "id" => 1, "username" => "nguyen",
 
         if (!$user) {
             // Lỗi: Không tìm thấy username
@@ -53,21 +54,10 @@ class UserControllerSignIn
             $response['field'] = 'gender';
         } else {
             // --- ĐĂNG NHẬP THÀNH CÔNG ---
-
             $response['success'] = true;
             $response['message'] = 'Login successfully';
             $response['id'] = $user['id'];
             $response['username'] = $user['username'];
-
-            // // Lưu session
-            // $_SESSION["loggedin"] = true;
-            // $_SESSION["id"] = $user['id'];
-            // $_SESSION["username"] = $user['username'];
-
-            // $response['success'] = true;
-            // // Đường dẫn redirect này React sẽ dùng để navigate
-            // $response['redirectUrl'] = '../../../client/src/pages/dashboard/Dashboard.jsx';
-            // $response['message'] = 'Login successfully!';
         }
 
         echo json_encode($response);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Masonry from "react-masonry-css";
 import {
   List,
@@ -35,8 +35,9 @@ const breakpointColumnsObj = {
   700: 1, // Màn hình điện thoại: về 1 cột cho dễ nhìn
 };
 
-export const TaskPages = ({ onTaskUpdate }) => {
+export const TaskPages = ({ onTaskUpdate, activeTaskId}) => {
   const taskPageData = useTaskPages();
+
   const {
     isModalOpen,
     tasks,
@@ -44,9 +45,12 @@ export const TaskPages = ({ onTaskUpdate }) => {
     handleOpenAddModal,
     handleOpenEditModal,
     toggleExpand,
+    isActive,
+    handleTransition,
+    filteredTask
   } = taskPageData;
 
-  const {handleSubmitForm} = UpdateAndCreateTask( taskPageData,onTaskUpdate);
+  const { handleSubmitForm } = UpdateAndCreateTask(taskPageData, onTaskUpdate);
   const { handleDelete } = useDeleteTask({
     onSuccess: () => {
       // refetch dữ liệu của TaskPages
@@ -55,6 +59,27 @@ export const TaskPages = ({ onTaskUpdate }) => {
       if (typeof onTaskUpdate === "function") onTaskUpdate();
     },
   });
+
+  const taskRefs = useRef({});
+
+  useEffect (() => {
+    //Kiểm tra nếu có activeTaskId và thẻ đó đã tồn tại trên giao diện
+    if(activeTaskId && tasks && tasks.length > 0) {
+        const targetElement = taskRefs.current[activeTaskId];
+        if(targetElement){
+          console.log("Đang cuộn đến task:", activeTaskId); // Kiểm tra xem nó có nhảy vào đây không
+          targetElement.scrollIntoView({
+            behavior: "smooth", // Cuộn mượt mà
+            block: "center",    // Đưa thẻ vào giữa màn hình
+            inline: "nearest"
+          });
+        }
+    }
+  }, [activeTaskId, tasks]);
+
+  const totalTask = tasks?.length || 0; //Lấy số lượng task, nếu chưa có dữ liệu thì mặc định là 0
+  const completedTask = tasks?.filter(task => task.completed).length || 0;
+  const pendingTask = totalTask - completedTask;
 
   return (
     // <div className="SCOPE_TASK_PAGE">
@@ -79,7 +104,7 @@ export const TaskPages = ({ onTaskUpdate }) => {
                 <BarChart3 size={30} />
               </div>
               <div className="stat-info">
-                <h3>12</h3>
+                <h3>{totalTask}</h3>
                 <span>Task Total</span>
               </div>
             </div>
@@ -88,7 +113,7 @@ export const TaskPages = ({ onTaskUpdate }) => {
                 <CheckSquare size={30} />
               </div>
               <div className="stat-info">
-                <h3>5</h3>
+                <h3>{completedTask}</h3>
                 <span>Completed</span>
               </div>
             </div>
@@ -97,7 +122,7 @@ export const TaskPages = ({ onTaskUpdate }) => {
                 <Clock size={30} />
               </div>
               <div className="stat-info">
-                <h3>7</h3>
+                <h3>{pendingTask}</h3>
                 <span>Pending</span>
               </div>
             </div>
@@ -117,18 +142,33 @@ export const TaskPages = ({ onTaskUpdate }) => {
           </div>
         </header>
 
-        {/* BUTTON THÊM MỚI */}
+        {/* BUTTON*/}
 
         <div className="task-btn-group">
-          <button className="task-btn total" onClick={handleOpenAddModal}>
+          <button
+            className={`task-btn total ${
+              isActive === "task-total" ? "active" : ""
+            }`}
+            onClick={() => handleTransition("task-total")}
+          >
             <List size={18} /> Task Total
           </button>
 
-          <button className="task-btn pending" onClick={handleOpenAddModal}>
+          <button
+            className={`task-btn pending ${
+              isActive === "task-pending" ? "active" : ""
+            }`}
+            onClick={() => handleTransition("task-pending")}
+          >
             <Timer size={18} /> Pending
           </button>
 
-          <button className="task-btn completed" onClick={handleOpenAddModal}>
+          <button
+            className={`task-btn completed ${
+              isActive === "task-completed" ? "active" : ""
+            }`}
+            onClick={() => handleTransition("task-completed")}
+          >
             <CheckCircle size={18} /> Completed
           </button>
 
@@ -138,16 +178,19 @@ export const TaskPages = ({ onTaskUpdate }) => {
         </div>
 
         {/* DANH SÁCH TASK (TASK LIST) */}
-        {tasks && tasks.length > 0 && (
+        {filteredTask && filteredTask.length > 0 ? (
           <Masonry
             breakpointCols={breakpointColumnsObj}
             className="my-masonry-grid"
             columnClassName="my-masonry-grid_column"
           >
-            {tasks.map((task) => (
+            {filteredTask.map((task) => (
               <div
                 key={task.idTask}
-                className={`task-card ${task.completed ? "completed" : ""}`}
+                ref={(el) => (taskRefs.current[task.idTask] = el)}
+                className={`task-card ${task.completed ? "completed" : ""} ${
+                  task.idTask === activeTaskId ? "active-highlight" : ""
+                }`}
               >
                 <div className="card-main">
                   {/* Checkbox & Info */}
@@ -181,7 +224,7 @@ export const TaskPages = ({ onTaskUpdate }) => {
                             className="progress-bar-fill"
                             style={{
                               width: `${
-                                (task.detailTask.filter((s) => s.completed)
+                                (task.detailTask.filter((s) => s.completed) // s đại diện cho từng phần tử trong mảng
                                   .length /
                                   task.detailTask.length) *
                                 100
@@ -237,8 +280,8 @@ export const TaskPages = ({ onTaskUpdate }) => {
                 </div>
 
                 {/* Phần mở rộng (Subtasks & Detail) */}
-                <div className={`card-details ${task.expanded ? "show" : ""}`}>
-                  <p className="desc">
+                <div className={`card-details ${task.expanded ? "show" : ""} `}>
+                  <p className="description">
                     {task.description || "Don't have descriptions"}
                   </p>
                   <div className="meta-info">
@@ -250,34 +293,49 @@ export const TaskPages = ({ onTaskUpdate }) => {
 
                   {/* subtask */}
                   <div className="subtask-display-list">
-                    {task.detailTask.map((sub) => (
-                      <div key={sub.id} className="subtask-row">
-                        <div
-                          className={`mini-checkbox ${
-                            sub.completed ? "checked" : ""
-                          }`}
-                        >
-                          {sub.completed && <Check size={12} strokeWidth={4} />}
-                        </div>
-                        <span
-                          className={sub.completed ? "text-strikethrough" : ""}
-                        >
-                          {sub.title}
-                        </span>
+                    {task.detailTask.length === 0 ? (
+                      <div className="text-no-sub-task">
+                        This task has no sub-tasks
                       </div>
-                    ))}
+                    ) : (
+                      task.detailTask.map((sub) => (
+                        <div key={sub.id} className="subtask-row">
+                          <div
+                            className={`mini-checkbox ${
+                              sub.completed ? "checked" : ""
+                            }`}
+                          >
+                            {sub.completed && (
+                              <Check size={12} strokeWidth={4} />
+                            )}
+                          </div>
+                          <span
+                            className={
+                              sub.completed ? "text-strikethrough" : ""
+                            }
+                          >
+                            {sub.title ? sub.title : "Don't have sub-task"}
+                          </span>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
               </div>
             ))}
           </Masonry>
-        )}
+        ) : (
+          /* HIỂN THỊ KHI TRỐNG */
+            <div className="empty-state-container">
+               <AlertCircle size={48} color="#f3d077" />
+               <h3>Oops! Don't have any tasks in this category.</h3>
+               <p>Try switching filters or add a new task to get started!</p>
+            </div>
+          )}
       </div>
 
       {/* --- MODAL (ADD / EDIT TASK) --- */}
-      {isModalOpen && (
-        handleSubmitForm()
-      )}
+      {isModalOpen && handleSubmitForm()}
     </div>
     // </div>
   );

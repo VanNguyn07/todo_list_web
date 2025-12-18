@@ -336,8 +336,8 @@ export const ProfileModal = ({ isOpen, onClose, username: usernameProp, onLogout
                 <Settings size={18} />
               </div>
               <div className="setting-text">
-                <div className="setting-title">App Preferences</div>
-                <div className="setting-desc">Customize your experience</div>
+                <div className="setting-title">Notification Settings</div>
+                <div className="setting-desc">Customize your Notification</div>
               </div>
               <ChevronRight size={18} className="setting-arrow" />
             </button>
