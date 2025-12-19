@@ -5,7 +5,7 @@ export const useAddTaskForm = () => {
     return num.toString().padStart(2, "0");
   };
 
-  const handleSubmitCreate = async ({ taskForm }, onClose) => {
+  const handleSubmitCreate = async ({ taskForm }, onSuccess) => {
     const formData = new FormData();
     formData.append("action", "add_task");
     formData.append("titleTask", taskForm.titleTask);
@@ -13,9 +13,9 @@ export const useAddTaskForm = () => {
     formData.append("description", taskForm.description);
 
     if (taskForm.sub_tasks && taskForm.sub_tasks.length > 0) {
-      formData.append("subtask", JSON.stringify(taskForm.sub_tasks));
+      formData.append("subTask", JSON.stringify(taskForm.sub_tasks));
     } else {
-      formData.append("subtask", "[]");
+      formData.append("subTask", "[]");
     }
 
     // Xử lý Ngày tháng (Giữ nguyên logic của bạn)
@@ -43,8 +43,8 @@ export const useAddTaskForm = () => {
       const data = await response.json();
       
       if (data.success) {
+        if (onSuccess) onSuccess(); 
         alert(data.message);
-        if (onClose) onClose(); // Đóng Modal và thường sẽ gọi refetch() ở đây
       } else {
         alert("Lỗi: " + data.message);
       }

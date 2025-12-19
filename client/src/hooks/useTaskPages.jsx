@@ -64,9 +64,9 @@ export const useTaskPages = () => {
     setFormState({ ...formState, deadlineTask: date });
   };
 
-const handleSubtaskNameChange = (id, tempId, value) => {
+const handleSubtaskNameChange = (idSubTask, tempId, value) => {
   const updatedSubs = formState.sub_tasks.map((sub) => {
-    const isMatch = id ? sub.idSubTask === id : sub.tempId === tempId;
+    const isMatch = idSubTask ? sub.idSubTask === idSubTask : sub.tempId === tempId;
     return isMatch ? { ...sub, content: value } : sub;
   });
   setFormState({ ...formState, sub_tasks: updatedSubs });
@@ -80,19 +80,45 @@ const handleSubtaskNameChange = (id, tempId, value) => {
         content: subtaskInput, 
         completed: "false" 
       };
-      setFormState({
-        ...formState,
-        sub_tasks: [...formState.sub_tasks, newSub],
-      });
+      setFormState((prev) => ({
+        ...prev,
+      // Dùng hàm updater (prev) để đảm bảo lấy state mới nhất
+      sub_tasks: [...(prev.sub_tasks || []), newSub],
+      }));
       setSubtaskInput("");
     }
   };
 
-const handleDeleteSubtask = (id, tempId) => {
+  const handleToggleStatusSubtask = (id, tempId) => {
+    // Logic cập nhật state
+    const updateLogic = (prevSubTasks) => 
+      prevSubTasks.map((sub) => {
+        const isMatch = (id && sub.idSubTask === id) || (tempId && sub.tempId === tempId);
+        if (isMatch) {
+          const currentStatus = sub.completed === "true" || sub.completed === true;
+          return { ...sub, completed: !currentStatus };
+        }
+        return sub;
+      });
+
+    // Cập nhật cho formState (trong Modal)
+    setFormState(prev => ({
+      ...prev,
+      sub_tasks: updateLogic(prev.sub_tasks || [])
+    }));
+
+    // (Tùy chọn) Cập nhật trực tiếp cho danh sách tasks ngoài màn hình để UI mượt mà
+    setTasks(prevTasks => prevTasks.map(t => ({
+        ...t,
+        sub_tasks: updateLogic(t.sub_tasks || [])
+    })));
+  };
+
+const handleDeleteSubtask = (idSubTask, tempId) => {
   setFormState({
-    ...formState,
+    ...formState,//Giữ nguyên toàn bộ dữ liệu khác trong formState
     sub_tasks: formState.sub_tasks.filter((s) => 
-      id ? s.idSubTask !== id : s.tempId !== tempId
+      idSubTask ? s.idSubTask !== idSubTask : s.tempId !== tempId
     ),
   });
 };
@@ -124,6 +150,7 @@ const handleDeleteSubtask = (id, tempId) => {
     toggleExpand,
     isActive,
     handleTransition,
-    filteredTask
+    filteredTask,
+    handleToggleStatusSubtask
   };
 };

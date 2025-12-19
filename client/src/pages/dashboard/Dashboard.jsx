@@ -50,7 +50,8 @@ function Dashboard() {
     (a, b) => new Date(a.deadline) - new Date(b.deadline)
   );
 
-  const { activeView, activeTaskId, handleTransitionPage } = useButtonActive("home");
+  const { activeView, activeTaskId, handleTransitionPage } =
+    useButtonActive("home");
   const [activeModal, setActiveMoal] = useState(null);
   // 1. Gọi hook fetch, lấy ra hàm 'refetch'
   const { tasks, refetch } = useFetchTasks("get_nearest_tasks");
@@ -89,12 +90,10 @@ function Dashboard() {
   } = useFetchTaskOnUpdateForm();
 
   const taskPageData = useTaskPages();
-  const { handleOpenAddModal, isModalOpen, tasks:allTasks } = taskPageData;
+  const { handleOpenAddModal, isModalOpen, tasks: allTasks } = taskPageData;
 
   const username = localStorage.getItem("my_username") || "User";
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-
-  const { handleSubmitForm } = UpdateAndCreateTask(taskPageData, refetch);
 
   const handleLogOut = () => {
     localStorage.removeItem("my_username");
@@ -103,7 +102,10 @@ function Dashboard() {
   };
 
   const totalTask = allTasks?.length || 0;
-  const completedTask = allTasks?.filter((task) => (task.completed === "true" || task.completed === true)).length || 0;
+  const completedTask =
+    allTasks?.filter(
+      (task) => task.completed === "true" || task.completed === true
+    ).length || 0;
   const pendingTask = totalTask - completedTask;
 
   return (
@@ -501,7 +503,9 @@ function Dashboard() {
                       <div className="content-right">
                         <Button
                           className="btn-task btn-arrow-right"
-                          onClick={() => handleTransitionPage('task', task.idTask)}
+                          onClick={() =>
+                            handleTransitionPage("task", task.idTask)
+                          }
                         >
                           <i class="fas fa-arrow-right"></i>
                           <span className="tooltip-text">Detail</span>
@@ -658,7 +662,7 @@ function Dashboard() {
 
           {activeView === "task" && (
             <div className="task-page-wrapper">
-              <TaskPages onTaskUpdate={refetch} activeTaskId={activeTaskId}/>
+              <TaskPages onTaskUpdate={refetch} activeTaskId={activeTaskId} />
             </div>
           )}
 
@@ -740,7 +744,12 @@ function Dashboard() {
           />
         )}
 
-        {isModalOpen && handleSubmitForm()}
+        {isModalOpen && (
+          <UpdateAndCreateTask
+            taskPageData={taskPageData}
+            onTaskUpdate={refetch}
+          />
+        )}
       </div>
     </>
   );

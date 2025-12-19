@@ -3,11 +3,10 @@ import { useAddTaskForm } from "../../hooks/useAddTaskForm";
 import { Plus, Trash2, X, Save, Check } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-// import "../tasksPages/TaskPages.css"
-export const UpdateAndCreateTask = (taskPageData, onTaskUpdate) => {
+import "../tasksPages/TaskPages.css";
+export const UpdateAndCreateTask = ({taskPageData, onTaskUpdate}) => {
   const {
     formState,
-    setFormState,
     refetch,
     subtaskInput,
     setSubtaskInput,
@@ -16,6 +15,7 @@ export const UpdateAndCreateTask = (taskPageData, onTaskUpdate) => {
     handleDeleteSubtask,
     handleInputChange,
     handleSubtaskNameChange,
+    handleToggleStatusSubtask,
     closeModal,
   } = taskPageData;
 
@@ -23,8 +23,8 @@ export const UpdateAndCreateTask = (taskPageData, onTaskUpdate) => {
   const { handleSubmitCreate } = useAddTaskForm();
 
   const onSuccessAction = () => {
-    closeModal();
     refetch();
+    closeModal();
     if (onTaskUpdate) onTaskUpdate();
   };
 
@@ -49,26 +49,7 @@ export const UpdateAndCreateTask = (taskPageData, onTaskUpdate) => {
     }
   };
 
-  const handleToggleSubtask = (id, tempId) => {
-    const updated = formState.sub_tasks.map((sub) => {
-      // Kiểm tra khớp theo ID DB hoặc ID tạm thời
-      const isMatch = id ? sub.idSubTask === id : sub.tempId === tempId;
 
-      if (isMatch) {
-        return {
-          ...sub,
-          completed:
-            sub.completed === "true" || sub.completed === true
-              ? "false"
-              : "true",
-        };
-      }
-      return sub;
-    });
-    setFormState({ ...formState, sub_tasks: updated });
-  };
-
-  const handleSubmitForm = () => {
     return (
       <div className="modal-backdrop-task" onClick={closeModal}>
         <div
@@ -163,55 +144,48 @@ export const UpdateAndCreateTask = (taskPageData, onTaskUpdate) => {
 
               <div className="modal-subtask-list">
                 {formState.sub_tasks &&
-                  formState.sub_tasks?.map((sub) => (
-                    <div
-                      key={sub.idSubTask || sub.tempId}
-                      className="modal-subtask-item"
-                    >
+                  formState.sub_tasks?.map((sub) => {
+                    const isCompleted =
+                      sub.completed === "true" || sub.completed === true;
+                    return (
                       <div
-                        className={`mini-checkbox ${
-                          sub.completed === "true" || sub.completed === true
-                            ? "checked"
-                            : ""
-                        }`}
-                        onClick={() => handleToggleSubtask(sub.idSubTask)}
+                        key={sub.idSubTask || sub.tempId}
+                        className="modal-subtask-item"
                       >
-                        {(sub.completed === "true" ||
-                          sub.completed === true) && (
-                          <Check size={12} strokeWidth={4} />
-                        )}
-                        <span
-                          className={
-                            sub.completed === "true" || sub.completed === true
-                              ? "text-strikethrough"
-                              : ""
-                          }
+                        <button
+                          className={`mini-checkbox ${
+                            isCompleted ? "checked" : ""
+                          }`}
+                          onClick={() => handleToggleStatusSubtask(sub.idSubTask, sub.tempId)}
                         >
-                          {sub.content ? sub.content : "Don't have sub-task"}
-                        </span>
-                      </div>
+                          {isCompleted && <Check size={12} strokeWidth={4} />}
+                        </button>
 
-                      <input
-                        type="text"
-                        className="edit-sub-input"
-                        value={sub.content} 
-                        onChange={
-                          (e) =>
+                        <input
+                          type="text"
+                          className={`edit-sub-input ${
+                            isCompleted ? "text-strikethrough" : ""
+                          }`}
+                          value={sub.content}
+                          onChange={(e) =>
                             handleSubtaskNameChange(
                               sub.idSubTask,
+                              sub.tempId,
                               e.target.value
                             )
-                        }
-                      />
-
-                      <button
-                        className="btn-mini delete"
-                        onClick={() => handleDeleteSubtask(sub.idSubTask)} // id -> idSubTask
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                  ))}
+                          }
+                        />
+                        <button
+                          className="btn-mini delete"
+                          onClick={() =>
+                            handleDeleteSubtask(sub.idSubTask, sub.tempId)
+                          }
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    );
+                  })}
 
                 {(!formState.sub_tasks || formState.sub_tasks.length === 0) && (
                   <p className="empty-subtask-text">
@@ -241,6 +215,4 @@ export const UpdateAndCreateTask = (taskPageData, onTaskUpdate) => {
         </div>
       </div>
     );
-  };
-  return { handleSubmitForm };
 };

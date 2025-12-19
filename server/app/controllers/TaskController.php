@@ -21,7 +21,7 @@
             $description = trim($_POST['description'] ?? '');
 
             //Lấy chuỗi JSON sub-tasks gửi từ React
-            $subTask = $_POST['subTask'] ?? [];
+            $subTask = $_POST['subTask'] ?? '[]';
             $subTasksArray = json_decode($subTask, true);
 
             // Validation

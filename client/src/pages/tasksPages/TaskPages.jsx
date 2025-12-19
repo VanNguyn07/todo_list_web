@@ -22,6 +22,7 @@ import {
   CheckSquare,
   Clock,
   Zap,
+  Sun,
 } from "lucide-react";
 import "./TaskPages.css";
 import { useDeleteTask } from "../../hooks/useDeleteTask";
@@ -48,10 +49,10 @@ export const TaskPages = ({ onTaskUpdate, activeTaskId }) => {
     toggleExpand,
     isActive,
     handleTransition,
-    filteredTask
+    filteredTask,
+    handleToggleStatusSubtask
   } = taskPageData;
 
-  const { handleSubmitForm } = UpdateAndCreateTask(taskPageData, onTaskUpdate);
   const { handleDelete } = useDeleteTask({
     onSuccess: () => {
       // refetch dữ liệu của TaskPages
@@ -62,6 +63,7 @@ export const TaskPages = ({ onTaskUpdate, activeTaskId }) => {
   });
 
   const taskRefs = useRef({});
+
   const { handleSubmitCompleted } = updateTaskStatus({
     onsuccess: () => {
       refetch();
@@ -84,7 +86,10 @@ export const TaskPages = ({ onTaskUpdate, activeTaskId }) => {
   }, [activeTaskId, tasks]);
 
   const totalTask = tasks?.length || 0; //Lấy số lượng task, nếu chưa có dữ liệu thì mặc định là 0
-  const completedTask = tasks?.filter((task) => (task.completed === "true") || task.completed === true).length || 0;
+  const completedTask =
+    tasks?.filter(
+      (task) => task.completed === "true" || task.completed === true
+    ).length || 0;
   const pendingTask = totalTask - completedTask;
 
   return (
@@ -246,19 +251,20 @@ export const TaskPages = ({ onTaskUpdate, activeTaskId }) => {
                             style={{
                               width: `${
                                 task.sub_tasks?.length > 0
-                                  ? task.sub_tasks.filter(
-                                      (sub) =>
-                                        String(sub.completed) === "true")
-                                          .length / task.sub_tasks.length
-                                     * 100
+                                  ? (task.sub_tasks.filter(
+                                      (sub) => String(sub.completed) === "true"
+                                    ).length /
+                                      task.sub_tasks.length) *
+                                    100
                                   : 0
                               }%`,
                             }}
                           ></div>
                         </div>
                         <span className="progress-text">
-                          {task.sub_tasks?.filter((s) => String(s.completed) === "true").length ||
-                            0}
+                          {task.sub_tasks?.filter(
+                            (s) => String(s.completed) === "true"
+                          ).length || 0}
                           /{task.sub_tasks?.length || 0} SubTask
                         </span>
                       </div>
@@ -281,7 +287,6 @@ export const TaskPages = ({ onTaskUpdate, activeTaskId }) => {
                       <Trash2 size={18} />
                     </button>
 
-                    {/* --- NÚT MŨI TÊN (SỬA ĐOẠN NÀY) --- */}
                     <button
                       className="action-btn expand tooltip-container"
                       onClick={() => toggleExpand(task.idTask)}
@@ -323,37 +328,44 @@ export const TaskPages = ({ onTaskUpdate, activeTaskId }) => {
                         This task has no sub-tasks
                       </div>
                     ) : (
-                      task.sub_tasks.map((sub) => (
-                        <div key={sub.idSubTask} className="subtask-row">
-                          <button
-                            className={`mini-checkbox ${
-                              sub.completed === "true" || sub.completed === true
-                                ? "checked"
-                                : ""
-                            }`}
-                            onClick={() =>
-                              handleSubmitCompleted(
-                                sub.idSubTask,
-                                sub.completed,
-                                "sub"
-                              )
-                            }
+                      task.sub_tasks.map((sub) => {
+                        const isCompleted =
+                          sub.completed === "true" || sub.completed === true;
+                        return (
+                          <div
+                            key={sub.idSubTask || sub.tempId}
+                            className="subtask-row"
                           >
-                            {sub.completed && (
-                              <Check size={12} strokeWidth={4} />
-                            )}
-                          </button>
-                          <span
-                            className={
-                              sub.completed === "true" || sub.completed === true
-                                ? "text-strikethrough"
-                                : ""
-                            }
-                          >
-                            {sub.content ? sub.content : "Don't have sub-task"}
-                          </span>
-                        </div>
-                      ))
+                            <button
+                              className={`mini-checkbox ${
+                                isCompleted ? "checked" : ""
+                              }`}
+                              onClick={() => {
+                                sub.idSubTask
+                                  ? handleSubmitCompleted(
+                                      sub.idSubTask,
+                                      sub.completed,
+                                      "sub"
+                                    )
+                                  : handleToggleStatusSubtask(null, sub.tempId);
+                              }}
+                            >
+                              {isCompleted && (
+                                <Check size={12} strokeWidth={4} />
+                              )}
+                            </button>
+                            <span
+                              className={
+                                isCompleted ? "text-strikethrough" : ""
+                              }
+                            >
+                              {sub.content
+                                ? sub.content
+                                : "Don't have sub-task"}
+                            </span>
+                          </div>
+                        );
+                      })
                     )}
                   </div>
                 </div>
@@ -371,7 +383,12 @@ export const TaskPages = ({ onTaskUpdate, activeTaskId }) => {
       </div>
 
       {/* --- MODAL (ADD / EDIT TASK) --- */}
-      {isModalOpen && handleSubmitForm()}
+      {isModalOpen && (
+        <UpdateAndCreateTask 
+           taskPageData={taskPageData} 
+           onTaskUpdate={onTaskUpdate} 
+        />
+      )}
     </div>
     // </div>
   );

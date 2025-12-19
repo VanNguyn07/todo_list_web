@@ -11,6 +11,7 @@ export const useUpdateTask = () => {
     formData.append("idTask", idTask);
     formData.append("titleTask", taskForm.titleTask);
     formData.append("categoryTask", taskForm.categoryTask);
+    formData.append("completed", taskForm.completed);
     formData.append("subTask", JSON.stringify(taskForm.sub_tasks));
 
     // Xử lý Ngày tháng
