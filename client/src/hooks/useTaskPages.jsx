@@ -1,26 +1,27 @@
 import React, { useState } from "react";
 import { useFetchTasks } from "./useFetchTask";
+
 export const useTaskPages = () => {
+  // Lấy dữ liệu từ API. Lưu ý: Model PHP mới sẽ trả về key 'sub_tasks' bên trong mỗi task
   const { tasks, setTasks, refetch } = useFetchTasks("get_all_task_list");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const [isActive, setIsACtive] = useState("task-total");
+  const [isActive, setIsActive] = useState("task-total");
 
   const handleTransition = (view) => {
-    setIsACtive(view);
-  }
+    setIsActive(view);
+  };
 
-  const filteredTask = tasks?.filter((task) => {
-    if(isActive === "task-completed") return task.completed === true;
-    if(isActive === "task-pending") return task.completed === false;
+    const filteredTask = tasks?.filter((task) => {
+    if(isActive === "task-completed") return task.completed === "true";
+    if(isActive === "task-pending") return task.completed === "false";
     return true; // total Task
   }) || [];
 
   const [formState, setFormState] = useState({
     idTask: "",
     titleTask: "",
-    detailTask: [],
+    sub_tasks: [], // Tên mới khớp với DB
     categoryTask: "", 
     deadlineTask: new Date(),
     description: "",
@@ -32,7 +33,7 @@ export const useTaskPages = () => {
     setFormState({
       idTask: "",
       titleTask: "",
-      detailTask: [],
+      sub_tasks: [],
       categoryTask: "",
       deadlineTask: null,
       description: "",
@@ -40,17 +41,11 @@ export const useTaskPages = () => {
     setIsModalOpen(true);
   };
 
-  
   const handleOpenEditModal = (task) => {
     setFormState({
-      // sao chép các field, nhưng ép deadlineTask thành Date hoặc null
       idTask: task.idTask,
       titleTask: task.titleTask || "",
-      detailTask: Array.isArray(task.detailTask)
-        ? task.detailTask
-        : task.detailTask
-        ? JSON.parse(task.detailTask)
-        : [],
+      sub_tasks: Array.isArray(task.sub_tasks) ? task.sub_tasks : [],
       categoryTask: task.categoryTask || "",
       deadlineTask: task.deadlineTask ? new Date(task.deadlineTask) : null,
       description: task.description || "",
@@ -69,45 +64,51 @@ export const useTaskPages = () => {
     setFormState({ ...formState, deadlineTask: date });
   };
 
-  const handleSubtaskNameChange = (id, value) => {
-    const updatedSubs = formState.detailTask.map((subtask) =>
-      subtask.id === id ? { ...subtask, title: value } : subtask
-    );
-    setFormState({ ...formState, detailTask: updatedSubs });
-  };
+const handleSubtaskNameChange = (id, tempId, value) => {
+  const updatedSubs = formState.sub_tasks.map((sub) => {
+    const isMatch = id ? sub.idSubTask === id : sub.tempId === tempId;
+    return isMatch ? { ...sub, content: value } : sub;
+  });
+  setFormState({ ...formState, sub_tasks: updatedSubs });
+};
 
-  // Hàm giả thêm subtask (Enter)
   const handleAddSubtask = (e) => {
     if (e.key === "Enter" && subtaskInput.trim()) {
-      const newSub = { id: Date.now(), title: subtaskInput, completed: false };
+      // Tạo object sub-task mới theo đúng tên cột trong DB
+      const newSub = { 
+        tempId: Date.now(), // ID tạm thời cho React render
+        content: subtaskInput, 
+        completed: "false" 
+      };
       setFormState({
         ...formState,
-        detailTask: [...formState.detailTask, newSub],
+        sub_tasks: [...formState.sub_tasks, newSub],
       });
       setSubtaskInput("");
     }
   };
 
-  // Hàm giả xóa subtask
-  const handleDeleteSubtask = (id) => {
-    setFormState({
-      ...formState,
-      detailTask: formState.detailTask.filter((s) => s.id !== id),
-    });
-  };
+const handleDeleteSubtask = (id, tempId) => {
+  setFormState({
+    ...formState,
+    sub_tasks: formState.sub_tasks.filter((s) => 
+      id ? s.idSubTask !== id : s.tempId !== tempId
+    ),
+  });
+};
 
-  // --- Logic Đóng/Mở chi tiết Task ---
   const toggleExpand = (taskId) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
-        // Nếu đúng ID thì đảo ngược trạng thái expanded (true -> false, false -> true)
         task.idTask === taskId ? { ...task, expanded: !task.expanded } : task
       )
     );
   };
+
   return {
     isModalOpen,
     formState,
+    setFormState,
     subtaskInput,
     tasks,
     refetch,

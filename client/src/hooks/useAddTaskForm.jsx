@@ -10,31 +10,27 @@ export const useAddTaskForm = () => {
     formData.append("action", "add_task");
     formData.append("titleTask", taskForm.titleTask);
     formData.append("categoryTask", taskForm.categoryTask);
+    formData.append("description", taskForm.description);
 
-    if(taskForm.detailTask && taskForm.detailTask.length > 0){
-        // Chuyển mảng subtask thành chuỗi JSON
-        formData.append("detailTask", JSON.stringify(taskForm.detailTask))
-    }else {
-        formData.append("detailTask", "[]");
+    if (taskForm.sub_tasks && taskForm.sub_tasks.length > 0) {
+      formData.append("subtask", JSON.stringify(taskForm.sub_tasks));
+    } else {
+      formData.append("subtask", "[]");
     }
 
+    // Xử lý Ngày tháng (Giữ nguyên logic của bạn)
     if (taskForm.deadlineTask instanceof Date) {
       const date = taskForm.deadlineTask;
-      // Lấy các thành phần theo giờ local (GMT+7)
       const Y = date.getFullYear();
-      const M = pad(date.getMonth() + 1); // getMonth() bắt đầu từ 0
+      const M = pad(date.getMonth() + 1);
       const D = pad(date.getDate());
       const h = pad(date.getHours());
       const m = pad(date.getMinutes());
       const s = pad(date.getSeconds());
 
-      // Tạo chuỗi YYYY-MM-DD HH:MM:SS
       const localDateTimeString = `${Y}-${M}-${D} ${h}:${m}:${s}`;
-
       formData.append("deadlineTask", localDateTimeString);
     }
-
-    formData.append("description", taskForm.description);
 
     console.log("Sending data: ", Object.fromEntries(formData));
 
@@ -43,16 +39,20 @@ export const useAddTaskForm = () => {
         method: "POST",
         body: formData,
       });
+      
       const data = await response.json();
+      
       if (data.success) {
         alert(data.message);
-        if (onClose) onClose();
+        if (onClose) onClose(); // Đóng Modal và thường sẽ gọi refetch() ở đây
       } else {
-        throw new Error(data.message || "Add failed!");
+        alert("Lỗi: " + data.message);
       }
     } catch (err) {
-      console.log("Error by get API!", err);
+      console.error("Error by get API!", err);
+      alert("Lỗi kết nối máy chủ!");
     }
   };
+
   return { handleSubmitCreate };
 };

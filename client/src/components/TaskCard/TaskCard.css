@@ -163,3 +163,13 @@
   transform: translateX(-50%) translateY(-5px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
+/* Trong file CSS của bạn */
+.subtask-list {
+    list-style-type: disc !important; 
+    list-style-position: inside; 
+}
+
+.subtask-list li {
+    margin-bottom: 5px;
+    display: list-item;
+}

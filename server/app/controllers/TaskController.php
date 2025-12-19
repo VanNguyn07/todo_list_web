@@ -16,27 +16,26 @@
         {
             // Lấy dữ liệu từ POST
             $titleTask = trim($_POST['titleTask'] ?? '');
-            $detailTask = trim($_POST['detailTask'] ?? '');
             $categoryTask = trim($_POST['categoryTask'] ?? '');
             $deadlineTask = trim($_POST['deadlineTask'] ?? '');
             $description = trim($_POST['description'] ?? '');
 
+            //Lấy chuỗi JSON sub-tasks gửi từ React
+            $subTask = $_POST['subTask'] ?? [];
+            $subTasksArray = json_decode($subTask, true);
+
             // Validation
             if (empty($titleTask)) {
+                $this->response['success'] = false;
                 $this->response['message'] = 'Please enter a task title!';
                 $this->response['field'] = 'titleTask';
                 echo json_encode($this->response);
                 exit();
             }
 
-            if (empty($detailTask)) {
-                $this->response['message'] = 'Please enter a task detail!';
-                $this->response['field'] = 'detailTask';
-                echo json_encode($this->response);
-                exit();
-            }
 
             if (empty($categoryTask)) {
+                $this->response['success'] = false;
                 $this->response['message'] = 'Please select a task category!';
                 $this->response['field'] = 'categoryTask';
                 echo json_encode($this->response);
@@ -44,6 +43,7 @@
             }
 
             if (empty($deadlineTask)) {
+                $this->response['success'] = false;
                 $this->response['message'] = 'Please select a task deadline!';
                 $this->response['field'] = 'deadlineTask';
                 echo json_encode($this->response);
@@ -55,6 +55,7 @@
                 // PHP có thể đọc trực tiếp bằng new DateTime()
                 new DateTime($deadlineTask);
             } catch (Exception $e) {
+                $this->response['success'] = false;
                 $this->response['message'] = 'Định dạng ngày hết hạn không hợp lệ!';
                 $this->response['field'] = 'deadlineTask';
                 echo json_encode($this->response);
@@ -64,6 +65,7 @@
             $checkDublicateTitleTask = $this->taskModel->checkTitleTask($titleTask);
 
             if ($checkDublicateTitleTask === "ERR_TITLETASK_EXISTS") {
+                $this->response['success'] = false;
                 $this->response['message'] = 'Title Task already exists!';
                 $this->response['field'] = 'titleTask';
                 echo json_encode($this->response);
@@ -71,24 +73,31 @@
             }
             // Thêm xử lý lỗi DB
             if ($checkDublicateTitleTask === "ERROR_DB") {
+                $this->response['success'] = false;
                 $this->response['message'] = 'Database error while checking duplicate!';
                 echo json_encode($this->response);
                 exit();
             }
 
             if ($checkDublicateTitleTask === "NOT_FOUND") {
-                // Gọi Model để insert vào database
-                $isSuccess = $this->taskModel->insertTaskIntoDatabase(
+                // Gọi Model để chèn Task cha
+                $isSuccess = $this->taskModel->insertParentTask(
                     $titleTask,
-                    $detailTask,
                     $categoryTask,
                     $deadlineTask,
                     $description
                 );
 
                 if ($isSuccess) {
+                    $newIdParent = $isSuccess['idTask']; // Lấy ID ở cha
+                    if (!empty($subTasksArray)) {
+                        foreach ($subTasksArray as $sub) {
+                            // Gọi hàm insertSubTask đã tạo trong Model
+                            $this->taskModel->insertSubTask($newIdParent, $sub['content']);
+                        }
+                    }
                     $this->response['success'] = true;
-                    $this->response['message'] = 'Add task successfully!';
+                    $this->response['message'] = 'Add task and sub-tasks successfully!';
                 } else {
                     $this->response['message'] = 'Lỗi CSDL: ' . $isSuccess['message'];
                 }
@@ -98,13 +107,13 @@
             }
         }
 
-        public function handleSelectAllDataFromDb()
+        public function handleNearestUpcomingTasks()
         {
             $tasks = $this->taskModel->getNearestUpcomingTasks();
             if ($tasks !== null) {
                 // 2. Trả về JSON thành công
                 $this->response['success'] = true;
-                $this->response['tasks'] = $tasks;
+                $this->response['tasks'] = $tasks['data'];
             } else {
                 // 3. Trả về JSON lỗi
                 $this->response['message'] = 'Lỗi khi lấy danh sách task';
@@ -114,12 +123,13 @@
             exit();
         }
 
-        public function handleGetAllTaskList(){
+        public function handleGetAllTaskList()
+        {
             $taskForm = $this->taskModel->getAllTaskList();
-            if($taskForm !== null){
+            if ($taskForm !== null) {
                 $this->response['success'] = true;
                 $this->response['taskForm'] = $taskForm['data'];
-            }else {
+            } else {
                 $this->response['message'] = "Lỗi khi lấy danh sách task";
             }
 
@@ -153,15 +163,17 @@
         public function handleUpdateTask($idTask)
         {
             $titleTask = trim($_POST['titleTask'] ?? '');
-            $detailTask = trim($_POST['detailTask'] ?? '');
             $categoryTask = trim($_POST['categoryTask'] ?? '');
             $deadlineTask = trim($_POST['deadlineTask'] ?? '');
             $description = trim($_POST['description'] ?? '');
 
-            $result = $this->taskModel->updateTaskById($titleTask, $detailTask, $categoryTask, $deadlineTask, $description, $idTask);
+            $subTask = $_POST['subTask'] ?? '[]';
+            $subTasksArray = is_array($subTask) ? $subTask : json_decode($subTask, true);
 
-            // Expecting $result to be an array with 'success' boolean
+            $result = $this->taskModel->updateTaskById($idTask, $titleTask, $categoryTask, $deadlineTask, $description, $subTasksArray);
+
             if (is_array($result) && isset($result['success']) && $result['success'] === true) {
+                error_log("ID TASK UPDATE: " . $idTask);
                 $this->response['success'] = true;
                 $this->response['message'] = "Update your task successfully!";
             } else {
@@ -190,14 +202,25 @@
             exit();
         }
 
-        /**
-         * Xử lý toggle complete status
-         * Frontend cần gửi: taskId
-         */
-        public function handleToggleComplete()
+        public function handleToggleComplete($id)
         {
-            // TODO: Implement toggle complete
-            $this->response['message'] = 'Chức năng đánh dấu hoàn thành đang được phát triển.';
+            $type = $_POST['type'] ?? 'parent';
+            $completed = $_POST['completed'] ?? 'false';
+
+            if ($type === 'sub') {
+                $result = $this->taskModel->updateSubTaskStatus($completed, $id);
+            } else {
+                $result = $this->taskModel->updateParentTaskStatus($completed, $id);
+            }
+
+            if (is_array($result) && isset($result['success']) && $result['success'] === true) {
+                $this->response['success'] = true;
+                $this->response['message'] = "Status updated successfully!";
+            } else {
+                $this->response['success'] = false;
+                $errMsg = is_array($result) && isset($result['message']) ? $result['message'] : 'Unknown DB error';
+                $this->response['message'] = 'Lỗi DB: ' . $errMsg;
+            }
             echo json_encode($this->response);
             exit();
         }

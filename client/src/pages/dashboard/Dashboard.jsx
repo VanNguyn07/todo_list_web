@@ -41,8 +41,6 @@ import { UpdateAndCreateTask } from "../modalPopup/updateAndCreateTaskModal";
 
 function Dashboard() {
   const currentStreakCount = 10;
-  const currentCompeledTaskCount = 5;
-  const currentPendingTaskCount = 10;
 
   const [goals, _setGoals] = useState(DUMMY_GOALS);
 
@@ -60,8 +58,8 @@ function Dashboard() {
   const {
     taskForm,
     subTask,
-    currentDetailInput,
-    handleDetailChange,
+    currentSubTask,
+    handleSubTaskChange,
     handleWhenClickEnter,
     removeSubTask,
     handleInputChange,
@@ -91,7 +89,7 @@ function Dashboard() {
   } = useFetchTaskOnUpdateForm();
 
   const taskPageData = useTaskPages();
-  const { handleOpenAddModal, isModalOpen } = taskPageData;
+  const { handleOpenAddModal, isModalOpen, tasks:allTasks } = taskPageData;
 
   const username = localStorage.getItem("my_username") || "User";
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -104,6 +102,9 @@ function Dashboard() {
     window.location.href = "/signin";
   };
 
+  const totalTask = allTasks?.length || 0;
+  const completedTask = allTasks?.filter((task) => (task.completed === "true" || task.completed === true)).length || 0;
+  const pendingTask = totalTask - completedTask;
 
   return (
     <>
@@ -408,10 +409,10 @@ function Dashboard() {
                       <div className="input-with-list">
                         <div className="sub-task-list">
                           {subTask.map((sub) => (
-                            <span key={sub.id} className="sub-task-item">
-                              • {sub.title}
+                            <span key={sub.idSubTask} className="sub-task-item">
+                              • {sub.content}
                               <Button
-                                onClick={() => removeSubTask(sub.id)}
+                                onClick={() => removeSubTask(sub.idSubTask)}
                                 className="remove-temp-btn"
                               >
                                 <X size={13} />
@@ -430,8 +431,8 @@ function Dashboard() {
                               ? "Add another sub-task..."
                               : "Type a sub-task and press Enter..."
                           }
-                          value={currentDetailInput}
-                          onChange={handleDetailChange}
+                          value={currentSubTask}
+                          onChange={handleSubTaskChange}
                           onKeyDown={handleWhenClickEnter}
                         />
                       </div>
@@ -491,7 +492,9 @@ function Dashboard() {
                     >
                       <div className="content-left">
                         <h2>{task.titleTask}</h2>
-                        <p>{RenderSubTasks(task.detailTask)}</p>
+
+                        <p>{RenderSubTasks(task.sub_tasks)}</p>
+
                         <h3>Deadline Task: {task.deadlineTask}</h3>
                       </div>
 
@@ -621,13 +624,13 @@ function Dashboard() {
                 <CompeledTask
                   className="task-widget compeleted-task"
                   title="Compeled Task"
-                  compeledTaskCount={currentCompeledTaskCount}
+                  compeledTaskCount={completedTask}
                 />
 
                 <PendingTask
                   className="task-widget pending-task"
                   title="Pending Task"
-                  pendingTaskCount={currentPendingTaskCount}
+                  pendingTaskCount={pendingTask}
                 />
               </div>
 

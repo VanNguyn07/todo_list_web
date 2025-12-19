@@ -50,6 +50,11 @@ try {
             case 'delete_task':
                 $controller->handleDeleteTask();
                 break;
+            
+            case 'is_completed':
+                $updateTaskStatusById = $_POST['id'];
+                $controller->handleToggleComplete($updateTaskStatusById);
+                break;
 
             default:
                 echo json_encode(['success' => false, 'message' => 'Hành động không hợp lệ.']);

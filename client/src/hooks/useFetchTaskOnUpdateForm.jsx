@@ -10,11 +10,9 @@ export const useFetchTaskOnUpdateForm = () => {
     try {
       const response = await fetch(
         `/api/fetchTaskApi.php?action=get_task_to_update&idTask=${idTask}`
-      );
-      const data = await response.json();
+      );      const data = await response.json();
 
       if (data.success) {
-        
         setTasks(data.tasks);
         setIsShowFormUpdate(true);
         console.log("Data when success is: ", data.tasks);

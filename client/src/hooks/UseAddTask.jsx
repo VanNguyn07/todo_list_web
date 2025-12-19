@@ -14,7 +14,7 @@ export const useAddTask = ({ onSuccess }) => {
   });
 
   const [subTask, setSubTask] = useState([]);// Mảng chứa các task con
-  const [currentDetailInput, setCurrentDetailInput] = useState("");// Nội dung đang gõ trong ô Detail
+  const [currentSubTask, setCurrentSubTask] = useState("");// Nội dung đang gõ trong ô Detail
 
   // Xử lý input text thường (Title, Category...)
   const handleInputChange = (e) => {
@@ -25,26 +25,26 @@ export const useAddTask = ({ onSuccess }) => {
     }));
   };
 
-  const handleDetailChange = (e) => {
-    setCurrentDetailInput(e.target.value);
+  const handleSubTaskChange = (e) => {
+    setCurrentSubTask(e.target.value);
   };
 
   // Xử lý khi nhấn phím (Bắt sự kiện Enter)
   const handleWhenClickEnter = (e) => {
     if(e.key === "Enter") {
       e.preventDefault(); // Chặn xuống dòng mặc định của textarea/input
-      if(!currentDetailInput.trim()){
+      if(!currentSubTask.trim()){
         return;
       }
 
       const newSub = {
-        id:Date.now(),// ID tạm để React render key
-        title:currentDetailInput.trim(),
-        completed: false,
+        id: Date.now(),
+        content:currentSubTask.trim(),
+        completed: 'false',
       }
 
       setSubTask([...subTask, newSub]);
-      setCurrentDetailInput("");
+      setCurrentSubTask("");
     }
   }
 
@@ -62,16 +62,13 @@ export const useAddTask = ({ onSuccess }) => {
   };
 
   // 2. Hàm xử lý `fetch`
-  const handleAddTask = () => {
+  const handleAddTask = async () => {
     // Validation phía client (giữ nguyên)
     if (!taskForm.titleTask.trim()) {
       alert("Please enter a task title!");
       return;
     }
-    // if (subTask.length === 0 && !currentDetailInput.trim()) {
-    //   alert("Please enter at least one detail/sub-task!");
-    //   return;
-    // }
+
     if (!taskForm.categoryTask) {
       alert("Please select a task category!");
       return;
@@ -81,20 +78,12 @@ export const useAddTask = ({ onSuccess }) => {
       return;
     }
 
-    let finalSubTasks = [...subTask];
-    if(currentDetailInput.trim()){
-      finalSubTasks.push({
-        id: Date.now(),
-        title: currentDetailInput.trim(),
-        completed: false,
-      })
-    }
     // Tạo FormData để gửi lên server (giữ nguyên)
     const formData = new FormData();
     formData.append("action", "add_task");
     formData.append("titleTask", taskForm.titleTask.trim());
     formData.append("categoryTask", taskForm.categoryTask);
-    formData.append("detailTask", JSON.stringify(finalSubTasks));
+    formData.append("subTask", JSON.stringify(subTask))
 
     //Chuyển Date object thành chuỗi ISO string (chuẩn UTC)
     if (taskForm.deadlineTask instanceof Date) {
@@ -117,19 +106,13 @@ export const useAddTask = ({ onSuccess }) => {
     console.log("Sending data: ", Object.fromEntries(formData));
 
     try {
-      const API_URL = "/api/taskApi.php";
-      fetch(API_URL, {
+      const response = await fetch("/api/taskApi.php", {
         method: "POST",
-        body: formData,
+        body: formData
       })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`Lỗi HTTP! Status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (data.success) {
+
+      const data = await response.json();
+      if (data.success) {
             alert(data.message);
             setTaskForm({
               titleTask: "",
@@ -137,7 +120,7 @@ export const useAddTask = ({ onSuccess }) => {
               deadlineTask: null,
             });
             setSubTask([]);
-            setCurrentDetailInput("");
+            setCurrentSubTask("");
             // 2. GỌI CALLBACK SAU KHI THÀNH CÔNG!
             if (onSuccess) {
               onSuccess(); // Đây chính là hàm refetch()
@@ -145,12 +128,7 @@ export const useAddTask = ({ onSuccess }) => {
           } else {
             alert(data.message || "Lỗi thêm task");
           }
-        })
-        .catch((error) => {
-          console.error("Lỗi fetch:", error);
-          alert("Lỗi kết nối: " + error.message);
-        });
-    } catch (error) {
+    } catch(error) {
       console.error("Lỗi khi thêm task:", error);
       alert("Lỗi kết nối. Vui lòng thử lại.");
     }
@@ -158,13 +136,13 @@ export const useAddTask = ({ onSuccess }) => {
   return {
     taskForm,
     subTask,
-    currentDetailInput,
+    currentSubTask,
     setTaskForm,
     handleInputChange,
     handleDateChange,
     handleAddTask,
     handleWhenClickEnter,
-    handleDetailChange,
+    handleSubTaskChange,
     removeSubTask,
   };
 };

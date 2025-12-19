@@ -2,11 +2,12 @@ import { useUpdateTask } from "../../hooks/useUpdateTask";
 import { useAddTaskForm } from "../../hooks/useAddTaskForm";
 import { Plus, Trash2, X, Save, Check } from "lucide-react";
 import DatePicker from "react-datepicker";
-// Import CSS bắt buộc của react-datepicker
 import "react-datepicker/dist/react-datepicker.css";
+// import "../tasksPages/TaskPages.css"
 export const UpdateAndCreateTask = (taskPageData, onTaskUpdate) => {
   const {
     formState,
+    setFormState,
     refetch,
     subtaskInput,
     setSubtaskInput,
@@ -15,7 +16,7 @@ export const UpdateAndCreateTask = (taskPageData, onTaskUpdate) => {
     handleDeleteSubtask,
     handleInputChange,
     handleSubtaskNameChange,
-    closeModal,// <-- Lúc này closeModal mới chung một nhịp với cha là TaskPages
+    closeModal,
   } = taskPageData;
 
   const { handleSubmitUpdate } = useUpdateTask();
@@ -28,7 +29,6 @@ export const UpdateAndCreateTask = (taskPageData, onTaskUpdate) => {
   };
 
   const handleCreateAndUpdate = async () => {
-    //tạo bản sao object
     const coppyObject = { ...formState };
 
     try {
@@ -47,6 +47,25 @@ export const UpdateAndCreateTask = (taskPageData, onTaskUpdate) => {
     } catch (error) {
       console.log("Error when save ", error);
     }
+  };
+
+  const handleToggleSubtask = (id, tempId) => {
+    const updated = formState.sub_tasks.map((sub) => {
+      // Kiểm tra khớp theo ID DB hoặc ID tạm thời
+      const isMatch = id ? sub.idSubTask === id : sub.tempId === tempId;
+
+      if (isMatch) {
+        return {
+          ...sub,
+          completed:
+            sub.completed === "true" || sub.completed === true
+              ? "false"
+              : "true",
+        };
+      }
+      return sub;
+    });
+    setFormState({ ...formState, sub_tasks: updated });
   };
 
   const handleSubmitForm = () => {
@@ -89,7 +108,7 @@ export const UpdateAndCreateTask = (taskPageData, onTaskUpdate) => {
                   value={formState.categoryTask}
                   onChange={handleInputChange}
                 >
-                  <option value="" disabled selected>
+                  <option value="" disabled>
                     Category
                   </option>
                   <option value="Work">Work</option>
@@ -103,19 +122,15 @@ export const UpdateAndCreateTask = (taskPageData, onTaskUpdate) => {
                   selected={formState.deadlineTask}
                   onChange={handleDateChange}
                   placeholderText="Click to select date"
-                  name="deadlineTask"
                   showTimeSelect
                   dateFormat="dd/MM/yyyy HH:mm"
-                  minDate={new Date()} // Không cho chọn ngày trong quá khứ
-                  isClearable // Hiển thị nút (x) để xóa ngày đã chọn
-                  // Chỉ hiển thị lịch khi bấm vào icon
+                  minDate={new Date()}
+                  isClearable
                   showIcon
-                  icon="fa fa-calendar"
-                  // Hiển thị tháng và năm để chọn nhanh
                   showYearDropdown
                   showMonthDropdown
                   dropdownMode="select"
-                ></DatePicker>
+                />
               </div>
             </div>
 
@@ -131,11 +146,10 @@ export const UpdateAndCreateTask = (taskPageData, onTaskUpdate) => {
               />
             </div>
 
-            {/* --- SUBTASK MANAGER (PHẦN QUAN TRỌNG) --- */}
+            {/* --- SUBTASK MANAGER (FIX TÊN BIẾN TẠI ĐÂY) --- */}
             <div className="subtask-manager-section">
               <label>Work list (Subtasks)</label>
 
-              {/* Input thêm mới */}
               <div className="add-subtask-row">
                 <Plus size={18} className="add-icon-input" />
                 <input
@@ -147,39 +161,59 @@ export const UpdateAndCreateTask = (taskPageData, onTaskUpdate) => {
                 />
               </div>
 
-              {/* List Subtask có thể sửa/xóa */}
               <div className="modal-subtask-list">
-                {formState.detailTask.map((sub) => (
-                  <div key={sub.id} className="modal-subtask-item">
-                    {/* Checkbox giả */}
+                {formState.sub_tasks &&
+                  formState.sub_tasks?.map((sub) => (
                     <div
-                      className={`mini-checkbox ${
-                        sub.completed ? "checked" : ""
-                      }`}
+                      key={sub.idSubTask || sub.tempId}
+                      className="modal-subtask-item"
                     >
-                      {sub.completed && <Check size={12} strokeWidth={4} />}
+                      <div
+                        className={`mini-checkbox ${
+                          sub.completed === "true" || sub.completed === true
+                            ? "checked"
+                            : ""
+                        }`}
+                        onClick={() => handleToggleSubtask(sub.idSubTask)}
+                      >
+                        {(sub.completed === "true" ||
+                          sub.completed === true) && (
+                          <Check size={12} strokeWidth={4} />
+                        )}
+                        <span
+                          className={
+                            sub.completed === "true" || sub.completed === true
+                              ? "text-strikethrough"
+                              : ""
+                          }
+                        >
+                          {sub.content ? sub.content : "Don't have sub-task"}
+                        </span>
+                      </div>
+
+                      <input
+                        type="text"
+                        className="edit-sub-input"
+                        value={sub.content} 
+                        onChange={
+                          (e) =>
+                            handleSubtaskNameChange(
+                              sub.idSubTask,
+                              e.target.value
+                            )
+                        }
+                      />
+
+                      <button
+                        className="btn-mini delete"
+                        onClick={() => handleDeleteSubtask(sub.idSubTask)} // id -> idSubTask
+                      >
+                        <Trash2 size={14} />
+                      </button>
                     </div>
+                  ))}
 
-                    {/* Input sửa tên trực tiếp */}
-                    <input
-                      type="text"
-                      className="edit-sub-input"
-                      value={sub.title}
-                      onChange={(e) =>
-                        handleSubtaskNameChange(sub.id, e.target.value)
-                      }
-                    />
-
-                    {/* Nút xóa subtask */}
-                    <button
-                      className="btn-mini delete"
-                      onClick={() => handleDeleteSubtask(sub.id)}
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                ))}
-                {formState.detailTask.length === 0 && (
+                {(!formState.sub_tasks || formState.sub_tasks.length === 0) && (
                   <p className="empty-subtask-text">
                     Don't have sub-task created
                   </p>

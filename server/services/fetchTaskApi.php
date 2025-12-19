@@ -38,7 +38,7 @@ try {
         switch ($action) {
             
             case 'get_nearest_tasks':
-                $controller->handleSelectAllDataFromDb();
+                $controller->handleNearestUpcomingTasks();
                 break;
 
             case 'get_task_to_update':
