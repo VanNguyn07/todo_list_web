@@ -30,14 +30,14 @@ import { useTaskPages } from "../../hooks/useTaskPages";
 import { UpdateAndCreateTask } from "../modalPopup/updateAndCreateTaskModal";
 import { updateTaskStatus } from "../../hooks/useUpdateStatus";
 
-//Cấu hình số cột: default là 2 cột (theo ý bạn)
+//Cấu hình số cột: default là 2 cột 
 const breakpointColumnsObj = {
   default: 2, // Màn hình to: 2 cột
   1100: 2, // Màn hình lỡ: vẫn 2 cột
   700: 1, // Màn hình điện thoại: về 1 cột cho dễ nhìn
 };
 
-export const TaskPages = ({ onTaskUpdate, activeTaskId }) => {
+export const TaskPages = ({ onTaskUpdate, activeTaskId, handleTransitionPage }) => {
   const taskPageData = useTaskPages();
 
   const {
@@ -199,6 +199,7 @@ export const TaskPages = ({ onTaskUpdate, activeTaskId }) => {
               <div
                 key={task.idTask}
                 ref={(el) => (taskRefs.current[task.idTask] = el)}
+
                 className={`task-card ${
                   task.completed === "true" || task.completed === true
                     ? "completed"
@@ -302,11 +303,12 @@ export const TaskPages = ({ onTaskUpdate, activeTaskId }) => {
                       </span>
                     </button>
 
-                    <button className="action-btn takeNow tooltip-container">
+                    <button className="action-btn takeNow tooltip-container"
+                    onClick={() => handleTransitionPage("pomodoro", task.idTask, task.titleTask)}>
                       <Zap size={20} />
                       <span className="tooltip-text-for-task">Do it now</span>
                     </button>
-                  </div>
+                  </div>  
                 </div>
 
                 {/* Phần mở rộng (Subtasks & Detail) */}

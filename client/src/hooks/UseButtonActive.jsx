@@ -4,8 +4,9 @@ import {buttonClickHandles} from "../components/button/ButtonHandleOnClick";
 export const useButtonActive = (defaultView = "home") => {
   const [activeView, setActiveView] = useState(defaultView);
   const [activeTaskId, setActiveTaskId] = useState(null); // Lưu ID task được chọn
+  const [activeTitleTask, setActiveTitleTask] = useState("");
 
-  const handleTransitionPage = (viewName, idTask) => {
+  const handleTransitionPage = (viewName, idTask, titleTask) => {
     // kiểm tra danh sách trong buttonClickHandles có hàm nào tên là home không 
     if(buttonClickHandles[viewName]){
       buttonClickHandles[viewName]();
@@ -13,6 +14,7 @@ export const useButtonActive = (defaultView = "home") => {
       console.warn(`Không tìm thấy xử lý cho: ${viewName}`);
     }
     setActiveView(viewName);
+    setActiveTitleTask(titleTask || "");
 
     if(idTask){
       setActiveTaskId(idTask);
@@ -25,6 +27,7 @@ export const useButtonActive = (defaultView = "home") => {
   return {
     activeView,
     activeTaskId,
+    activeTitleTask,
     handleTransitionPage
   };
 };

@@ -14,10 +14,18 @@ import {
   ChevronRight,
   Shield,
   Camera,
+  BarChart3,
 } from "lucide-react";
 import "./ProfileModal.css";
+import { useTaskPages } from "../../hooks/useTaskPages";
 
-export const ProfileModal = ({ isOpen, onClose, username: usernameProp, onLogout, onUpdate }) => {
+export const ProfileModal = ({
+  isOpen,
+  onClose,
+  username: usernameProp,
+  onLogout,
+  onUpdate,
+}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editUsername, setEditUsername] = useState(usernameProp || "");
   const [email, setEmail] = useState("");
@@ -27,12 +35,48 @@ export const ProfileModal = ({ isOpen, onClose, username: usernameProp, onLogout
 
   // Achievements with emoji icons + descriptions
   const achievements = [
-    { icon: "🚀", label: "First Step", status: "unlocked", desc: "Completed your first task", progress: 100 },
-    { icon: "🔥", label: "On Fire", status: "unlocked", desc: "7-day task streak", progress: 100 },
-    { icon: "⭐", label: "50 Tasks", status: "unlocked", desc: "Marked 50 tasks complete", progress: 100 },
-    { icon: "💯", label: "Perfect Day", status: "unlocked", desc: "100% completion rate", progress: 100 },
-    { icon: "👑", label: "Master", status: "in-progress", desc: "Reach 500 tasks", progress: 45 },
-    { icon: "✨", label: "Legend", status: "locked", desc: "Ultimate achievement", progress: 0 },
+    {
+      icon: "🚀",
+      label: "First Step",
+      status: "unlocked",
+      desc: "Completed your first task",
+      progress: 100,
+    },
+    {
+      icon: "🔥",
+      label: "On Fire",
+      status: "unlocked",
+      desc: "7-day task streak",
+      progress: 100,
+    },
+    {
+      icon: "⭐",
+      label: "50 Tasks",
+      status: "unlocked",
+      desc: "Marked 50 tasks complete",
+      progress: 100,
+    },
+    {
+      icon: "💯",
+      label: "Perfect Day",
+      status: "unlocked",
+      desc: "100% completion rate",
+      progress: 100,
+    },
+    {
+      icon: "👑",
+      label: "Master",
+      status: "in-progress",
+      desc: "Reach 500 tasks",
+      progress: 45,
+    },
+    {
+      icon: "✨",
+      label: "Legend",
+      status: "locked",
+      desc: "Ultimate achievement",
+      progress: 0,
+    },
   ];
 
   // User stats
@@ -47,39 +91,48 @@ export const ProfileModal = ({ isOpen, onClose, username: usernameProp, onLogout
     avgTimePerTaskMin: 18,
   });
 
+  const taskPageData = useTaskPages();
+  const { tasks } = taskPageData;
+  const totalTasks = tasks?.length || 0;
+  const completedTasks =
+    tasks?.filter(
+      (itemTask) => itemTask.completed === "true" || itemTask.completed === true
+    ).length || 0;
+  const pendingTask = totalTasks - completedTasks;
+
   // Recent activities
   const [recentActivities] = useState([
-    { 
-      id: 1, 
-      action: "Completed", 
+    {
+      id: 1,
+      action: "Completed",
       item: "Write project spec",
-      time: "2 hours ago", 
+      time: "2 hours ago",
       icon: CheckSquare,
-      color: "#10b981"
+      color: "#10b981",
     },
-    { 
-      id: 2, 
-      action: "Added habit", 
+    {
+      id: 2,
+      action: "Added habit",
       item: "Morning run",
-      time: "1 day ago", 
+      time: "1 day ago",
       icon: Zap,
-      color: "#f59e0b"
+      color: "#f59e0b",
     },
-    { 
-      id: 3, 
-      action: "Updated deadline", 
+    {
+      id: 3,
+      action: "Updated deadline",
       item: "Prepare slides",
-      time: "2 days ago", 
+      time: "2 days ago",
       icon: Clock,
-      color: "#3b82f6"
+      color: "#3b82f6",
     },
-    { 
-      id: 4, 
-      action: "Earned badge", 
+    {
+      id: 4,
+      action: "Earned badge",
       item: "On Fire 🔥",
-      time: "3 days ago", 
+      time: "3 days ago",
       icon: Trophy,
-      color: "#8b5cf6"
+      color: "#8b5cf6",
     },
   ]);
 
@@ -121,10 +174,11 @@ export const ProfileModal = ({ isOpen, onClose, username: usernameProp, onLogout
     try {
       localStorage.setItem("my_username", editUsername);
       localStorage.setItem("my_email", email);
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
       setIsSaving(false);
       setIsEditing(false);
-      if (typeof onUpdate === "function") onUpdate({ username: editUsername, email });
+      if (typeof onUpdate === "function")
+        onUpdate({ username: editUsername, email });
     } catch (error) {
       console.error("Error saving profile:", error);
       setIsSaving(false);
@@ -135,7 +189,10 @@ export const ProfileModal = ({ isOpen, onClose, username: usernameProp, onLogout
 
   return (
     <div className="profile-modal-backdrop" onClick={onClose}>
-      <div className="profile-modal-container" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="profile-modal-container"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* COVER PHOTO SECTION */}
         <div className="profile-cover-section">
           {coverUrl ? (
@@ -146,7 +203,12 @@ export const ProfileModal = ({ isOpen, onClose, username: usernameProp, onLogout
           <label className="cover-upload-btn">
             <Camera size={18} />
             <span>Edit Cover</span>
-            <input type="file" accept="image/*" onChange={handleCoverChange} style={{display: 'none'}} />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleCoverChange}
+              style={{ display: "none" }}
+            />
           </label>
         </div>
 
@@ -162,7 +224,12 @@ export const ProfileModal = ({ isOpen, onClose, username: usernameProp, onLogout
             )}
             <label className="avatar-edit-btn">
               <Camera size={16} />
-              <input type="file" accept="image/*" onChange={handleAvatarChange} style={{display: 'none'}} />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarChange}
+                style={{ display: "none" }}
+              />
             </label>
           </div>
 
@@ -183,10 +250,17 @@ export const ProfileModal = ({ isOpen, onClose, username: usernameProp, onLogout
                   placeholder="Email address"
                 />
                 <div className="edit-actions-inline">
-                  <button onClick={handleSaveProfile} disabled={isSaving} className="btn-save-modern">
+                  <button
+                    onClick={handleSaveProfile}
+                    disabled={isSaving}
+                    className="btn-save-modern"
+                  >
                     {isSaving ? "Saving..." : "Save"}
                   </button>
-                  <button onClick={() => setIsEditing(false)} className="btn-cancel-modern">
+                  <button
+                    onClick={() => setIsEditing(false)}
+                    className="btn-cancel-modern"
+                  >
                     Cancel
                   </button>
                 </div>
@@ -195,7 +269,10 @@ export const ProfileModal = ({ isOpen, onClose, username: usernameProp, onLogout
               <>
                 <div className="user-name-row">
                   <h2 className="user-name-large">{editUsername || "User"}</h2>
-                  <button onClick={() => setIsEditing(true)} className="btn-edit-modern">
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="btn-edit-modern"
+                  >
                     <Edit2 size={16} />
                   </button>
                 </div>
@@ -214,7 +291,6 @@ export const ProfileModal = ({ isOpen, onClose, username: usernameProp, onLogout
 
         {/* BODY CONTENT */}
         <div className="profile-modal-body-modern">
-
           {/* STATS GRID */}
           <div className="stats-grid-modern">
             <div className="stat-card-modern streak-card">
@@ -231,7 +307,7 @@ export const ProfileModal = ({ isOpen, onClose, username: usernameProp, onLogout
                 <CheckSquare size={24} />
               </div>
               <div className="stat-content">
-                <div className="stat-number">{userStats.completedTasks}</div>
+                <div className="stat-number">{completedTasks}</div>
                 <div className="stat-label">Completed</div>
               </div>
             </div>
@@ -240,17 +316,17 @@ export const ProfileModal = ({ isOpen, onClose, username: usernameProp, onLogout
                 <Clock size={24} />
               </div>
               <div className="stat-content">
-                <div className="stat-number">{userStats.pendingTasks}</div>
+                <div className="stat-number">{pendingTask}</div>
                 <div className="stat-label">Pending</div>
               </div>
             </div>
             <div className="stat-card-modern completion-card">
               <div className="stat-icon-modern">
-                <Trophy size={24} />
+                <BarChart3 size={24} />
               </div>
               <div className="stat-content">
-                <div className="stat-number">{userStats.completionRate}%</div>
-                <div className="stat-label">Success Rate</div>
+                <div className="stat-number">{totalTasks}</div>
+                <div className="stat-label">Task Total</div>
               </div>
             </div>
           </div>
@@ -258,25 +334,36 @@ export const ProfileModal = ({ isOpen, onClose, username: usernameProp, onLogout
           {/* ACHIEVEMENTS */}
           <div className="section-header-modern">
             <h3>Achievements</h3>
-            <span className="section-subtitle">{achievements.filter(a => a.status === 'unlocked').length} of {achievements.length} unlocked</span>
+            <span className="section-subtitle">
+              {achievements.filter((a) => a.status === "unlocked").length} of{" "}
+              {achievements.length} unlocked
+            </span>
           </div>
           <div className="achievements-grid-modern">
             {achievements.map((item, idx) => (
-              <div key={idx} className={`achievement-card-modern ${item.status}`}>
+              <div
+                key={idx}
+                className={`achievement-card-modern ${item.status}`}
+              >
                 <div className="achievement-emoji">{item.icon}</div>
                 <div className="achievement-info">
                   <div className="achievement-name">{item.label}</div>
                   <div className="achievement-description">{item.desc}</div>
-                  {item.status === 'in-progress' && (
+                  {item.status === "in-progress" && (
                     <div className="achievement-progress">
                       <div className="progress-bar">
-                        <div className="progress-fill" style={{width: `${item.progress}%`}}></div>
+                        <div
+                          className="progress-fill"
+                          style={{ width: `${item.progress}%` }}
+                        ></div>
                       </div>
                       <span className="progress-text">{item.progress}%</span>
                     </div>
                   )}
                 </div>
-                {item.status === 'unlocked' && <div className="unlocked-badge">✓</div>}
+                {item.status === "unlocked" && (
+                  <div className="unlocked-badge">✓</div>
+                )}
               </div>
             ))}
           </div>
@@ -291,7 +378,13 @@ export const ProfileModal = ({ isOpen, onClose, username: usernameProp, onLogout
               const Icon = act.icon;
               return (
                 <div key={act.id} className="activity-card-modern">
-                  <div className="activity-icon-modern" style={{backgroundColor: act.color + '20', color: act.color}}>
+                  <div
+                    className="activity-icon-modern"
+                    style={{
+                      backgroundColor: act.color + "20",
+                      color: act.color,
+                    }}
+                  >
                     <Icon size={18} />
                   </div>
                   <div className="activity-details">
@@ -312,17 +405,25 @@ export const ProfileModal = ({ isOpen, onClose, username: usernameProp, onLogout
           </div>
           <div className="settings-list-modern">
             <button className="setting-item-modern">
-              <div className="setting-icon-modern" style={{backgroundColor: '#3b82f620', color: '#3b82f6'}}>
+              <div
+                className="setting-icon-modern"
+                style={{ backgroundColor: "#3b82f620", color: "#3b82f6" }}
+              >
                 <User size={18} />
               </div>
               <div className="setting-text">
                 <div className="setting-title">Personal Information</div>
-                <div className="setting-desc">Update your details and preferences</div>
+                <div className="setting-desc">
+                  Update your details and preferences
+                </div>
               </div>
               <ChevronRight size={18} className="setting-arrow" />
             </button>
             <button className="setting-item-modern">
-              <div className="setting-icon-modern" style={{backgroundColor: '#10b98120', color: '#10b981'}}>
+              <div
+                className="setting-icon-modern"
+                style={{ backgroundColor: "#10b98120", color: "#10b981" }}
+              >
                 <Shield size={18} />
               </div>
               <div className="setting-text">
@@ -332,7 +433,10 @@ export const ProfileModal = ({ isOpen, onClose, username: usernameProp, onLogout
               <ChevronRight size={18} className="setting-arrow" />
             </button>
             <button className="setting-item-modern">
-              <div className="setting-icon-modern" style={{backgroundColor: '#8b5cf620', color: '#8b5cf6'}}>
+              <div
+                className="setting-icon-modern"
+                style={{ backgroundColor: "#8b5cf620", color: "#8b5cf6" }}
+              >
                 <Settings size={18} />
               </div>
               <div className="setting-text">
@@ -346,7 +450,12 @@ export const ProfileModal = ({ isOpen, onClose, username: usernameProp, onLogout
 
         {/* FOOTER */}
         <div className="profile-modal-footer-modern">
-          <button onClick={() => { if (typeof onLogout === "function") onLogout(); }} className="btn-logout-modern">
+          <button
+            onClick={() => {
+              if (typeof onLogout === "function") onLogout();
+            }}
+            className="btn-logout-modern"
+          >
             <LogOut size={18} />
             <span>Log Out</span>
           </button>

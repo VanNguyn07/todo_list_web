@@ -14,7 +14,6 @@ import QuickNotesWidget from "../../components/quickNotes/QuickNotes";
 import { WeeklyProcessChart } from "../../components/recharts/WeeklyProccessChart";
 import { CalendarWidget } from "../../components/calendarWidget/CalendarWidget";
 import mockTasks from "../../components/utils/MockDataChart";
-import DUMMY_GOALS from "../../components/utils/MockDataProcess";
 import { ProcessGoal } from "../../components/processGoal/ProcessGoal";
 import { useAddTask } from "../../hooks/useAddTask";
 import { useButtonActive } from "../../hooks/UseButtonActive";
@@ -38,23 +37,24 @@ import { X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ProfileModal } from "../profile/ProfileModal";
 import { UpdateAndCreateTask } from "../modalPopup/updateAndCreateTaskModal";
+import { parseISO } from "date-fns";
 
 function Dashboard() {
   const currentStreakCount = 10;
 
-  const [goals, _setGoals] = useState(DUMMY_GOALS);
-
-  console.log('Dữ liệu GỐC trong "goals":', goals);
-
-  const sortedGoals = [...goals].sort(
-    (a, b) => new Date(a.deadline) - new Date(b.deadline)
-  );
-
-  const { activeView, activeTaskId, handleTransitionPage } =
+  const { activeView, activeTaskId, activeTitleTask, handleTransitionPage } =
     useButtonActive("home");
+
   const [activeModal, setActiveMoal] = useState(null);
   // 1. Gọi hook fetch, lấy ra hàm 'refetch'
   const { tasks, refetch } = useFetchTasks("get_nearest_tasks");
+  const { tasks: taskProcess } = useFetchTasks("get_all_task_for_process");
+
+  const sortedGoals = [...taskProcess].sort(
+    (a, b) =>
+      new parseISO(a.deadlineTask).getTime() -
+      parseISO(b.deadlineTask).getTime()
+  );
 
   const {
     taskForm,
@@ -649,9 +649,13 @@ function Dashboard() {
 
               <div className="process-goal-container">
                 <h3>Target due date</h3>
-                {sortedGoals.map((item) => (
-                  <ProcessGoal key={item.id} {...item} />
-                ))}
+                {sortedGoals.length === 0 ? (
+                  <p>No goals yet</p>
+                ) : (
+                  sortedGoals.map((item) => (
+                    <ProcessGoal key={item.idTask} {...item} />
+                  ))
+                )}
               </div>
             </div>
           )}
@@ -662,16 +666,24 @@ function Dashboard() {
 
           {activeView === "task" && (
             <div className="task-page-wrapper">
-              <TaskPages onTaskUpdate={refetch} activeTaskId={activeTaskId} />
+              <TaskPages
+                onTaskUpdate={refetch}
+                activeTaskId={activeTaskId}
+                handleTransitionPage={handleTransitionPage}
+              />
             </div>
           )}
 
           {/* ======================================================== */}
           {/* KHU VỰC 3: TRANG POMODORO                                    */}
           {/* ======================================================== */}
+
           {activeView === "pomodoro" && (
             <div className="pomodoro-page-wrapper">
-              <PomodoroPages />
+              <PomodoroPages
+                activeTaskId={activeTaskId}
+                activeTitleTask={activeTitleTask}
+              />
             </div>
           )}
 

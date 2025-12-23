@@ -1,35 +1,37 @@
 import React from "react";
-import { intervalToDuration, format, parseISO, endOfDay, isAfter } from 'date-fns';
+import {format, parseISO, endOfDay, isAfter, differenceInDays, differenceInHours } from 'date-fns';
 import "./ProcessGoal.css";
 
-const getProcessBar = (duration) => {
-    if (duration.days <= 3) return 'urgent';
-    if (duration.days <= 7) return 'soon';
+const getProcessBar = (totalDays, isOverdue) => {
+    if (isOverdue) return 'overdue';
+    if (totalDays <= 3) return 'urgent';
+    if (totalDays <= 7) return 'soon';
     return 'normal';
 };
 
-export const ProcessGoal = ({ title, deadline, tasksCompleted = 0, tasksTotal = 0 }) => {
-    const deadlineDate = endOfDay(parseISO(deadline));
+export const ProcessGoal = ({ titleTask, deadlineTask, tasksCompleted = 0, tasksTotal = 0 }) => {
+    const deadlineDate = endOfDay(parseISO(deadlineTask));
     const current = new Date();
     const isOverdue = !isAfter(deadlineDate, current);
 
-    const duration = !isOverdue ? intervalToDuration({start: current, end: deadlineDate}) : {days: 0, hours: 0};
+    const totalDays = !isOverdue ? differenceInDays(deadlineDate, current) : 0;
+    const totalHours = !isOverdue ? differenceInHours(deadlineDate, current) % 24 : 0;
     const formattedDeadline = format(deadlineDate, 'dd/MM/yyyy');
     const percentage = tasksTotal > 0 ? Math.round((tasksCompleted / tasksTotal) * 100) : 0;
 
-    const status = getProcessBar(duration);
+    const status = getProcessBar(totalDays);
 
     return (
         <div className={`card ${status}`}>
             <div className="header">
                 <span className={`icon ${status}`}><i className="fa-solid fa-bullseye-pointer"></i></span>
-                <span className="title">{title}</span>
+                <span className="title">{titleTask}</span>
             </div>
 
             <div className="deadlineInfo">
                 <p>
                     🔔 Deadline: <b>{formattedDeadline}</b>{" "}
-                    {!isOverdue ? `Remaining: ${duration.days} days ${duration.hours} hours` : "(overdue)"}
+                    {!isOverdue ? `Remaining: ${totalDays} days ${totalHours} hours` : "(overdue)"}
                 </p>
             </div>
 

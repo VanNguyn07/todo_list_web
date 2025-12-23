@@ -49,6 +49,10 @@ try {
             case 'get_all_task_list':
                 $controller->handleGetAllTaskList();
                 break;
+
+            case 'get_all_task_for_process':
+                $controller->handleAllTaskForProcessGoal();
+                break;
                 
             default:
                 echo json_encode(['success' => false, 'message' => 'Hành động không hợp lệ.']);

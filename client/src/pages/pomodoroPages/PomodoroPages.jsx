@@ -33,7 +33,7 @@ const mockUsers = [
   { id: 6, name: "Frank", avatar: man3, status: "break" },
 ];
 
-export const PomodoroPages = () => {
+export const PomodoroPages = ({activeTitleTask}) => {
   const [activeTab, setActiveTab] = useState("room");
   const {
     isActive,
@@ -45,7 +45,6 @@ export const PomodoroPages = () => {
     audioInputRef,
     audioRef,
     volumes,
-    currentTask,
     sessionsCompleted,
     breaksTaken,
     totalMinutes,
@@ -147,9 +146,11 @@ export const PomodoroPages = () => {
                 type="text"
                 className="task-input"
                 placeholder="What are you working on?"
-                value={currentTask}
+                value={activeTitleTask}
                 onChange={handleChange}
-              />
+              >
+
+              </input>
             </div>
             <div className="card-pomodoro stats-card">
               <h3 className="card-title">Daily Stats</h3>

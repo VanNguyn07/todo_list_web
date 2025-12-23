@@ -165,12 +165,13 @@ class TaskModel
         try {
             $prepareStmt = $this->pdo->prepare($sql);
             $prepareStmt->execute([$idTask]);
-            $task = $prepareStmt->fetch(PDO::FETCH_ASSOC);
-            if($task){
+            $task = $prepareStmt->fetch(PDO::FETCH_ASSOC); // trả về một mảng kết hợp dạng key = value
+
+            if ($task) {
                 $sqlSub = "SELECT * FROM " . $this->table_sub_tasks . " WHERE idParent = ?";
                 $stmtSub = $this->pdo->prepare($sqlSub);
                 $stmtSub->execute([$idTask]);
-            
+
                 $task['sub_tasks'] = $stmtSub->fetchAll(PDO::FETCH_ASSOC);
                 return $task;
             }
@@ -179,48 +180,49 @@ class TaskModel
         }
     }
 
-public function updateTaskById($idTask, $titleTask, $categoryTask, $deadlineTask, $description, $subTasks) {
-    try {
-        $this->pdo->beginTransaction();
+    public function updateTaskById($idTask, $titleTask, $categoryTask, $deadlineTask, $description, $subTasks)
+    {
+        try {
+            $this->pdo->beginTransaction();
 
-        // 1. Update Task cha
-        $sqlParent = "UPDATE " . $this->table_tasks . " SET 
+            // 1. Update Task cha
+            $sqlParent = "UPDATE " . $this->table_tasks . " SET 
             titleTask = ?, categoryTask = ?, deadlineTask = ?, description = ?
             WHERE idTask = ?";
-        $this->pdo->prepare($sqlParent)->execute([$titleTask, $categoryTask, $deadlineTask, $description, $idTask]);
+            $this->pdo->prepare($sqlParent)->execute([$titleTask, $categoryTask, $deadlineTask, $description, $idTask]);
 
-        // 2. Lấy danh sách ID cũ để so sánh (Phục vụ việc XÓA)
-        $keepIds = [];
-        if (!empty($subTasks)) {
-            foreach ($subTasks as $sub) {
-                // Chỉ những cái có idSubTask là số (từ DB cũ) mới đi UPDATE
-                if (isset($sub['idSubTask']) && is_numeric($sub['idSubTask'])) {
-                    $sqlUp = "UPDATE " . $this->table_sub_tasks . " SET content = ?, completed = ? WHERE idSubTask = ?";
-                    $status = ($sub['completed'] === "true" || $sub['completed'] === true) ? 'true' : 'false';
-                    $this->pdo->prepare($sqlUp)->execute([$sub['content'], $status, $sub['idSubTask']]);
-                    $keepIds[] = $sub['idSubTask'];
-                } else {
-                    $sqlIn = "INSERT INTO " . $this->table_sub_tasks . " (idParent, content, completed) VALUES (?, ?, 'false')";
-                    $this->pdo->prepare($sqlIn)->execute([$idTask, $sub['content']]);
-                    $keepIds[] = $this->pdo->lastInsertId();
+            // 2. Lấy danh sách ID cũ để so sánh (Phục vụ việc XÓA)
+            $keepIds = [];
+            if (!empty($subTasks)) {
+                foreach ($subTasks as $sub) {
+                    // Chỉ những cái có idSubTask là số (từ DB cũ) mới đi UPDATE
+                    if (isset($sub['idSubTask']) && is_numeric($sub['idSubTask'])) {
+                        $sqlUp = "UPDATE " . $this->table_sub_tasks . " SET content = ?, completed = ? WHERE idSubTask = ?";
+                        $status = ($sub['completed'] === "true" || $sub['completed'] === true) ? 'true' : 'false';
+                        $this->pdo->prepare($sqlUp)->execute([$sub['content'], $status, $sub['idSubTask']]);
+                        $keepIds[] = $sub['idSubTask'];
+                    } else {
+                        $sqlIn = "INSERT INTO " . $this->table_sub_tasks . " (idParent, content, completed) VALUES (?, ?, 'false')";
+                        $this->pdo->prepare($sqlIn)->execute([$idTask, $sub['content']]);
+                        $keepIds[] = $this->pdo->lastInsertId();
+                    }
                 }
             }
-        }
 
-        // 3. XÓA các subtask đã bị người dùng nhấn icon Thùng rác (Xóa khỏi giao diện)
-        if (!empty($keepIds)) {
-            $placeholders = implode(',', array_fill(0, count($keepIds), '?'));
-            $sqlDel = "DELETE FROM " . $this->table_sub_tasks . " WHERE idParent = ? AND idSubTask NOT IN ($placeholders)";
-            $this->pdo->prepare($sqlDel)->execute(array_merge([$idTask], $keepIds));
-        }
+            // 3. XÓA các subtask đã bị người dùng nhấn icon Thùng rác (Xóa khỏi giao diện)
+            if (!empty($keepIds)) {
+                $placeholders = implode(',', array_fill(0, count($keepIds), '?'));
+                $sqlDel = "DELETE FROM " . $this->table_sub_tasks . " WHERE idParent = ? AND idSubTask NOT IN ($placeholders)";
+                $this->pdo->prepare($sqlDel)->execute(array_merge([$idTask], $keepIds));
+            }
 
-        $this->pdo->commit();
-        return ['success' => true, 'message' => 'Update DB successfully!'];
-    } catch (Exception $e) {
-        $this->pdo->rollBack();
-        return ['success' => false, 'message' => $e->getMessage()];
+            $this->pdo->commit();
+            return ['success' => true, 'message' => 'Update DB successfully!'];
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
     }
-}
 
     public function updateSubTaskStatus($completed, $idSubTask)
     {
@@ -288,6 +290,23 @@ public function updateTaskById($idTask, $titleTask, $categoryTask, $deadlineTask
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
             return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    public function getAllTaskForProcessGoal()
+    {
+        $sql = "SELECT t.idTask, t.titleTask, t.deadlineTask, 
+                COUNT(s.idSubTask) AS tasksTotal,
+                SUM(CASE WHEN s.completed = 'true' THEN 1 ELSE 0 END) AS tasksCompleted
+                FROM " . $this->table_tasks . " t
+                LEFT JOIN " . $this->table_sub_tasks . " s ON t.idTask = s.idParent
+                GROUP BY t.idTask";
+        
+        $result = $this->pdo->query($sql);
+        if(!$result){
+            return ["error" => $this->pdo->error];
+        }else {
+            return $result->fetchAll(PDO::FETCH_ASSOC);
         }
     }
 }

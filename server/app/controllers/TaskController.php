@@ -224,4 +224,16 @@
             echo json_encode($this->response);
             exit();
         }
+
+        public function handleAllTaskForProcessGoal(){
+            $data = $this->taskModel->getAllTaskForProcessGoal();
+            if($data !== null){
+                $this->response['success'] = true;
+                $this->response['tasks'] = $data;
+            }else {
+                 $this->response['message'] = 'Lỗi khi lấy danh sách task';
+            }
+            echo json_encode($this->response);
+            exit();
+        }
     }
