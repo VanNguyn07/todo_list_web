@@ -127,9 +127,6 @@ export const HabitTrackerPages = () => {
     },
   ];
 
-  console.log("Check openCreateModal:", openCreateModal);
-  console.log("Check habitForm:", habitForm);
-
   // Focus Timer Component
   const FocusTimer = () => {
     const [timeLeft, setTimeLeft] = useState(25 * 60);

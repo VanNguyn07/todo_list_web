@@ -31,8 +31,8 @@ class HabitModel
         try {
             $prepareStmt = $this->pdo->prepare($sql);
             $prepareStmt->execute();
-            $habitFromDb = $prepareStmt->fetchAll(PDO::FETCH_ASSOC);
-            return ['success' => true, 'data' => $habitFromDb];
+            $habitFormDb = $prepareStmt->fetchAll(PDO::FETCH_ASSOC);
+            return ['success' => true, 'data' => $habitFormDb];
         } catch (PDOException $e) {
             return ['success' => false, 'message' => $e->getMessage(), 'data' => []];
         }

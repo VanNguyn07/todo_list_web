@@ -50,7 +50,7 @@ export const useHabitManager = ({ onSuccess, setHabits }) => {
     }
 
     const formData = new FormData();
-    formData.append("action", "add_habit");
+    formData.append("action", "add_event");
     formData.append("name", habitForm.name.trim());
     formData.append("period", habitForm.period);
     formData.append("target", habitForm.target);
@@ -73,7 +73,7 @@ export const useHabitManager = ({ onSuccess, setHabits }) => {
         resetForm();
         if (onSuccess) onSuccess(); // call refetch()
       } else {
-        alert(data.message) || "add don't successfully";
+        alert(data.message) || "Add don't successfully";
       }
     } catch (er) {
       console.error("Lỗi khi thêm habit:", er);

@@ -16,66 +16,50 @@ import {
   X,
   Pen,
 } from "lucide-react";
+import { useCalendarManager } from "../../hooks/useCalendarManager";
+import { useFetchEvent } from "../../hooks/useFetchCalendar";
 
 export const CalendarPages = () => {
+  const { events, refetch } = useFetchEvent();
   const [date, setDate] = useState(new Date());
-
-  // State Modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState(null); // ID của task calendar đang sửa
-  const [newTask, setNewTask] = useState({
-    title: "",
-    desc: "",
-    startTime: "09:00",
-    endTime: "10:00",
-    color: "#6366f1",
-  });
-
-  // State Dữ liệu
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      date: new Date(),
-      title: "Product Launch",
-      desc: "Sync with Marketing team",
-      startTime: "09:00",
-      endTime: "10:30",
-      color: "#6366f1",
-      completed: false,
-    },
-    {
-      id: 2,
-      date: new Date(),
-      title: "Gym Time",
-      desc: "Leg day workout",
-      startTime: "17:30",
-      endTime: "18:30",
-      color: "#ef4444",
-      completed: true,
-    },
-  ]);
+  console.log("1. Dữ liệu events từ Hook:", events);
+  const {
+    handleChangeColor,
+    handleChangeInput,
+    handleSubmit,
+    handleToggleEvent,
+    handleDeleteEvent,
+    isModalOpen,
+    colors,
+    editingId,
+    calForm,
+    // setCalForm,
+    openAddModal,
+    openUpdateModal,
+    closeModal,
+  } = useCalendarManager({ onSuccess: refetch, date: date });
 
   // --- LOGIC ---
-  const tasksMap = useMemo(() => {
+  const eventsMap = useMemo(() => {
     const map = {};
-    tasks.forEach((task) => {
-      const dateKey = format(task.date, "yyyy-MM-dd");
+    events.forEach((event) => {
+      const dateKey = format(new Date(event.date), "yyyy-MM-dd");
       if (!map[dateKey])
         map[dateKey] = { count: 0, completed: 0, isAllDone: false };
       map[dateKey].count += 1;
-      if (task.completed) map[dateKey].completed += 1;
+      if (event.completed) map[dateKey].completed += 1;
     });
     Object.keys(map).forEach((key) => {
       map[key].isAllDone =
         map[key].count > 0 && map[key].count === map[key].completed;
     });
     return map;
-  }, [tasks]);
+  }, [events]);
 
   const getTileContent = ({ date, view }) => {
     if (view === "month") {
       const dateKey = format(date, "yyyy-MM-dd");
-      const data = tasksMap[dateKey];
+      const data = eventsMap[dateKey];
       if (data && data.count > 0) {
         const statusClass = data.isAllDone ? "cp-done" : "";
         if (data.count === 1)
@@ -86,70 +70,21 @@ export const CalendarPages = () => {
     return null;
   };
 
-  const currentTasks = tasks
-    .filter((t) => isSameDay(t.date, date))
+  const currentEvent = events
+    .filter((t) => {
+      // 2. Thử convert sang Date Object để so sánh
+      const taskDateObj = new Date(t.date);
+      const isMatch = isSameDay(taskDateObj, date);
+
+      // 3. Trả về kết quả (Quan trọng: Phải convert t.date thì mới True được)
+      return isMatch;
+    })
     .sort((a, b) => a.startTime.localeCompare(b.startTime));
 
-  const totalToday = currentTasks.length;
-  const completedToday = currentTasks.filter((t) => t.completed).length;
+  const totalToday = currentEvent.length;
+  const completedToday = currentEvent.filter((t) => t.completed).length;
   const progress =
     totalToday === 0 ? 0 : Math.round((completedToday / totalToday) * 100);
-
-  // --- ACTIONS ---
-  const openModal = () => {
-    setNewTask({
-      title: "",
-      desc: "",
-      startTime: "09:00",
-      endTime: "10:00",
-      color: "#6366f1",
-    });
-    setIsModalOpen(true);
-  };
-
-  const onpenModalForUpdate = (taskId) => {
-    setEditingId(taskId.id);
-    setNewTask({
-      title: taskId.title,
-      desc: taskId.desc,
-      startTime: taskId.startTime,
-      endTime: taskId.endTime,
-      color: taskId.color,
-    });
-    setIsModalOpen(true);
-  };
-
-  const handleSave = (e) => {
-    e.preventDefault();
-    if (!newTask.title) return;
-    if (editingId) {
-      setTasks(
-        tasks.map((task) =>
-          task.id === editingId ? { ...task, ...newTask } : task
-        )
-      );
-    } else {
-      const taskToAdd = {
-        id: Date.now(),
-        date: date,
-        ...newTask,
-        completed: false,
-      };
-      setTasks([...tasks, taskToAdd]);
-    }
-    setIsModalOpen(false);
-    setEditingId(null);
-  };
-
-  const toggleTask = (id) =>
-    setTasks(
-      tasks.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
-    );
-  const deleteTask = (id) =>
-    window.confirm("Are you sure you want to delete this task?") &&
-    setTasks(tasks.filter((t) => t.id !== id));
-
-  const colors = ["#6366f1", "#10b981", "#ef4444", "#f59e0b", "#8b5cf6"];
 
   return (
     <div className="cp-wrapper">
@@ -204,41 +139,41 @@ export const CalendarPages = () => {
               <span>{format(date, "EEEE")}</span>
             </div>
 
-            <button className="cp-btn-add" onClick={openModal}>
+            <button className="cp-btn-add" onClick={openAddModal}>
               <Plus size={20} /> Add Event
             </button>
           </div>
 
           <div className="cp-task-list">
-            {currentTasks.length > 0 ? (
-              currentTasks.map((task) => (
-                <div key={task.id} className="cp-task-row">
+            {currentEvent.length > 0 ? (
+              currentEvent.map((event) => (
+                <div key={event.id} className="cp-task-row">
                   {/* Cột thời gian */}
                   <div className="cp-time-col">
-                    <span className="cp-time-start">{task.startTime}</span>
-                    <span className="cp-time-end">{task.endTime}</span>
+                    <span className="cp-time-start">{event.startTime}</span>
+                    <span className="cp-time-end">{event.endTime}</span>
                   </div>
 
                   {/* Card Task */}
                   <div
                     className={`cp-task-card ${
-                      task.completed ? "completed" : ""
+                      event.completed ? "completed" : ""
                     }`}
-                    style={{ borderLeftColor: task.color }}
+                    style={{ borderLeftColor: event.color }}
                   >
                     <div className="cp-task-info">
-                      <h4>{task.title}</h4>
-                      {task.desc && <p>{task.desc}</p>}
+                      <h4>{event.name}</h4>
+                      {event.description && <p>{event.description}</p>}
                     </div>
 
                     {/* Hover Actions */}
                     <div className="cp-task-actions">
                       <button
                         className="cp-btn-icon"
-                        onClick={() => toggleTask(task.id)}
-                        title={task.completed ? "Undo" : "Complete"}
+                        title={event.completed ? "Undo" : "Complete"}
+                        onClick={() => handleToggleEvent(event.id)}
                       >
-                        {task.completed ? (
+                        {event.completed ? (  
                           <RotateCcw size={18} />
                         ) : (
                           <CheckCircle size={18} />
@@ -247,7 +182,7 @@ export const CalendarPages = () => {
 
                       <button
                         className="cp-btn-icon cp-btn-del"
-                        onClick={() => onpenModalForUpdate(task.id)}
+                        onClick={() => openUpdateModal(event)}
                         title="Update"
                       >
                         <Pen size={18} />
@@ -255,7 +190,7 @@ export const CalendarPages = () => {
 
                       <button
                         className="cp-btn-icon cp-btn-del"
-                        onClick={() => deleteTask(task.id)}
+                        onClick={() => handleDeleteEvent(event.id)}
                         title="Delete"
                       >
                         <Trash2 size={18} />
@@ -285,30 +220,26 @@ export const CalendarPages = () => {
 
       {/* MODAL POPUP */}
       {isModalOpen && (
-        <div className="cp-modal-overlay" onClick={() => setIsModalOpen(false)}>
+        <div className="cp-modal-overlay" onClick={closeModal}>
           <div className="cp-modal-box" onClick={(e) => e.stopPropagation()}>
             <div className="cp-modal-header">
-              <h3>New Task: {format(date, "MMM do")}</h3>
-              <button
-                className="cp-btn-close"
-                onClick={() => setIsModalOpen(false)}
-              >
+              <h3>{editingId ? "Update Event" : "New Event"} {format(date, "MMM do")}</h3>
+              <button className="cp-btn-close" onClick={closeModal}>
                 <X size={24} />
               </button>
             </div>
 
-            <form onSubmit={handleSave}>
+            <form>
               <div className="cp-form-group">
                 <label className="cp-label">Event Title</label>
                 <input
                   autoFocus
                   type="text"
+                  name="name"
                   className="cp-input"
                   placeholder="What do you need to do?"
-                  value={newTask.title}
-                  onChange={(e) =>
-                    setNewTask({ ...newTask, title: e.target.value })
-                  }
+                  value={calForm.name}
+                  onChange={handleChangeInput}
                 />
               </div>
 
@@ -317,22 +248,20 @@ export const CalendarPages = () => {
                   <label className="cp-label">Start Time</label>
                   <input
                     type="time"
+                    name="startTime"
                     className="cp-input"
-                    value={newTask.startTime}
-                    onChange={(e) =>
-                      setNewTask({ ...newTask, startTime: e.target.value })
-                    }
+                    value={calForm.startTime}
+                    onChange={handleChangeInput}
                   />
                 </div>
                 <div className="cp-col">
                   <label className="cp-label">End Time</label>
                   <input
                     type="time"
+                    name="endTime"
                     className="cp-input"
-                    value={newTask.endTime}
-                    onChange={(e) =>
-                      setNewTask({ ...newTask, endTime: e.target.value })
-                    }
+                    value={calForm.endTime}
+                    onChange={handleChangeInput}
                   />
                 </div>
               </div>
@@ -341,12 +270,11 @@ export const CalendarPages = () => {
                 <label className="cp-label">Description (Optional)</label>
                 <input
                   type="text"
+                  name="description"
                   className="cp-input"
                   placeholder="Add details..."
-                  value={newTask.desc}
-                  onChange={(e) =>
-                    setNewTask({ ...newTask, desc: e.target.value })
-                  }
+                  value={calForm.description}
+                  onChange={handleChangeInput}
                 />
               </div>
 
@@ -357,25 +285,30 @@ export const CalendarPages = () => {
                     <div
                       key={c}
                       className={`cp-color-circle ${
-                        newTask.color === c ? "selected" : ""
+                        calForm.color === c ? "selected" : ""
                       }`}
                       style={{ backgroundColor: c }}
-                      onClick={() => setNewTask({ ...newTask, color: c })}
+                      onClick={() => handleChangeColor(c)}
                     ></div>
                   ))}
                 </div>
+                <input type="hidden" name="color" value={calForm.color} />
               </div>
 
               <div className="cp-modal-footer">
                 <button
                   type="button"
                   className="cp-btn-cancel"
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={closeModal}
                 >
                   Cancel
                 </button>
-                <button type="submit" className="cp-btn-save">
-                  Save Task
+                <button
+                  type="button"
+                  className="cp-btn-save"
+                  onClick={handleSubmit}
+                >
+                  {editingId ? "Update Event" : "Add Event"}
                 </button>
               </div>
             </form>

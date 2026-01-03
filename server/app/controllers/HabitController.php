@@ -1,7 +1,4 @@
 <?php
-
-use PHPMailer\Test\OAuth\DummyOauthProvider;
-
 header('Content-Type: application/json');
 class HabitController
 {
@@ -13,13 +10,14 @@ class HabitController
         $this->habitModel =  new HabitModel($database);
     }
 
-    public function handleInsertHabit()
+    public function handleInsertHabit() 
     {
         $name = trim($_POST['name'] ?? '');
         $period = trim($_POST['period'] ?? '');
         $target = trim($_POST['target'] ?? '');
         $unit = trim($_POST['unit'] ?? '');
         $iconKey = trim($_POST['iconKey'] ?? '');
+
         if (empty($name)) {
             $this->response['success'] = false;
             $this->response['message'] = "Please enter a habit name!";

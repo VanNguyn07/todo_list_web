@@ -54,7 +54,6 @@ export const useCalendarForm = () => {
     setFormData,
     handleChangeColor,
     handleChangeInput,
-    resetForm
-  }
-
+    resetForm,
+  };
 };
