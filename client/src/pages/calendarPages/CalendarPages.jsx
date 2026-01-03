@@ -299,7 +299,7 @@ export const CalendarPages = () => {
 
             <form onSubmit={handleSave}>
               <div className="cp-form-group">
-                <label className="cp-label">Task Title</label>
+                <label className="cp-label">Event Title</label>
                 <input
                   autoFocus
                   type="text"

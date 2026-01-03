@@ -24,7 +24,7 @@
   grid-template-columns: 1fr 380px;
   overflow: hidden;
   margin-left: 235px;
-  animation: fadein 0.4s ease-out ;
+  animation: fadein 0.4s ease-out;
 }
 
 /* --- CỘT GIỮA: NỘI DUNG CHÍNH --- */
@@ -46,7 +46,7 @@
 }
 .header-title-group {
   display: flex;
-  flex-direction: column;   
+  flex-direction: column;
 }
 .header-title {
   font-size: 50px;
@@ -164,10 +164,17 @@
   box-shadow: var(--shadow-hover);
 }
 
+.habit-card.completed {
+  opacity: 0.75;
+  filter: grayscale(0.8);
+  transform: scale(0.98);
+  transition: all 0.3s ease;
+}
+
 .card-actions-habit {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 .action-btn-small {
   width: 28px;
@@ -215,6 +222,7 @@
   margin: 0;
   font-size: 18px;
   font-weight: 600;
+  color: white;
 }
 .habit-meta {
   display: flex;
@@ -223,6 +231,12 @@
   margin-top: 6px;
   opacity: 0.9;
   font-weight: 500;
+}
+
+.completed-text {
+  text-decoration: line-through;
+  opacity: 0.8;
+  color: rgb(94, 93, 93) !important;
 }
 
 /* Nút Progress Tròn */
@@ -424,7 +438,7 @@
   align-items: center;
   gap: 5px;
   font-weight: 600;
-  transition: 0.2s ease-out
+  transition: 0.2s ease-out;
 }
 
 .btn-add-habit:hover {
@@ -603,11 +617,11 @@
   font-weight: 600;
   cursor: pointer;
   box-shadow: 0 5px 15px rgba(70, 144, 255, 0.3);
-  transition:  0.2s ease-out;
+  transition: 0.2s ease-out;
 }
 .btn-submit:hover {
   background-color: #f4c538;
-transform: translateY(-3px);
+  transform: translateY(-3px);
 }
 .btn-submit:active {
   transform: scale(0.98);

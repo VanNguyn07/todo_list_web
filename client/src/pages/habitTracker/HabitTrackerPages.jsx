@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./HabitTrackPages.css"; // Import file CSS
-import confetti from "canvas-confetti";
 import {
   CloudSun,
   Check,
@@ -25,12 +24,32 @@ import {
   Flame,
   Crown,
 } from "lucide-react";
+import { useHabitPages } from "../../hooks/useHabitPages";
 
 export const HabitTrackerPages = () => {
-  //   const [activeDate, setActiveDate] = useState(new Date().getDate());
-  const [showModal, setShowModal] = useState(false);
-  const [editingId, setEditingId] = useState(null); // ID của habit đang sửa
-
+  const {
+    // Data hiển thị
+    habits,
+    // Logic Page (Tiến độ, Xóa)
+    handleIncrement,
+    handleDeleteHabit,
+    // Logic Manager (Modal, Add, Edit)
+    isModalOpen,
+    editingId,
+    openCreateModal,
+    openEditModal,
+    closeModal,
+    handleSubmit,
+    // Logic Form (Input)
+    habitForm,
+    setHabitForm,
+    handleInputChange,
+    handleChangePeriod,
+    handleChangetarget,
+    handleChangeUnit,
+    handleChangeIconMap,
+    iconColorMap,
+  } = useHabitPages();
   // Mapping String Key sang Lucide Component
   const iconMap = {
     run: <Footprints size={24} />,
@@ -43,62 +62,6 @@ export const HabitTrackerPages = () => {
     work: <Briefcase size={24} />,
     music: <Music size={24} />,
   };
-
-  // Dữ liệu mẫu
-  const [habits, setHabits] = useState([
-    {
-      id: 1,
-      name: "Jogging",
-      freq: "Daily",
-      current: 3,
-      target: 5,
-      unit: "km",
-      iconKey: "run",
-      color: "var(--color-blue)",
-      completed: false,
-    },
-    {
-      id: 2,
-      name: "Drink Water",
-      freq: "Daily",
-      current: 4,
-      target: 8,
-      unit: "cups",
-      iconKey: "water",
-      color: "var(--color-cyan)",
-      completed: false,
-    },
-    {
-      id: 3,
-      name: "Read Books",
-      freq: "Daily",
-      current: 15,
-      target: 30,
-      unit: "mins",
-      iconKey: "book",
-      color: "var(--color-orange)",
-      completed: false,
-    },
-    {
-      id: 4,
-      name: "Sleep",
-      freq: "Daily",
-      current: 7,
-      target: 8,
-      unit: "hrs",
-      iconKey: "sleep",
-      color: "var(--color-purple)",
-      completed: false,
-    },
-  ]);
-
-  const [newHabitData, setNewHabitData] = useState({
-    name: "",
-    iconKey: "run",
-    period: "Daily",
-    target: "",
-    unit: "",
-  });
 
   // --- LOGIC: Tạo danh sách ngày tự động (Tuần hiện tại) ---
   const getDaysArray = () => {
@@ -117,10 +80,13 @@ export const HabitTrackerPages = () => {
     }
     return days;
   };
-  const weekDays = getDaysArray();
 
+  const weekDays = getDaysArray();
   // --- LOGIC: Tính toán Tiến độ ---
+  // const safeHabits = Array.isArray(habits) ? habits : [];
+
   const totalHabits = habits.length;
+
   // Tính trung bình % hoàn thành của tất cả habit
   const totalPercent = habits.reduce(
     (acc, h) => acc + Math.min(h.current / h.target, 1),
@@ -129,151 +95,40 @@ export const HabitTrackerPages = () => {
   const overallProgress =
     totalHabits === 0 ? 0 : Math.round((totalPercent / totalHabits) * 100);
 
-  // Xử lý nút bấm tăng
-  const handleIncrement = (id) => {
-    setHabits(
-      habits.map((habit) => {
-        if (habit.id === id) {
-          if (habit.current < habit.target) {
-            const newCurrent = habit.current + 1;
-            const isDone = newCurrent >= habit.target;
-            if (isDone) {
-              confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ["#4690ff", "#ff5c72"],
-              });
-            }
-            return { ...habit, current: newCurrent, completed: isDone };
-          }
-        }
-        return habit;
-      })
-    );
-  };
-
-  const handleDeleteHabit = (id) => {
-    if (window.confirm("Delete this habit?")) {
-      setHabits(habits.filter((h) => h.id !== id));
-    }
-  };
-
-  const openCreateModal = () => {
-    setEditingId(null);
-    setNewHabitData({
-      name: "",
-      iconKey: "run",
-      period: "Daily",
-      target: "",
-      unit: "",
-    });
-    setShowModal(true);
-  };
-
-  const openEditModal = (habit) => {
-    setEditingId(habit.id);
-    setNewHabitData({
-      name: habit.name,
-      iconKey: habit.iconKey,
-      target: habit.target,
-      unit: habit.unit,
-      period: habit.freq.includes("Weekly")
-        ? "Weekly"
-        : habit.freq.includes("Monthly")
-        ? "Monthly"
-        : "Daily",
-    });
-    setShowModal(true);
-  };
-
-  const handleSaveHabit = () => {
-    if (!newHabitData.name || !newHabitData.target) return;
-
-    let dailyTarget = parseFloat(newHabitData.target);
-    let displayFreq = "Daily";
-    if (newHabitData.period === "Weekly") {
-      dailyTarget = Math.ceil(dailyTarget / 7);
-      displayFreq = "Weekly Goal";
-    } else if (newHabitData.period === "Monthly") {
-      dailyTarget = Math.ceil(dailyTarget / 30);
-      displayFreq = "Monthly Goal";
-    }
-
-    if (editingId) {
-      setHabits(
-        habits.map((h) => {
-          if (h.id === editingId) {
-            return {
-              ...h,
-              name: newHabitData.name,
-              iconKey: newHabitData.iconKey,
-              target: dailyTarget,
-              unit: newHabitData.unit,
-              freq: displayFreq,
-            };
-          }
-          return h;
-        })
-      );
-    } else {
-      const colors = [
-        "var(--color-blue)",
-        "var(--color-orange)",
-        "var(--color-purple)",
-        "var(--color-red-pink)",
-        "var(--color-green)",
-      ];
-      const randomColor = colors[Math.floor(Math.random() * colors.length)];
-      setHabits([
-        ...habits,
-        {
-          id: Date.now(),
-          name: newHabitData.name,
-          freq: displayFreq,
-          target: dailyTarget,
-          current: 0,
-          unit: newHabitData.unit,
-          iconKey: newHabitData.iconKey,
-          color: randomColor,
-          completed: false,
-        },
-      ]);
-    }
-    setShowModal(false);
-  };
-
   // Suggestions Data
   const suggestions = [
     {
       name: "Meditation",
-      freq: "Daily",
+      period: "Daily",
       iconKey: "sport",
       color: "var(--color-blue)",
       bgClass: "bg-light-blue",
     },
     {
       name: "Yoga",
-      freq: "Weekly",
+      period: "Weekly",
       iconKey: "gym",
       color: "var(--color-red-pink)",
       bgClass: "bg-light-red",
     },
     {
       name: "Tennis",
-      freq: "Weekly",
+      period: "Weekly",
       iconKey: "sport",
       color: "var(--color-orange)",
       bgClass: "bg-light-orange",
     },
     {
       name: "Healthy Food",
-      freq: "Daily",
+      period: "Daily",
       iconKey: "food",
       color: "var(--color-green)",
       bgClass: "bg-light-purple",
     },
   ];
+
+  console.log("Check openCreateModal:", openCreateModal);
+  console.log("Check habitForm:", habitForm);
 
   // Focus Timer Component
   const FocusTimer = () => {
@@ -355,37 +210,39 @@ export const HabitTrackerPages = () => {
 
         <div className="section-header">
           <span>Upcoming Habits</span>
-          <a className="link-manage" href="#">
-            Manage
-          </a>
         </div>
 
         <div className="habit-list-container">
           {habits.map((habit) => {
+            const current = parseFloat(habit.current);
+            const target = parseFloat(habit.target);
+
             const percent =
-              habit.target > 0
-                ? Math.min((habit.current / habit.target) * 100, 100)
-                : 0;
-            const isCompleted = habit.completed;
+              target > 0 ? Math.min((current / target) * 100, 100) : 0;
+            const keyToRender = habit.icon_key || habit.iconKey || "default";
+
+            const isCompleted = habit.completed === "true";
+
+            const cardColor = iconColorMap[keyToRender] || iconColorMap.default;
 
             return (
               <div
                 key={habit.id}
                 className="habit-card"
                 style={{
-                  backgroundColor: isCompleted ? "#595959ff" : habit.color,
+                  backgroundColor: isCompleted ? "#8a8686ff" : cardColor,
                 }}
               >
                 <div
                   className="habit-icon-box"
                   style={
                     isCompleted
-                      ? { background: "white", color: "#ccc" }
+                      ? { background: "gray", color: "#b8b6b6ff" }
                       : { color: "white" }
                   }
                 >
-                  {/* Render Icon từ Map */}
-                  {iconMap[habit.iconKey]}
+                  {/* Render Icon từ Map với fallback */}
+                  {iconMap[keyToRender] || iconMap["default"]}
                 </div>
 
                 <div
@@ -396,12 +253,14 @@ export const HabitTrackerPages = () => {
                     color: isCompleted ? "#1e1e2d" : "white",
                   }}
                 >
-                  <h3>{habit.name}</h3>
+                  <h3 className={isCompleted ? "completed-text" : ""}>
+                    {habit.name}
+                  </h3>
                   <div className="habit-meta">
                     <span>
-                      {habit.current} / {habit.target} {habit.unit}
+                      {Number(current)} / {Number(target)} {habit.unit}
                     </span>
-                    <span>{habit.freq}</span>
+                    <span>{habit.period}</span>
                   </div>
                   <div
                     className="progress-bar-mini"
@@ -451,7 +310,7 @@ export const HabitTrackerPages = () => {
                   >
                     <Pencil size={14} />
                   </button>
-                  
+
                   <button
                     className="action-btn-small delete"
                     onClick={(e) => {
@@ -519,8 +378,8 @@ export const HabitTrackerPages = () => {
               key={idx}
               className={`suggestion-card ${item.bgClass}`}
               onClick={() => {
-                setNewHabitData({
-                  ...newHabitData,
+                setHabitForm({
+                  ...habitForm,
                   name: item.name,
                   iconKey: item.iconKey,
                 });
@@ -534,19 +393,19 @@ export const HabitTrackerPages = () => {
                 {iconMap[item.iconKey]}
               </div>
               <h4>{item.name}</h4>
-              <p>{item.freq}</p>
+              <p>{item.period}</p>
             </div>
           ))}
         </div>
       </aside>
 
       {/* --- MODAL --- */}
-      {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+      {isModalOpen && (
+        <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>{editingId ? "Edit Habit" : "New Habit Goal"}</h2>
-              <button className="btn-close" onClick={() => setShowModal(false)}>
+              <button className="btn-close" onClick={() => closeModal()}>
                 <X size={20} />
               </button>
             </div>
@@ -555,12 +414,11 @@ export const HabitTrackerPages = () => {
               <label className="form-label">Habit Name</label>
               <input
                 type="text"
+                name="name"
                 className="form-input"
                 placeholder="e.g. Read Book"
-                value={newHabitData.name}
-                onChange={(e) =>
-                  setNewHabitData({ ...newHabitData, name: e.target.value })
-                }
+                value={habitForm.name}
+                onChange={handleInputChange}
               />
             </div>
 
@@ -569,10 +427,9 @@ export const HabitTrackerPages = () => {
               <div style={{ position: "relative" }}>
                 <select
                   className="form-input"
-                  value={newHabitData.period}
-                  onChange={(e) =>
-                    setNewHabitData({ ...newHabitData, period: e.target.value })
-                  }
+                  name="period"
+                  value={habitForm.period}
+                  onChange={(e) => handleChangePeriod(e.target.value)}
                 >
                   <option value="Daily">Daily</option>
                   <option value="Weekly">Weekly</option>
@@ -601,20 +458,16 @@ export const HabitTrackerPages = () => {
             >
               <div className="form-group">
                 <label className="form-label">
-                  Target ({newHabitData.period})
+                  Target ({habitForm.target})
                 </label>
                 <div style={{ position: "relative" }}>
                   <input
                     type="number"
                     className="form-input"
                     placeholder="e.g. 5"
-                    value={newHabitData.target}
-                    onChange={(e) =>
-                      setNewHabitData({
-                        ...newHabitData,
-                        target: e.target.value,
-                      })
-                    }
+                    name="target"
+                    value={habitForm.target}
+                    onChange={handleChangetarget}
                     style={{ paddingLeft: "40px" }}
                   />
                   <Target
@@ -634,10 +487,9 @@ export const HabitTrackerPages = () => {
                 <label className="form-label">Unit</label>
                 <select
                   className="form-input"
-                  value={newHabitData.unit}
-                  onChange={(e) =>
-                    setNewHabitData({ ...newHabitData, unit: e.target.value })
-                  }
+                  name="unit"
+                  value={habitForm.unit}
+                  onChange={(e) => handleChangeUnit(e.target.value)}
                 >
                   <option value="" disabled>
                     Select Unit
@@ -645,7 +497,6 @@ export const HabitTrackerPages = () => {
                   <optgroup label="Distance">
                     <option value="km">km (Kilometer)</option>
                     <option value="m">m (Meter)</option>
-                    <option value="miles">miles</option>
                   </optgroup>
                   <optgroup label="Time">
                     <option value="mins">mins (Minutes)</option>
@@ -660,54 +511,38 @@ export const HabitTrackerPages = () => {
                 </select>
               </div>
             </div>
-
-            {newHabitData.target && newHabitData.period !== "Daily" && (
-              <div
-                style={{
-                  background: "#f0f9ff",
-                  padding: "10px",
-                  borderRadius: "10px",
-                  marginBottom: "20px",
-                  fontSize: "13px",
-                  color: "#0369a1",
-                  display: "flex",
-                  gap: "8px",
-                  alignItems: "center",
-                }}
-              >
-                <div style={{ fontWeight: "bold" }}>💡 Auto-Split:</div>~{" "}
-                <strong>
-                  {Math.ceil(
-                    newHabitData.target /
-                      (newHabitData.period === "Weekly" ? 7 : 30)
-                  )}{" "}
-                  {newHabitData.unit}
-                </strong>{" "}
-                per day.
-              </div>
-            )}
-
             <div className="form-group">
               <label className="form-label">Icon</label>
+
               <div className="icon-selector">
-                {Object.keys(iconMap).map((key) => (
-                  <div
-                    key={key}
-                    className={`icon-opt ${
-                      newHabitData.iconKey === key ? "selected" : ""
-                    }`}
-                    onClick={() =>
-                      setNewHabitData({ ...newHabitData, iconKey: key })
-                    }
-                  >
-                    {iconMap[key]}
-                  </div>
-                ))}
+                {Object.keys(iconMap).map((key) => {
+                  const isSelected = habitForm.iconKey === key;
+                  const color = iconColorMap[key] || iconColorMap.default;
+
+                  return (
+                    <div
+                      key={key}
+                      className={`icon-opt ${isSelected ? "selected" : ""}`}
+                      onClick={() => handleChangeIconMap(key)}
+                      style={{
+                        // Nếu chọn: nền màu, chữ trắng. Không chọn: nền trong suốt, chữ màu
+                        backgroundColor: isSelected ? color : "transparent",
+                        color: isSelected ? "white" : color,
+                        borderColor: isSelected ? color : "#e5e7eb", // Viền trùng màu
+                        borderWidth: "1px",
+                        borderStyle: "solid",
+                      }}
+                    >
+                      {iconMap[key]}
+                    </div>
+                  );
+                })}
               </div>
+              <input type="hidden" name="iconKey" value={habitForm.iconKey} />
             </div>
 
             <div className="modal-footer">
-              <button className="btn-submit" onClick={handleSaveHabit}>
+              <button className="btn-submit" onClick={handleSubmit}>
                 {editingId ? "Update Goal" : "Set Goal"}
               </button>
             </div>

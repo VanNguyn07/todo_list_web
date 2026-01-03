@@ -411,10 +411,10 @@ function Dashboard() {
                       <div className="input-with-list">
                         <div className="sub-task-list">
                           {subTask.map((sub) => (
-                            <span key={sub.idSubTask} className="sub-task-item">
+                            <span key={sub.id} className="sub-task-item">
                               • {sub.content}
                               <Button
-                                onClick={() => removeSubTask(sub.idSubTask)}
+                                onClick={() => removeSubTask(sub.id)}
                                 className="remove-temp-btn"
                               >
                                 <X size={13} />

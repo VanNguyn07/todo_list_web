@@ -48,8 +48,8 @@ export const useAddTask = ({ onSuccess }) => {
     }
   }
 
-  const removeSubTask = (id) => {
-    setSubTask(subTask.filter(task => task.id !== id));
+  const removeSubTask = (idToremove) => {
+    setSubTask(subTask.filter(sub => sub.id !== idToremove));
   };
 
   //Hàm xử lý riêng cho DatePicker

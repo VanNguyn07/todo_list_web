@@ -11,49 +11,47 @@ session_start();
 header('Content-Type: application/json'); // Luôn trả về JSON
 
 try {
-    // 1. NẠP FILE VÀ KHỞI TẠO
-    $projectRoot = dirname(__DIR__, 2); // → /.../TODO_LIST
-    
+    $projectRoot = dirname(__DIR__, 2);
+
     // Nạp CSDL
     require_once $projectRoot . '/server/config/connectDatabaseOOP.php';
-    
+
     // Nạp Model
-    require_once $projectRoot . '/server/app/models/TaskModel.php'; 
-    
+    require_once $projectRoot . '/server/app/models/HabitModel.php';
+
     // Nạp Controller
-    require_once $projectRoot . '/server/app/controllers/TaskController.php';
-    
+    require_once $projectRoot . '/server/app/controllers/HabitController.php';
+
     // Biến $connect phải được tạo từ connectDatabase.php
     if (!isset($pdo)) {
-         throw new Exception('Biến $pdo không tồn tại sau khi nạp CSDL.');
+        throw new Exception('Biến $pdo không tồn tại sau khi nạp CSDL.');
     }
 
-    // Khởi tạo Controller
-    $controller = new TaskController($pdo);
+    $controller = new HabitController($pdo);
 
-    // 2. LẤY DỮ LIỆU
+    // get data
     $action = $_POST['action'] ?? null;
 
-    // 3. XỬ LÝ LOGIC
+    //handle logic
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         switch ($action) {
-            
-            case 'add_task':
-                $controller->handleInsertTaskIntoDb();
+            case 'add_habit':
+                $controller->handleInsertHabit();
                 break;
-            
-            case 'update_task':
-                $updatetaskById = $_POST['idTask'];
-                $controller->handleUpdateTask($updatetaskById);
+
+            case 'is_completed' :
+                $updateStatusById = $_POST['id'];
+                $controller->handleToggleStatus($updateStatusById);
                 break;
-            
-            case 'delete_task':
-                $controller->handleDeleteTask();
+
+            case 'delete_habit':
+                $deleteHabitById = $_POST['id'];
+                $controller->handleDeleteHabit($deleteHabitById);
                 break;
-            
-            case 'is_completed':
-                $updateTaskStatusById = $_POST['id'];
-                $controller->handleToggleComplete($updateTaskStatusById);
+
+            case 'update_habit':
+                $updateHabitById = $_POST['id'];
+                $controller->handleUpdateHabit($updateHabitById);
                 break;
 
             default:
@@ -61,16 +59,13 @@ try {
                 exit();
         }
     } else {
-        echo json_encode(['success' => false, 'message' => 'Chỉ chấp nhận phương thức POST.']);
+        echo json_encode(['success' => false, 'message' => 'Just only accept POST method']);
         exit();
     }
-
 } catch (Throwable $e) {
-    // Bắt tất cả lỗi cú pháp
     echo json_encode([
         'success' => false,
         'message' => 'Lỗi PHP Fatal Error: ' . $e->getMessage() . ' tại ' . $e->getFile() . ' dòng ' . $e->getLine()
     ]);
     exit();
 }
-?>

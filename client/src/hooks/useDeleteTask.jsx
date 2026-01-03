@@ -11,6 +11,7 @@ export const useDeleteTask = ({ onSuccess }) => {
     // Hàm handleDelete giờ nằm trong hook
     const handleDelete = (idTask) => {
         // Hỏi xác nhận
+        // nút cancel = false, !false = true => chạy if 
         if (!window.confirm("Are your sure want to delete this task?")) {
             return;
         }
@@ -31,7 +32,7 @@ export const useDeleteTask = ({ onSuccess }) => {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert(data.message);
+                console.log(data.message);
                 // 1. GỌI CALLBACK ĐỂ BÁO CHO 'useFetchTasks' TẢI LẠI
                 if (onSuccess) {
                     onSuccess(); // Chính là gọi refetch()
