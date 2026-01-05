@@ -1,55 +1,9 @@
-"use client"
+import React, { useState, useRef, useEffect } from "react"
+// Cần cài đặt: npm install lucide-react
+import { HeadphonesIcon, CheckCircle2, AlertCircle, MessageSquare, Send, RefreshCw, Archive, Eye, MoreVertical, Filter } from "lucide-react"
 
-import type React from "react"
-
-import { useState } from "react"
-import { HeadphonesIcon, CheckCircle2, AlertCircle, MessageSquare, Send, RefreshCw, Archive, Eye } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import { Textarea } from "@/components/ui/textarea"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { useToast } from "@/hooks/use-toast"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-
-type TicketStatus = "open" | "in-progress" | "resolved" | "archived"
-type TicketPriority = "low" | "medium" | "high" | "urgent"
-
-interface TicketMessage {
-  id: string
-  sender: "user" | "admin"
-  message: string
-  timestamp: Date
-}
-
-interface SupportTicket {
-  id: string
-  user: {
-    name: string
-    email: string
-    avatar: string
-  }
-  subject: string
-  description: string
-  status: TicketStatus
-  priority: TicketPriority
-  category: string
-  createdAt: Date
-  updatedAt: Date
-  messages: TicketMessage[]
-}
-
-const initialTickets: SupportTicket[] = [
+// --- Dữ liệu giả lập ---
+const initialTickets = [
   {
     id: "TKT001",
     user: {
@@ -162,7 +116,7 @@ const initialTickets: SupportTicket[] = [
   },
 ]
 
-const statusConfig: Record<TicketStatus, { label: string; color: string; icon: React.ReactNode }> = {
+const statusConfig = {
   open: {
     label: "Open",
     color: "bg-amber-100 text-amber-800 border-amber-200",
@@ -185,30 +139,132 @@ const statusConfig: Record<TicketStatus, { label: string; color: string; icon: R
   },
 }
 
-const priorityConfig: Record<TicketPriority, { label: string; color: string }> = {
+const priorityConfig = {
   low: { label: "Low", color: "bg-gray-100 text-gray-600" },
   medium: { label: "Medium", color: "bg-blue-100 text-blue-700" },
   high: { label: "High", color: "bg-orange-100 text-orange-700" },
   urgent: { label: "Urgent", color: "bg-red-100 text-red-700" },
 }
 
+// --- Helper Components ---
+
+const Button = ({ children, className, variant = "default", size = "default", ...props }) => {
+  const baseStyles = "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
+  const variants = {
+    default: "bg-blue-600 text-white hover:bg-blue-700 shadow-sm",
+    outline: "border border-gray-200 bg-white hover:bg-gray-100 text-gray-900",
+    ghost: "hover:bg-gray-100 hover:text-gray-900",
+  }
+  const sizes = {
+    default: "h-9 px-4 py-2",
+    sm: "h-8 rounded-md px-3 text-xs",
+    icon: "h-9 w-9",
+  }
+  return (
+    <button className={`${baseStyles} ${variants[variant] || variants.default} ${sizes[size] || sizes.default} ${className || ""}`} {...props}>
+      {children}
+    </button>
+  )
+}
+
+const Badge = ({ children, className }) => (
+  <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`}>
+    {children}
+  </span>
+)
+
+const Card = ({ children, className }) => (
+  <div className={`rounded-lg border bg-white text-gray-950 shadow-sm ${className || ""}`}>
+    {children}
+  </div>
+)
+
+const Avatar = ({ src, fallback, alt }) => {
+  const [imgError, setImgError] = useState(false);
+  return (
+    <div className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full bg-gray-100 items-center justify-center">
+      {!imgError && src ? (
+        <img src={src} alt={alt} className="aspect-square h-full w-full object-cover" onError={() => setImgError(true)} />
+      ) : (
+        <span className="text-sm font-medium text-gray-600">{fallback}</span>
+      )}
+    </div>
+  )
+}
+
+const Modal = ({ isOpen, title, description, children, footer }) => {
+  if (!isOpen) return null
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-200">
+      <div className="relative w-full max-w-lg rounded-xl bg-white p-6 shadow-lg animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
+        <div className="mb-4 shrink-0">
+          <h3 className="text-lg font-semibold leading-none tracking-tight flex items-center gap-2">{title}</h3>
+          {description && <p className="mt-1.5 text-sm text-gray-500">{description}</p>}
+        </div>
+        <div className="flex-1 overflow-y-auto pr-2">{children}</div>
+        {footer && <div className="mt-4 flex justify-end gap-2 shrink-0">{footer}</div>}
+      </div>
+    </div>
+  )
+}
+
+const SimpleDropdown = ({ trigger, items, align = "right" }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (ref.current && !ref.current.contains(event.target)) setIsOpen(false)
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
+
+  return (
+    <div className="relative inline-block text-left" ref={ref}>
+      <div onClick={() => setIsOpen(!isOpen)}>{trigger}</div>
+      {isOpen && (
+        <div className={`absolute z-50 mt-2 w-48 rounded-md border bg-white p-1 shadow-md animate-in fade-in zoom-in-95 duration-100 ${align === "right" ? "right-0" : "left-0"}`}>
+          {items.map((item, idx) => (
+            <button
+              key={idx}
+              onClick={() => {
+                item.onClick()
+                setIsOpen(false)
+              }}
+              className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+
 export default function SupportTickets() {
-  const [tickets, setTickets] = useState<SupportTicket[]>(initialTickets)
-  const [selectedTicket, setSelectedTicket] = useState<SupportTicket | null>(null)
+  const [tickets, setTickets] = useState(initialTickets)
+  const [selectedTicket, setSelectedTicket] = useState(null)
   const [isViewModalOpen, setIsViewModalOpen] = useState(false)
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false)
   const [replyContent, setReplyContent] = useState("")
-  const [statusFilter, setStatusFilter] = useState<TicketStatus | "all">("all")
-  const { toast } = useToast()
+  const [statusFilter, setStatusFilter] = useState("all")
+  
+  // Hàm giả lập Toast notification
+  const showToast = ({ title, description }) => {
+    alert(`${title}: ${description}`)
+  }
 
   const filteredTickets = statusFilter === "all" ? tickets : tickets.filter((t) => t.status === statusFilter)
 
-  const handleViewTicket = (ticket: SupportTicket) => {
+  const handleViewTicket = (ticket) => {
     setSelectedTicket(ticket)
     setIsViewModalOpen(true)
   }
 
-  const handleOpenReplyModal = (ticket: SupportTicket) => {
+  const handleOpenReplyModal = (ticket) => {
     setSelectedTicket(ticket)
     setReplyContent("")
     setIsReplyModalOpen(true)
@@ -217,7 +273,7 @@ export default function SupportTickets() {
   const handleSendReply = () => {
     if (!selectedTicket || !replyContent.trim()) return
 
-    const newMessage: TicketMessage = {
+    const newMessage = {
       id: `M${Date.now()}`,
       sender: "admin",
       message: replyContent,
@@ -229,7 +285,7 @@ export default function SupportTickets() {
         t.id === selectedTicket.id
           ? {
               ...t,
-              status: "in-progress" as TicketStatus,
+              status: "in-progress",
               updatedAt: new Date(),
               messages: [...t.messages, newMessage],
             }
@@ -237,7 +293,7 @@ export default function SupportTickets() {
       ),
     )
 
-    toast({
+    showToast({
       title: "Reply Sent",
       description: `Your reply has been sent to ${selectedTicket.user.name}`,
     })
@@ -245,15 +301,15 @@ export default function SupportTickets() {
     setReplyContent("")
   }
 
-  const handleStatusChange = (ticketId: string, newStatus: TicketStatus) => {
+  const handleStatusChange = (ticketId, newStatus) => {
     setTickets((prev) => prev.map((t) => (t.id === ticketId ? { ...t, status: newStatus, updatedAt: new Date() } : t)))
-    toast({
+    showToast({
       title: "Status Updated",
       description: `Ticket status changed to ${statusConfig[newStatus].label}`,
     })
   }
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date) => {
     return new Intl.DateTimeFormat("en-US", {
       month: "short",
       day: "numeric",
@@ -264,185 +320,182 @@ export default function SupportTickets() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-serif text-2xl font-bold text-gray-900">Support Tickets</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Support Tickets</h2>
           <p className="text-sm text-gray-500">Manage and respond to user support requests</p>
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="gap-2 bg-transparent">
+        <SimpleDropdown 
+          trigger={
+            <Button variant="outline" className="gap-2">
+              <Filter className="size-4" />
               Filter: {statusFilter === "all" ? "All Status" : statusConfig[statusFilter]?.label || statusFilter}
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setStatusFilter("all")}>All Status</DropdownMenuItem>
-            {Object.entries(statusConfig).map(([key, config]) => (
-              <DropdownMenuItem key={key} onClick={() => setStatusFilter(key as TicketStatus)}>
+          }
+          items={[
+            { label: "All Status", onClick: () => setStatusFilter("all") },
+            ...Object.entries(statusConfig).map(([key, config]) => ({
+              label: (
                 <span className="flex items-center gap-2">
                   {config.icon}
                   {config.label}
                 </span>
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+              ),
+              onClick: () => setStatusFilter(key),
+            }))
+          ]}
+        />
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-        <Card className="border-0 shadow-sm">
-          <CardHeader className="pb-2">
-            <CardDescription>Open Tickets</CardDescription>
-            <CardTitle className="text-2xl text-amber-600">
+        <Card className="p-6 border shadow-sm">
+            <p className="text-sm text-gray-500">Open Tickets</p>
+            <h3 className="text-2xl font-bold text-amber-600">
               {tickets.filter((t) => t.status === "open").length}
-            </CardTitle>
-          </CardHeader>
+            </h3>
         </Card>
-        <Card className="border-0 shadow-sm">
-          <CardHeader className="pb-2">
-            <CardDescription>In Progress</CardDescription>
-            <CardTitle className="text-2xl text-blue-600">
+        <Card className="p-6 border shadow-sm">
+            <p className="text-sm text-gray-500">In Progress</p>
+            <h3 className="text-2xl font-bold text-blue-600">
               {tickets.filter((t) => t.status === "in-progress").length}
-            </CardTitle>
-          </CardHeader>
+            </h3>
         </Card>
-        <Card className="border-0 shadow-sm">
-          <CardHeader className="pb-2">
-            <CardDescription>Resolved</CardDescription>
-            <CardTitle className="text-2xl text-green-600">
+        <Card className="p-6 border shadow-sm">
+            <p className="text-sm text-gray-500">Resolved</p>
+            <h3 className="text-2xl font-bold text-green-600">
               {tickets.filter((t) => t.status === "resolved").length}
-            </CardTitle>
-          </CardHeader>
+            </h3>
         </Card>
-        <Card className="border-0 shadow-sm">
-          <CardHeader className="pb-2">
-            <CardDescription>Urgent</CardDescription>
-            <CardTitle className="text-2xl text-red-600">
+        <Card className="p-6 border shadow-sm">
+            <p className="text-sm text-gray-500">Urgent</p>
+            <h3 className="text-2xl font-bold text-red-600">
               {tickets.filter((t) => t.priority === "urgent").length}
-            </CardTitle>
-          </CardHeader>
+            </h3>
         </Card>
       </div>
 
       {/* Tickets Table */}
-      <div className="rounded-xl border bg-white shadow-sm">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-gray-50">
-              <TableHead>User</TableHead>
-              <TableHead>Subject</TableHead>
-              <TableHead>Priority</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Last Updated</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredTickets.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="h-32 text-center text-gray-500">
-                  No tickets found
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredTickets.map((ticket) => (
-                <TableRow key={ticket.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <Avatar className="size-10">
-                        <AvatarImage src={ticket.user.avatar || "/placeholder.svg"} alt={ticket.user.name} />
-                        <AvatarFallback>{ticket.user.name.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="font-medium text-gray-900">{ticket.user.name}</p>
-                        <p className="text-sm text-gray-500">{ticket.user.email}</p>
+      <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
+        <div className="w-full overflow-auto">
+          <table className="w-full caption-bottom text-sm text-left">
+            <thead className="[&_tr]:border-b">
+              <tr className="border-b bg-gray-50 transition-colors hover:bg-gray-50/50">
+                <th className="h-12 px-4 align-middle font-medium text-gray-500">User</th>
+                <th className="h-12 px-4 align-middle font-medium text-gray-500">Subject</th>
+                <th className="h-12 px-4 align-middle font-medium text-gray-500">Priority</th>
+                <th className="h-12 px-4 align-middle font-medium text-gray-500">Status</th>
+                <th className="h-12 px-4 align-middle font-medium text-gray-500">Last Updated</th>
+                <th className="h-12 px-4 align-middle font-medium text-gray-500 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="[&_tr:last-child]:border-0">
+              {filteredTickets.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="p-4 text-center h-32 text-gray-500">
+                    No tickets found
+                  </td>
+                </tr>
+              ) : (
+                filteredTickets.map((ticket) => (
+                  <tr key={ticket.id} className="border-b transition-colors hover:bg-gray-50/50">
+                    <td className="p-4 align-middle">
+                      <div className="flex items-center gap-3">
+                        <Avatar src={ticket.user.avatar} fallback={ticket.user.name.charAt(0)} alt={ticket.user.name} />
+                        <div>
+                          <p className="font-medium text-gray-900">{ticket.user.name}</p>
+                          <p className="text-sm text-gray-500">{ticket.user.email}</p>
+                        </div>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div>
-                      <p className="font-medium text-gray-900">{ticket.subject}</p>
-                      <p className="text-xs text-gray-500">{ticket.category}</p>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge className={priorityConfig[ticket.priority].color}>
-                      {priorityConfig[ticket.priority].label}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge className={`gap-1 ${statusConfig[ticket.status].color}`}>
-                      {statusConfig[ticket.status].icon}
-                      {statusConfig[ticket.status].label}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-sm text-gray-500">{formatDate(ticket.updatedAt)}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center justify-end gap-2">
-                      <Button size="sm" variant="ghost" onClick={() => handleViewTicket(ticket)}>
-                        <Eye className="size-4" />
-                      </Button>
-                      {ticket.status !== "archived" && (
-                        <>
-                          <Button
-                            size="sm"
-                            className="gap-1 bg-blue-600 hover:bg-blue-700"
-                            onClick={() => handleOpenReplyModal(ticket)}
-                          >
-                            <MessageSquare className="size-3" />
-                            Reply
-                          </Button>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button size="sm" variant="outline" className="bg-transparent">
-                                Status
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => handleStatusChange(ticket.id, "resolved")}>
-                                <CheckCircle2 className="mr-2 size-4 text-green-600" />
-                                Mark Resolved
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleStatusChange(ticket.id, "archived")}>
-                                <Archive className="mr-2 size-4 text-gray-600" />
-                                Archive
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </>
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+                    </td>
+                    <td className="p-4 align-middle">
+                      <div>
+                        <p className="font-medium text-gray-900">{ticket.subject}</p>
+                        <p className="text-xs text-gray-500">{ticket.category}</p>
+                      </div>
+                    </td>
+                    <td className="p-4 align-middle">
+                      <Badge className={priorityConfig[ticket.priority].color}>
+                        {priorityConfig[ticket.priority].label}
+                      </Badge>
+                    </td>
+                    <td className="p-4 align-middle">
+                      <Badge className={`gap-1 ${statusConfig[ticket.status].color}`}>
+                        {statusConfig[ticket.status].icon}
+                        {statusConfig[ticket.status].label}
+                      </Badge>
+                    </td>
+                    <td className="p-4 align-middle text-sm text-gray-500">{formatDate(ticket.updatedAt)}</td>
+                    <td className="p-4 align-middle text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <Button size="sm" variant="ghost" onClick={() => handleViewTicket(ticket)}>
+                          <Eye className="size-4" />
+                        </Button>
+                        {ticket.status !== "archived" && (
+                          <>
+                            <Button
+                              size="sm"
+                              className="gap-1 bg-blue-600 hover:bg-blue-700 text-white"
+                              onClick={() => handleOpenReplyModal(ticket)}
+                            >
+                              <MessageSquare className="size-3" />
+                              Reply
+                            </Button>
+                            
+                            <SimpleDropdown 
+                                trigger={
+                                    <Button size="sm" variant="outline">
+                                        Status
+                                    </Button>
+                                }
+                                align="right"
+                                items={[
+                                    {
+                                        label: <><CheckCircle2 className="mr-2 size-4 text-green-600" />Mark Resolved</>,
+                                        onClick: () => handleStatusChange(ticket.id, "resolved")
+                                    },
+                                    {
+                                        label: <><Archive className="mr-2 size-4 text-gray-600" />Archive</>,
+                                        onClick: () => handleStatusChange(ticket.id, "archived")
+                                    }
+                                ]}
+                            />
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* View Ticket Modal */}
-      <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
-        <DialogContent className="sm:max-w-lg">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 font-serif">
-              <HeadphonesIcon className="size-5 text-blue-600" />
-              Ticket Details
-            </DialogTitle>
-            <DialogDescription>View ticket information and conversation history</DialogDescription>
-          </DialogHeader>
-
+      <Modal
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        title={
+            <div className="flex items-center gap-2 font-serif">
+               <HeadphonesIcon className="size-5 text-blue-600" /> Ticket Details
+            </div>
+        }
+        description="View ticket information and conversation history"
+        footer={
+            <Button variant="outline" onClick={() => setIsViewModalOpen(false)}>
+              Close
+            </Button>
+        }
+      >
           {selectedTicket && (
             <div className="space-y-4">
               {/* User Info */}
-              <div className="flex items-center gap-3 rounded-lg bg-gray-50 p-3">
-                <Avatar className="size-10">
-                  <AvatarImage src={selectedTicket.user.avatar || "/placeholder.svg"} alt={selectedTicket.user.name} />
-                  <AvatarFallback>{selectedTicket.user.name.charAt(0)}</AvatarFallback>
-                </Avatar>
+              <div className="flex items-center gap-3 rounded-lg bg-gray-50 p-3 border">
+                <Avatar src={selectedTicket.user.avatar} fallback={selectedTicket.user.name.charAt(0)} alt={selectedTicket.user.name} />
                 <div className="flex-1">
                   <p className="font-medium">{selectedTicket.user.name}</p>
                   <p className="text-sm text-gray-500">{selectedTicket.user.email}</p>
@@ -468,12 +521,11 @@ export default function SupportTickets() {
               {/* Messages */}
               <div>
                 <h4 className="mb-2 text-sm font-medium text-gray-700">Conversation</h4>
-                <ScrollArea className="h-48">
-                  <div className="space-y-3">
+                <div className="h-48 overflow-y-auto space-y-3 pr-2">
                     {selectedTicket.messages.map((msg) => (
                       <div
                         key={msg.id}
-                        className={`rounded-lg p-3 ${msg.sender === "admin" ? "ml-4 bg-blue-50" : "mr-4 bg-gray-50"}`}
+                        className={`rounded-lg p-3 ${msg.sender === "admin" ? "ml-4 bg-blue-50 border border-blue-100" : "mr-4 bg-gray-50 border border-gray-100"}`}
                       >
                         <div className="flex items-center justify-between">
                           <span className="text-xs font-medium text-gray-600">
@@ -484,39 +536,43 @@ export default function SupportTickets() {
                         <p className="mt-1 text-sm text-gray-700">{msg.message}</p>
                       </div>
                     ))}
-                  </div>
-                </ScrollArea>
+                </div>
               </div>
             </div>
           )}
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsViewModalOpen(false)}>
-              Close
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      </Modal>
 
       {/* Reply Modal */}
-      <Dialog open={isReplyModalOpen} onOpenChange={setIsReplyModalOpen}>
-        <DialogContent className="sm:max-w-lg">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 font-serif">
-              <MessageSquare className="size-5 text-blue-600" />
-              Reply to Ticket
-            </DialogTitle>
-            <DialogDescription>Send a response to {selectedTicket?.user.name}</DialogDescription>
-          </DialogHeader>
-
+      <Modal
+        isOpen={isReplyModalOpen}
+        onClose={() => setIsReplyModalOpen(false)}
+        title={
+            <div className="flex items-center gap-2 font-serif">
+                <MessageSquare className="size-5 text-blue-600" /> Reply to Ticket
+            </div>
+        }
+        description={`Send a response to ${selectedTicket?.user.name}`}
+        footer={
+            <div className="flex gap-2 w-full justify-end">
+                <Button variant="outline" onClick={() => setIsReplyModalOpen(false)}>
+                Cancel
+                </Button>
+                <Button
+                className="gap-1 bg-blue-600 hover:bg-blue-700 text-white"
+                onClick={handleSendReply}
+                disabled={!replyContent.trim()}
+                >
+                <Send className="size-4" />
+                Send Reply
+                </Button>
+            </div>
+        }
+      >
           {selectedTicket && (
             <div className="space-y-4">
               {/* User Info */}
-              <div className="flex items-center gap-3 rounded-lg bg-gray-50 p-3">
-                <Avatar className="size-10">
-                  <AvatarImage src={selectedTicket.user.avatar || "/placeholder.svg"} alt={selectedTicket.user.name} />
-                  <AvatarFallback>{selectedTicket.user.name.charAt(0)}</AvatarFallback>
-                </Avatar>
+              <div className="flex items-center gap-3 rounded-lg bg-gray-50 p-3 border">
+                 <Avatar src={selectedTicket.user.avatar} fallback={selectedTicket.user.name.charAt(0)} alt={selectedTicket.user.name} />
                 <div>
                   <p className="font-medium">{selectedTicket.user.name}</p>
                   <p className="text-sm text-gray-500">{selectedTicket.subject}</p>
@@ -526,9 +582,9 @@ export default function SupportTickets() {
               {/* Reply Input */}
               <div>
                 <label className="text-sm font-medium text-gray-700">Your Reply</label>
-                <Textarea
+                <textarea
                   rows={4}
-                  className="mt-1 w-full"
+                  className="mt-1 flex w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm shadow-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-500"
                   placeholder="Type your response..."
                   value={replyContent}
                   onChange={(e) => setReplyContent(e.target.value)}
@@ -536,22 +592,7 @@ export default function SupportTickets() {
               </div>
             </div>
           )}
-
-          <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setIsReplyModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button
-              className="gap-1 bg-blue-600 hover:bg-blue-700"
-              onClick={handleSendReply}
-              disabled={!replyContent.trim()}
-            >
-              <Send className="size-4" />
-              Send Reply
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      </Modal>
     </div>
   )
 }

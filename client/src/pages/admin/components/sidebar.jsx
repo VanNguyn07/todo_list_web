@@ -1,5 +1,3 @@
-"use client"
-
 import React from "react"
 import {
   LayoutDashboard,
@@ -8,14 +6,12 @@ import {
   AlertTriangle,
   Bell,
   HeadphonesIcon,
-  LogOut,
   Shield,
   ChevronDown,
-  Settings,
+  LogOut,
+  Menu,
+  X,
 } from "lucide-react"
-
-// Define styles directly in object for specific dynamic values or keep in CSS
-// Here we rely on classes defined in globals.css + some inline styles for simple logic
 
 const navItems = [
   { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard size={18} /> },
@@ -27,23 +23,82 @@ const navItems = [
 ]
 
 export default function Sidebar({ activeSection, onSectionChange, notificationCount = 0 }) {
+  const [isMobileOpen, setIsMobileOpen] = React.useState(false)
+
   return (
-    <header className="app-header">
-      <div className="header-inner">
+    <>
+      {/* Top Navigation Bar */}
+      <nav className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 flex-center  px-4 z-50 shadow-sm">
         {/* Logo Section */}
-        <div className="logo-section">
-          <div className="logo-icon">
-            <Shield size={16} color="white" />
+        <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity mr-8 flex-shrink-0">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-md">
+            <Shield size={18} />
           </div>
-          <div className="logo-text">
-            <h1>Admin Panel</h1>
-            <span>Management System</span>
+          <div className="hidden md:flex flex-col mr-20">
+            <h1 className="text-sm font-bold text-gray-900 leading-tight">Admin Panel</h1>
+            <span className="text-[11px] text-gray-500 font-semibold tracking-wide">MANAGEMENT</span>
           </div>
         </div>
 
-        {/* Navigation */}
-        <nav className="main-nav">
-          <div className="nav-list">
+        {/* Desktop Navigation Items */}
+        <div className="hidden md:flex flex-1 items-center gap-10">
+          {navItems.map((item) => {
+            const isActive = activeSection === item.id
+            // const showBadge = item.id === "notifications" ? notificationCount > 0 : item.badge
+            // const badgeCount = item.id === "notifications" ? notificationCount : item.badge
+
+            return (
+              <button
+                key={item.id}
+                onClick={() => onSectionChange(item.id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 relative ${
+                  isActive
+                    ? "text-blue-700 bg-blue-50 border-b-2 border-b-blue-600"
+                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                }`}
+              >
+                <span className={`transition-colors ${isActive ? "text-blue-600" : "text-gray-500 group-hover:text-gray-700"}`}>
+                  {item.icon}
+                </span>
+                <span>{item.label}</span>
+                {/* {showBadge && (
+                  <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white shadow-sm ml-1">
+                    {badgeCount}
+                  </span>
+                )} */}
+              </button>
+            )
+          })}
+        </div>
+
+        {/* User Profile and Mobile Menu */}
+        <div className="ml-auto flex items-center gap-4">
+          {/* User Profile */}
+          <div className="hidden sm:flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer group">
+            <div className="h-8 w-8 overflow-hidden rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+              A
+            </div>
+            <div className="hidden lg:flex flex-col items-start">
+              <span className="text-xs font-bold text-gray-900">Admin User</span>
+              <span className="text-xs text-gray-600 font-medium">Super Admin</span>
+            </div>
+            <ChevronDown size={16} className="text-gray-500 group-hover:text-gray-700 transition-colors" />
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button 
+            onClick={() => setIsMobileOpen(!isMobileOpen)}
+            className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Dropdown Menu */}
+      {isMobileOpen && (
+        <div className="fixed top-16 left-0 right-0 bg-white border-b border-gray-200 md:hidden z-40 max-h-[calc(100vh-64px)] overflow-y-auto">
+          <nav className="flex flex-col divide-y divide-gray-200">
             {navItems.map((item) => {
               const isActive = activeSection === item.id
               const showBadge = item.id === "notifications" ? notificationCount > 0 : item.badge
@@ -52,144 +107,41 @@ export default function Sidebar({ activeSection, onSectionChange, notificationCo
               return (
                 <button
                   key={item.id}
-                  onClick={() => onSectionChange(item.id)}
-                  className={`nav-item ${isActive ? "active" : ""}`}
+                  onClick={() => {
+                    onSectionChange(item.id)
+                    setIsMobileOpen(false)
+                  }}
+                  className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium transition-all duration-200 ${
+                    isActive
+                      ? "bg-blue-50 text-blue-700 border-l-4 border-l-blue-600"
+                      : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                  }`}
                 >
-                  <span className="nav-icon">{item.icon}</span>
-                  <span className="nav-label">{item.label}</span>
+                  <div className="flex items-center gap-3">
+                    <span className={`transition-colors ${isActive ? "text-blue-600" : "text-gray-500 group-hover:text-gray-700"}`}>
+                      {item.icon}
+                    </span>
+                    <span>{item.label}</span>
+                  </div>
                   {showBadge && (
-                    <span className="nav-badge">{badgeCount}</span>
+                    <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-xs font-bold text-white shadow-sm">
+                      {badgeCount}
+                    </span>
                   )}
                 </button>
               )
             })}
-          </div>
-        </nav>
+          </nav>
 
-        {/* User Profile */}
-        <div className="user-menu">
-          <button className="user-btn">
-            <div className="avatar">
-               <img src="/placeholder.svg?height=28&width=28" alt="Admin" />
-            </div>
-            <div className="user-info">
-              <span className="user-name">Admin</span>
-              <span className="user-role">Super Admin</span>
-            </div>
-            <ChevronDown size={14} className="text-muted" />
-          </button>
+          {/* Mobile Logout Button */}
+          <div className="p-4 border-t border-gray-200">
+            <button className="w-full flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors border border-transparent hover:border-red-200">
+              <LogOut size={16} />
+              Logout
+            </button>
+          </div>
         </div>
-      </div>
-      
-      <style jsx>{`
-        .app-header {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: var(--header-height);
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(5px);
-          border-bottom: 1px solid var(--border-color);
-          z-index: 100;
-        }
-        .header-inner {
-          max-width: 1280px;
-          margin: 0 auto;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 0 1.5rem;
-        }
-        .logo-section {
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-        }
-        .logo-icon {
-          width: 32px;
-          height: 32px;
-          background: linear-gradient(135deg, #2563eb, #1d4ed8);
-          border-radius: 8px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .logo-text h1 {
-          font-size: 15px;
-          font-weight: 600;
-          margin: 0;
-          font-family: var(--font-inter);
-        }
-        .logo-text span {
-          font-size: 10px;
-          color: var(--text-muted);
-          display: block;
-        }
-        .nav-list {
-          display: flex;
-          background: #f3f4f6;
-          padding: 4px;
-          border-radius: 8px;
-        }
-        .nav-item {
-          position: relative;
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          padding: 6px 12px;
-          border: none;
-          background: transparent;
-          cursor: pointer;
-          border-radius: 6px;
-          color: var(--text-muted);
-          font-size: 13px;
-          font-weight: 500;
-          transition: all 0.2s;
-        }
-        .nav-item.active {
-          background: white;
-          color: var(--primary);
-          box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-        .nav-item:hover:not(.active) {
-          color: var(--text-main);
-        }
-        .nav-badge {
-          background: #ef4444;
-          color: white;
-          font-size: 9px;
-          font-weight: bold;
-          height: 16px;
-          min-width: 16px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 50%;
-          padding: 0 4px;
-        }
-        .user-btn {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          background: transparent;
-          border: none;
-          padding: 4px 8px;
-          border-radius: 8px;
-          cursor: pointer;
-        }
-        .user-btn:hover {
-          background: #f3f4f6;
-        }
-        .user-info {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-        }
-        .user-name { font-size: 13px; font-weight: 500; }
-        .user-role { font-size: 10px; color: var(--text-muted); }
-      `}</style>
-    </header>
+      )}
+    </>
   )
 }

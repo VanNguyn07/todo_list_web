@@ -1,46 +1,9 @@
-"use client"
+import React, { useState, useRef, useEffect } from "react"
+// Cần cài đặt: npm install lucide-react
+import { Bug, CheckCircle2, Clock, Eye, RefreshCw, Server, XCircle, MoreVertical, Filter, X } from "lucide-react"
 
-import type React from "react"
-
-import { useState } from "react"
-import { Bug, CheckCircle2, Clock, Eye, RefreshCw, Server, XCircle } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Textarea } from "@/components/ui/textarea"
-import { useToast } from "@/hooks/use-toast"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-
-type ErrorStatus = "open" | "investigating" | "fixed" | "wont-fix"
-type ErrorSeverity = "low" | "medium" | "high" | "critical"
-
-interface ErrorLog {
-  id: string
-  errorCode: string
-  message: string
-  description: string
-  severity: ErrorSeverity
-  status: ErrorStatus
-  source: string
-  stackTrace: string
-  occurrences: number
-  firstOccurred: Date
-  lastOccurred: Date
-  resolvedAt?: Date
-  resolution?: string
-}
-
-const initialErrors: ErrorLog[] = [
+// --- Dữ liệu giả lập ---
+const initialErrors = [
   {
     id: "ERR001",
     errorCode: "AUTH_FAILED",
@@ -113,7 +76,7 @@ const initialErrors: ErrorLog[] = [
   },
 ]
 
-const statusConfig: Record<ErrorStatus, { label: string; color: string; icon: React.ReactNode }> = {
+const statusConfig = {
   open: {
     label: "Open",
     color: "bg-red-100 text-red-800 border-red-200",
@@ -136,36 +99,137 @@ const statusConfig: Record<ErrorStatus, { label: string; color: string; icon: Re
   },
 }
 
-const severityConfig: Record<ErrorSeverity, { label: string; color: string }> = {
+const severityConfig = {
   low: { label: "Low", color: "bg-gray-100 text-gray-600" },
   medium: { label: "Medium", color: "bg-blue-100 text-blue-700" },
   high: { label: "High", color: "bg-orange-100 text-orange-700" },
   critical: { label: "Critical", color: "bg-red-100 text-red-700" },
 }
 
+// --- Helper Components ---
+
+const Button = ({ children, className, variant = "default", size = "default", ...props }) => {
+  const baseStyles = "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
+  const variants = {
+    default: "bg-blue-600 text-white hover:bg-blue-700 shadow-sm",
+    outline: "border border-gray-200 bg-white hover:bg-gray-100 text-gray-900",
+    ghost: "hover:bg-gray-100 hover:text-gray-900",
+  }
+  const sizes = {
+    default: "h-9 px-4 py-2",
+    sm: "h-8 rounded-md px-3 text-xs",
+    icon: "h-9 w-9",
+  }
+  return (
+    <button className={`${baseStyles} ${variants[variant] || variants.default} ${sizes[size] || sizes.default} ${className || ""}`} {...props}>
+      {children}
+    </button>
+  )
+}
+
+const Badge = ({ children, className }) => (
+  <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`}>
+    {children}
+  </span>
+)
+
+const Card = ({ children, className }) => (
+  <div className={`rounded-lg border bg-white text-gray-950 shadow-sm ${className || ""}`}>
+    {children}
+  </div>
+)
+
+const Textarea = ({ className, ...props }) => (
+  <textarea
+    className={`flex min-h-[80px] w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm shadow-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 ${className || ""}`}
+    {...props}
+  />
+)
+
+const Modal = ({ isOpen, onClose, title, description, children, footer }) => {
+  if (!isOpen) return null
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-200">
+      <div className="relative w-full max-w-2xl rounded-xl bg-white p-6 shadow-lg animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
+        <button onClick={onClose} className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100">
+          <X className="h-4 w-4" />
+        </button>
+        <div className="mb-4 shrink-0">
+          <h3 className="text-lg font-semibold leading-none tracking-tight flex items-center gap-2">{title}</h3>
+          {description && <p className="mt-1.5 text-sm text-gray-500">{description}</p>}
+        </div>
+        <div className="flex-1 overflow-y-auto pr-2">{children}</div>
+        {footer && <div className="mt-4 flex justify-end gap-2 shrink-0">{footer}</div>}
+      </div>
+    </div>
+  )
+}
+
+const SimpleDropdown = ({ trigger, items, align = "right" }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (ref.current && !ref.current.contains(event.target)) setIsOpen(false)
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
+
+  return (
+    <div className="relative inline-block text-left" ref={ref}>
+      <div onClick={() => setIsOpen(!isOpen)}>{trigger}</div>
+      {isOpen && (
+        <div className={`absolute z-50 mt-2 w-48 rounded-md border bg-white p-1 shadow-md animate-in fade-in zoom-in-95 duration-100 ${align === "right" ? "right-0" : "left-0"}`}>
+          {items.map((item, idx) => (
+            <button
+              key={idx}
+              onClick={() => {
+                item.onClick()
+                setIsOpen(false)
+              }}
+              className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// --- Main Component ---
+
 export default function SystemErrors() {
-  const [errors, setErrors] = useState<ErrorLog[]>(initialErrors)
-  const [selectedError, setSelectedError] = useState<ErrorLog | null>(null)
+  const [errors, setErrors] = useState(initialErrors)
+  const [selectedError, setSelectedError] = useState(null)
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
   const [isResolveModalOpen, setIsResolveModalOpen] = useState(false)
   const [resolutionNotes, setResolutionNotes] = useState("")
-  const [statusFilter, setStatusFilter] = useState<ErrorStatus | "all">("all")
-  const { toast } = useToast()
+  const [statusFilter, setStatusFilter] = useState("all")
+  
+  // Hàm giả lập Toast
+  const showToast = ({ title, description }) => {
+    // Trong thực tế bạn có thể thay bằng console.log hoặc thư viện toast khác
+    alert(`${title}: ${description}`)
+  }
 
   const filteredErrors = statusFilter === "all" ? errors : errors.filter((e) => e.status === statusFilter)
 
-  const handleViewDetails = (error: ErrorLog) => {
+  const handleViewDetails = (error) => {
     setSelectedError(error)
     setIsDetailModalOpen(true)
   }
 
-  const handleOpenResolveModal = (error: ErrorLog) => {
+  const handleOpenResolveModal = (error) => {
     setSelectedError(error)
     setResolutionNotes("")
     setIsResolveModalOpen(true)
   }
 
-  const handleResolveError = (status: "fixed" | "wont-fix") => {
+  const handleResolveError = (status) => {
     if (!selectedError) return
 
     setErrors((prev) =>
@@ -181,22 +245,22 @@ export default function SystemErrors() {
       ),
     )
 
-    toast({
+    showToast({
       title: "Error Updated",
       description: `Error ${selectedError.errorCode} marked as ${statusConfig[status].label}`,
     })
     setIsResolveModalOpen(false)
   }
 
-  const handleStatusChange = (errorId: string, newStatus: ErrorStatus) => {
+  const handleStatusChange = (errorId, newStatus) => {
     setErrors((prev) => prev.map((e) => (e.id === errorId ? { ...e, status: newStatus } : e)))
-    toast({
+    showToast({
       title: "Status Updated",
       description: `Error status changed to ${statusConfig[newStatus].label}`,
     })
   }
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date) => {
     return new Intl.DateTimeFormat("en-US", {
       month: "short",
       day: "numeric",
@@ -207,178 +271,182 @@ export default function SystemErrors() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-serif text-2xl font-bold text-gray-900">System Errors</h2>
+          <h2 className="text-2xl font-bold text-gray-900">System Errors</h2>
           <p className="text-sm text-gray-500">Monitor and resolve system errors and exceptions</p>
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="gap-2 bg-transparent">
+        <SimpleDropdown 
+          trigger={
+            <Button variant="outline" className="gap-2">
+              <Filter className="size-4" />
               Filter: {statusFilter === "all" ? "All Status" : statusConfig[statusFilter]?.label || statusFilter}
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setStatusFilter("all")}>All Status</DropdownMenuItem>
-            {Object.entries(statusConfig).map(([key, config]) => (
-              <DropdownMenuItem key={key} onClick={() => setStatusFilter(key as ErrorStatus)}>
+          }
+          items={[
+            { label: "All Status", onClick: () => setStatusFilter("all") },
+            ...Object.entries(statusConfig).map(([key, config]) => ({
+              label: (
                 <span className="flex items-center gap-2">
                   {config.icon}
                   {config.label}
                 </span>
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+              ),
+              onClick: () => setStatusFilter(key),
+            }))
+          ]}
+        />
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-        <Card className="border-0 shadow-sm">
-          <CardHeader className="pb-2">
-            <CardDescription>Open Errors</CardDescription>
-            <CardTitle className="text-2xl text-red-600">{errors.filter((e) => e.status === "open").length}</CardTitle>
-          </CardHeader>
+        <Card className="p-6 border shadow-sm">
+            <p className="text-sm text-gray-500">Open Errors</p>
+            <h3 className="text-2xl font-bold text-red-600">
+                {errors.filter((e) => e.status === "open").length}
+            </h3>
         </Card>
-        <Card className="border-0 shadow-sm">
-          <CardHeader className="pb-2">
-            <CardDescription>Investigating</CardDescription>
-            <CardTitle className="text-2xl text-amber-600">
-              {errors.filter((e) => e.status === "investigating").length}
-            </CardTitle>
-          </CardHeader>
+        <Card className="p-6 border shadow-sm">
+            <p className="text-sm text-gray-500">Investigating</p>
+            <h3 className="text-2xl font-bold text-amber-600">
+                {errors.filter((e) => e.status === "investigating").length}
+            </h3>
         </Card>
-        <Card className="border-0 shadow-sm">
-          <CardHeader className="pb-2">
-            <CardDescription>Fixed</CardDescription>
-            <CardTitle className="text-2xl text-green-600">
-              {errors.filter((e) => e.status === "fixed").length}
-            </CardTitle>
-          </CardHeader>
+        <Card className="p-6 border shadow-sm">
+            <p className="text-sm text-gray-500">Fixed</p>
+            <h3 className="text-2xl font-bold text-green-600">
+                {errors.filter((e) => e.status === "fixed").length}
+            </h3>
         </Card>
-        <Card className="border-0 shadow-sm">
-          <CardHeader className="pb-2">
-            <CardDescription>Critical</CardDescription>
-            <CardTitle className="text-2xl text-red-700">
-              {errors.filter((e) => e.severity === "critical" && e.status !== "fixed").length}
-            </CardTitle>
-          </CardHeader>
+        <Card className="p-6 border shadow-sm">
+            <p className="text-sm text-gray-500">Critical</p>
+            <h3 className="text-2xl font-bold text-red-700">
+                {errors.filter((e) => e.severity === "critical" && e.status !== "fixed").length}
+            </h3>
         </Card>
       </div>
 
       {/* Errors Table */}
-      <div className="rounded-xl border bg-white shadow-sm">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-gray-50">
-              <TableHead>Error Code</TableHead>
-              <TableHead>Message</TableHead>
-              <TableHead>Severity</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Occurrences</TableHead>
-              <TableHead>Last Occurred</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredErrors.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={7} className="h-32 text-center text-gray-500">
-                  No errors found
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredErrors.map((error) => (
-                <TableRow key={error.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Bug className="size-4 text-gray-400" />
-                      <span className="font-mono text-sm font-medium">{error.errorCode}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div>
-                      <p className="font-medium text-gray-900">{error.message}</p>
-                      <p className="flex items-center gap-1 text-xs text-gray-500">
-                        <Server className="size-3" />
-                        {error.source}
-                      </p>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge className={severityConfig[error.severity].color}>
-                      {severityConfig[error.severity].label}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge className={`gap-1 ${statusConfig[error.status].color}`}>
-                      {statusConfig[error.status].icon}
-                      {statusConfig[error.status].label}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <span className="font-medium text-gray-900">{error.occurrences}</span>
-                  </TableCell>
-                  <TableCell className="text-sm text-gray-500">{formatDate(error.lastOccurred)}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center justify-end gap-2">
-                      <Button size="sm" variant="ghost" onClick={() => handleViewDetails(error)}>
-                        <Eye className="size-4" />
-                      </Button>
-                      {(error.status === "open" || error.status === "investigating") && (
-                        <>
-                          <Button
-                            size="sm"
-                            className="gap-1 bg-green-600 hover:bg-green-700"
-                            onClick={() => handleOpenResolveModal(error)}
-                          >
-                            <CheckCircle2 className="size-3" />
-                            Resolve
-                          </Button>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button size="sm" variant="outline" className="bg-transparent">
-                                Status
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              {error.status !== "investigating" && (
-                                <DropdownMenuItem onClick={() => handleStatusChange(error.id, "investigating")}>
-                                  <RefreshCw className="mr-2 size-4 text-amber-600" />
-                                  Start Investigating
-                                </DropdownMenuItem>
-                              )}
-                              <DropdownMenuItem onClick={() => handleStatusChange(error.id, "wont-fix")}>
-                                <Clock className="mr-2 size-4 text-gray-600" />
-                                Won't Fix
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </>
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+      <div className="rounded-xl border bg-white shadow-sm overflow-hidden">
+        <div className="w-full overflow-auto">
+          <table className="w-full caption-bottom text-sm text-left">
+            <thead className="[&_tr]:border-b">
+              <tr className="border-b bg-gray-50 transition-colors hover:bg-gray-50/50">
+                <th className="h-12 px-4 align-middle font-medium text-gray-500">Error Code</th>
+                <th className="h-12 px-4 align-middle font-medium text-gray-500">Message</th>
+                <th className="h-12 px-4 align-middle font-medium text-gray-500">Severity</th>
+                <th className="h-12 px-4 align-middle font-medium text-gray-500">Status</th>
+                <th className="h-12 px-4 align-middle font-medium text-gray-500">Occurrences</th>
+                <th className="h-12 px-4 align-middle font-medium text-gray-500">Last Occurred</th>
+                <th className="h-12 px-4 align-middle font-medium text-gray-500 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="[&_tr:last-child]:border-0">
+              {filteredErrors.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="p-4 text-center h-32 text-gray-500">
+                    No errors found
+                  </td>
+                </tr>
+              ) : (
+                filteredErrors.map((error) => (
+                  <tr key={error.id} className="border-b transition-colors hover:bg-gray-50/50">
+                    <td className="p-4 align-middle">
+                      <div className="flex items-center gap-2">
+                        <Bug className="size-4 text-gray-400" />
+                        <span className="font-mono text-sm font-medium">{error.errorCode}</span>
+                      </div>
+                    </td>
+                    <td className="p-4 align-middle">
+                      <div>
+                        <p className="font-medium text-gray-900">{error.message}</p>
+                        <p className="flex items-center gap-1 text-xs text-gray-500">
+                          <Server className="size-3" />
+                          {error.source}
+                        </p>
+                      </div>
+                    </td>
+                    <td className="p-4 align-middle">
+                      <Badge className={severityConfig[error.severity].color}>
+                        {severityConfig[error.severity].label}
+                      </Badge>
+                    </td>
+                    <td className="p-4 align-middle">
+                      <Badge className={`gap-1 ${statusConfig[error.status].color}`}>
+                        {statusConfig[error.status].icon}
+                        {statusConfig[error.status].label}
+                      </Badge>
+                    </td>
+                    <td className="p-4 align-middle">
+                      <span className="font-medium text-gray-900">{error.occurrences}</span>
+                    </td>
+                    <td className="p-4 align-middle text-sm text-gray-500">{formatDate(error.lastOccurred)}</td>
+                    <td className="p-4 align-middle text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <Button size="sm" variant="ghost" onClick={() => handleViewDetails(error)}>
+                          <Eye className="size-4" />
+                        </Button>
+                        
+                        {(error.status === "open" || error.status === "investigating") && (
+                          <>
+                            <Button
+                              size="sm"
+                              className="gap-1 bg-green-600 hover:bg-green-700 text-white"
+                              onClick={() => handleOpenResolveModal(error)}
+                            >
+                              <CheckCircle2 className="size-3" />
+                              Resolve
+                            </Button>
+                            
+                            <SimpleDropdown 
+                                trigger={
+                                    <Button size="sm" variant="outline">
+                                        Status
+                                    </Button>
+                                }
+                                align="right"
+                                items={[
+                                    ...(error.status !== "investigating" ? [{
+                                        label: <><RefreshCw className="mr-2 size-4 text-amber-600" />Start Investigating</>,
+                                        onClick: () => handleStatusChange(error.id, "investigating")
+                                    }] : []),
+                                    {
+                                        label: <><Clock className="mr-2 size-4 text-gray-600" />Won't Fix</>,
+                                        onClick: () => handleStatusChange(error.id, "wont-fix")
+                                    }
+                                ]}
+                            />
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Detail Modal */}
-      <Dialog open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
-        <DialogContent className="sm:max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 font-serif">
-              <Bug className="size-5 text-red-600" />
-              Error Details
-            </DialogTitle>
-            <DialogDescription>View detailed error information and stack trace</DialogDescription>
-          </DialogHeader>
-
+      <Modal
+        isOpen={isDetailModalOpen}
+        onClose={() => setIsDetailModalOpen(false)}
+        title={
+            <div className="flex items-center gap-2 font-serif">
+               <Bug className="size-5 text-red-600" /> Error Details
+            </div>
+        }
+        description="View detailed error information and stack trace"
+        footer={
+            <Button variant="outline" onClick={() => setIsDetailModalOpen(false)}>
+              Close
+            </Button>
+        }
+      >
           {selectedError && (
             <div className="space-y-4">
               {/* Error Summary */}
@@ -427,9 +495,9 @@ export default function SystemErrors() {
               {/* Stack Trace */}
               <div>
                 <h4 className="mb-2 text-sm font-medium text-gray-700">Stack Trace</h4>
-                <ScrollArea className="h-32 rounded-lg bg-gray-900 p-3">
-                  <pre className="font-mono text-xs text-green-400">{selectedError.stackTrace}</pre>
-                </ScrollArea>
+                <div className="h-32 rounded-lg bg-gray-900 p-3 overflow-auto">
+                  <pre className="font-mono text-xs text-green-400 whitespace-pre-wrap">{selectedError.stackTrace}</pre>
+                </div>
               </div>
 
               {/* Resolution (if exists) */}
@@ -447,26 +515,38 @@ export default function SystemErrors() {
               )}
             </div>
           )}
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDetailModalOpen(false)}>
-              Close
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      </Modal>
 
       {/* Resolve Modal */}
-      <Dialog open={isResolveModalOpen} onOpenChange={setIsResolveModalOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 font-serif">
-              <CheckCircle2 className="size-5 text-green-600" />
-              Resolve Error
-            </DialogTitle>
-            <DialogDescription>Add resolution notes for {selectedError?.errorCode}</DialogDescription>
-          </DialogHeader>
-
+      <Modal
+        isOpen={isResolveModalOpen}
+        onClose={() => setIsResolveModalOpen(false)}
+        title={
+            <div className="flex items-center gap-2 font-serif">
+               <CheckCircle2 className="size-5 text-green-600" /> Resolve Error
+            </div>
+        }
+        description={`Add resolution notes for ${selectedError?.errorCode}`}
+        footer={
+            <div className="flex gap-2 w-full justify-end">
+                <Button variant="outline" onClick={() => setIsResolveModalOpen(false)}>
+                Cancel
+                </Button>
+                <Button
+                variant="outline"
+                className="text-gray-600 bg-transparent"
+                onClick={() => handleResolveError("wont-fix")}
+                >
+                <Clock className="mr-2 size-4" />
+                Won't Fix
+                </Button>
+                <Button className="bg-green-600 hover:bg-green-700 text-white" onClick={() => handleResolveError("fixed")}>
+                <CheckCircle2 className="mr-2 size-4" />
+                Mark Fixed
+                </Button>
+            </div>
+        }
+      >
           <div className="space-y-4">
             <div>
               <label className="text-sm font-medium text-gray-700">Resolution Notes</label>
@@ -479,26 +559,7 @@ export default function SystemErrors() {
               />
             </div>
           </div>
-
-          <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setIsResolveModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button
-              variant="outline"
-              className="text-gray-600 bg-transparent"
-              onClick={() => handleResolveError("wont-fix")}
-            >
-              <Clock className="mr-2 size-4" />
-              Won't Fix
-            </Button>
-            <Button className="bg-green-600 hover:bg-green-700" onClick={() => handleResolveError("fixed")}>
-              <CheckCircle2 className="mr-2 size-4" />
-              Mark Fixed
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      </Modal>
     </div>
   )
 }
