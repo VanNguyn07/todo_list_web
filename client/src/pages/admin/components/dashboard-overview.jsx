@@ -19,6 +19,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+import { useFetchUsers } from "../../../hooks/useFetchUsers";
 // --- Helper Components ---
 const Card = ({ children, className }) => (
   <div
@@ -29,54 +30,6 @@ const Card = ({ children, className }) => (
     {children}
   </div>
 );
-
-// --- Dữ liệu giả lập ---
-const stats = [
-  {
-    title: "Total Users",
-    value: "4,521",
-    change: "+12%",
-    isPositive: true,
-    icon: Users,
-    color: "#2563eb",
-    bg: "#eff6ff",
-    borderColor: "border-l-4 border-l-blue-500",
-    accentColor: "text-blue-600",
-  },
-  {
-    title: "Active Issues",
-    value: "23",
-    change: "-5%",
-    isPositive: true,
-    icon: AlertTriangle,
-    color: "#d97706",
-    bg: "#fffbeb",
-    borderColor: "border-l-4 border-l-amber-500",
-    accentColor: "text-amber-600",
-  },
-  {
-    title: "Feedback Received",
-    value: "156",
-    change: "+8%",
-    isPositive: true,
-    icon: MessageSquare,
-    color: "#9333ea",
-    bg: "#faf5ff",
-    borderColor: "border-l-4 border-l-purple-500",
-    accentColor: "text-purple-600",
-  },
-  {
-    title: "System Health",
-    value: "98.5%",
-    change: "-0.5%",
-    isPositive: false,
-    icon: Activity,
-    color: "#16a34a",
-    bg: "#f0fdf4",
-    borderColor: "border-l-4 border-l-green-500",
-    accentColor: "text-green-600",
-  },
-];
 
 // --- Dữ liệu biểu đồ ---
 const chartData = [
@@ -104,6 +57,55 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function DashboardOverview() {
+  const { users } = useFetchUsers();
+  const totalUsers = users?.length || 0;
+  const stats = [
+    {
+      title: "Total Users",
+      value: totalUsers,
+      change: "+12%",
+      isPositive: true,
+      icon: Users,
+      color: "#2563eb",
+      bg: "#eff6ff",
+      borderColor: "border-l-4 border-l-blue-500",
+      accentColor: "text-blue-600",
+    },
+    {
+      title: "Active Issues",
+      value: "14",
+      change: "-5%",
+      isPositive: true,
+      icon: AlertTriangle,
+      color: "#d97706",
+      bg: "#fffbeb",
+      borderColor: "border-l-4 border-l-amber-500",
+      accentColor: "text-amber-600",
+    },
+    {
+      title: "Feedback Received",
+      value: "5",
+      change: "+8%",
+      isPositive: true,
+      icon: MessageSquare,
+      color: "#9333ea",
+      bg: "#faf5ff",
+      borderColor: "border-l-4 border-l-purple-500",
+      accentColor: "text-purple-600",
+    },
+    {
+      title: "System Health",
+      value: "98.5%",
+      change: "-0.5%",
+      isPositive: false,
+      icon: Activity,
+      color: "#16a34a",
+      bg: "#f0fdf4",
+      borderColor: "border-l-4 border-l-green-500",
+      accentColor: "text-green-600",
+    },
+  ];
+
   return (
     <div className="space-y-8 p-6">
       {/* Header */}
@@ -112,30 +114,48 @@ export default function DashboardOverview() {
           Dashboard Overview
         </h2>
         <p className="text-base text-gray-600">
-          Welcome back! Here's a comprehensive overview of your platform performance.
+          Welcome back! Here's a comprehensive overview of your platform
+          performance.
         </p>
       </div>
 
       {/* Stats Cards */}
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat, index) => (
-          <Card key={index} className={`p-6 ${stat.borderColor} overflow-hidden group hover:border-gray-300`}>
-            <div className="absolute -right-12 -top-12 w-32 h-32 rounded-full opacity-5 group-hover:opacity-10 transition-opacity" style={{ backgroundColor: stat.color }}></div>
+          <Card
+            key={index}
+            className={`p-6 ${stat.borderColor} overflow-hidden group hover:border-gray-300`}
+          >
             <div className="relative z-10 flex items-start justify-between">
               <div className="flex-1">
-                <span className="text-sm font-medium text-gray-600 block mb-3">{stat.title}</span>
+                <span className="text-sm font-medium text-gray-600 block mb-3">
+                  {stat.title}
+                </span>
                 <div className="space-y-2">
-                  <div className={`text-3xl font-bold ${stat.accentColor}`}>{stat.value}</div>
+                  <div className={`text-3xl font-bold ${stat.accentColor}`}>
+                    {stat.value}
+                  </div>
                   <div className="flex items-center text-xs font-medium">
-                    <span className={`flex items-center ${stat.isPositive ? "text-green-600" : "text-red-600"}`}>
-                      {stat.isPositive ? <ArrowUpRight size={14} className="mr-1" /> : <ArrowDownRight size={14} className="mr-1" />}
+                    <span
+                      className={`flex items-center ${
+                        stat.isPositive ? "text-green-600" : "text-red-600"
+                      }`}
+                    >
+                      {stat.isPositive ? (
+                        <ArrowUpRight size={14} className="mr-1" />
+                      ) : (
+                        <ArrowDownRight size={14} className="mr-1" />
+                      )}
                       {stat.change}
                     </span>
                     <span className="ml-2 text-gray-500">vs last month</span>
                   </div>
                 </div>
               </div>
-              <div className="rounded-lg p-3 flex-shrink-0 group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: stat.bg }}>
+              <div
+                className="rounded-lg p-3 flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
+                style={{ backgroundColor: stat.bg }}
+              >
                 <stat.icon size={28} style={{ color: stat.color }} />
               </div>
             </div>
@@ -150,9 +170,11 @@ export default function DashboardOverview() {
           <div className="p-6 border-b border-gray-100 bg-gray-50/50">
             <div className="flex items-center gap-3 mb-1">
               <div className="p-2 bg-blue-100 rounded-lg">
-                 <TrendingUp size={20} className="text-blue-600" />
+                <TrendingUp size={20} className="text-blue-600" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900">User Growth Statistics</h3>
+              <h3 className="text-lg font-bold text-gray-900">
+                User Growth Statistics
+              </h3>
             </div>
             <p className="text-sm text-gray-500 ml-11">
               Tracking monthly active users over the last 6 months period
@@ -171,34 +193,49 @@ export default function DashboardOverview() {
                     <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis 
-                  dataKey="month" 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fill: '#64748b', fontSize: 12, fontWeight: 500 }}
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  stroke="#f1f5f9"
+                />
+                <XAxis
+                  dataKey="month"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: "#64748b", fontSize: 12, fontWeight: 500 }}
                   dy={10}
                 />
-                <YAxis 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fill: '#64748b', fontSize: 12, fontWeight: 500 }}
-                  tickFormatter={(value) => value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value}
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: "#64748b", fontSize: 12, fontWeight: 500 }}
+                  tickFormatter={(value) =>
+                    value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value
+                  }
                   dx={-10}
                 />
-                <Tooltip 
-                  content={<CustomTooltip />} 
-                  cursor={{ stroke: '#3b82f6', strokeWidth: 1.5, strokeDasharray: '4 4' }}
-                  wrapperStyle={{ outline: 'none' }}
+                <Tooltip
+                  content={<CustomTooltip />}
+                  cursor={{
+                    stroke: "#3b82f6",
+                    strokeWidth: 1.5,
+                    strokeDasharray: "4 4",
+                  }}
+                  wrapperStyle={{ outline: "none" }}
                 />
-                <Area 
-                  type="monotone" 
-                  dataKey="users" 
-                  stroke="#2563eb" 
+                <Area
+                  type="monotone"
+                  dataKey="users"
+                  stroke="#2563eb"
                   strokeWidth={3}
-                  fillOpacity={1} 
-                  fill="url(#colorUsers)" 
-                  activeDot={{ r: 6, stroke: '#2563eb', strokeWidth: 4, fill: '#fff' }}
+                  fillOpacity={1}
+                  fill="url(#colorUsers)"
+                  activeDot={{
+                    r: 6,
+                    stroke: "#2563eb",
+                    strokeWidth: 4,
+                    fill: "#fff",
+                  }}
                 />
               </AreaChart>
             </ResponsiveContainer>

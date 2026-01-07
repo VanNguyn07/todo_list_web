@@ -40,7 +40,6 @@ try {
     $action = $_POST['action'] ?? null;
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $result = $controller->login();
         switch ($action) {
             case 'toggle_status':
                 $userId = $_POST['userId'] ?? "";
@@ -50,8 +49,6 @@ try {
                 echo json_encode(['success' => false, 'message' => 'Hành động không hợp lệ.']);
                 exit();
         }
-        // Trả kết quả về React
-        echo json_encode($result);
     }
 } catch (Exception $e) {
     echo json_encode([

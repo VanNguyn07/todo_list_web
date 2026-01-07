@@ -214,19 +214,19 @@
     gap: 10px;
     margin-left: 70px;
     color: #828282;
+    margin-bottom: 15px;
   }
 
   .fa-solid {
     margin-left: 5px;
   }
   /* Thêm class để căn lỗi gender */
-  .gender-error {
+  .gender-error, .role-error {
     position: static;
     color: red;
     font-weight: bold;
     font-size: 12px;
-    text-align: center;
-    margin-top: 5px;
+    margin-left: 80px;
   }
   .server-error {
     position: static;
@@ -255,6 +255,7 @@
     background-color: #00227b;
     color: #f3f4fc;
     font-size: 20px;
+    font-family: "Courier New", Courier, monospace;
     font-weight: bold;
     border-radius: 25px;
     border: 2px solid #828282;

@@ -1,11 +1,10 @@
 import React, { useState, useMemo, useRef, useEffect } from "react"
 import { CheckCircle2, Clock, AlertCircle, Hourglass, MessageSquare, User, Mail, History, Send, X, MoreVertical, Filter } from "lucide-react"
-
 // --- Dữ liệu giả lập ---
 const initialFeedback = [
   {
     id: "FB001",
-    user: { name: "John Doe", email: "john@example.com" },
+    user: { name: "Van Nguyen", email: "vannguyen@gmail.com" },
     subject: "Unable to login",
     message: "I'm having trouble logging into my account. The password reset isn't working.",
     status: "pending",
@@ -15,7 +14,7 @@ const initialFeedback = [
   },
   {
     id: "FB002",
-    user: { name: "Jane Smith", email: "jane@example.com" },
+    user: { name: "Lan Anh", email: "lananh@gmail.com" },
     subject: "Payment failed",
     message: "My payment was declined but the amount was deducted from my account.",
     status: "in-progress",
@@ -33,7 +32,7 @@ const initialFeedback = [
   },
   {
     id: "FB003",
-    user: { name: "Mike Johnson", email: "mike@example.com" },
+    user: { name: "Thanh Trung", email: "thanhtrung@gmail.com" },
     subject: "Feature request",
     message: "It would be great to have a dark mode option in the app.",
     status: "resolved",
@@ -58,7 +57,7 @@ const initialFeedback = [
   },
   {
     id: "FB004",
-    user: { name: "Sarah Williams", email: "sarah@example.com" },
+    user: { name: "Shiron", email: "shiron@gmail.com" },
     subject: "Account verification",
     message: "I submitted my documents but haven't received verification confirmation.",
     status: "waiting",
@@ -76,7 +75,7 @@ const initialFeedback = [
   },
   {
     id: "FB005",
-    user: { name: "Tom Brown", email: "tom@example.com" },
+    user: { name: "Sofia", email: "sofia@gmail.com" },
     subject: "Bug report",
     message: "The search function is not returning correct results.",
     status: "pending",
@@ -295,8 +294,8 @@ export default function FeedbackSupport() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900">Feedback & Support</h2>
-          <p className="text-sm text-gray-500">Manage user feedback and support tickets</p>
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900">Feedback Management</h2>
+          <p className="text-1xl text-gray-500">Manage user feedback</p>
         </div>
 
         {/* Status Filter */}

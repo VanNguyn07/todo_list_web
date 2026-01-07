@@ -275,8 +275,8 @@ export default function SystemErrors() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">System Errors</h2>
-          <p className="text-sm text-gray-500">Monitor and resolve system errors and exceptions</p>
+          <h2 className="text-3xl font-bold text-gray-900">System Errors</h2>
+          <p className="text-1xl text-gray-500">Monitor and resolve system errors and exceptions</p>
         </div>
 
         <SimpleDropdown 
@@ -304,28 +304,32 @@ export default function SystemErrors() {
       {/* Stats */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
         <Card className="p-6 border shadow-sm">
-            <p className="text-sm text-gray-500">Open Errors</p>
+            <p className="text-1xl text-gray-1000">Open Errors</p>
             <h3 className="text-2xl font-bold text-red-600">
                 {errors.filter((e) => e.status === "open").length}
             </h3>
+            <p className="text-sm text-gray-500">Unresolved errors still exist in the system.</p>
         </Card>
         <Card className="p-6 border shadow-sm">
-            <p className="text-sm text-gray-500">Investigating</p>
+            <p className="text-1xl text-gray-1000">Investigating</p>
             <h3 className="text-2xl font-bold text-amber-600">
                 {errors.filter((e) => e.status === "investigating").length}
             </h3>
+             <p className="text-sm text-gray-500">The cause is under investigation; there is no fix yet.</p>
         </Card>
         <Card className="p-6 border shadow-sm">
-            <p className="text-sm text-gray-500">Fixed</p>
+            <p className="text-1xl text-gray-1000">Fixed</p>
             <h3 className="text-2xl font-bold text-green-600">
                 {errors.filter((e) => e.status === "fixed").length}
             </h3>
+             <p className="text-sm text-gray-500">It's fixed now, it won't happen again.</p>
         </Card>
         <Card className="p-6 border shadow-sm">
-            <p className="text-sm text-gray-500">Critical</p>
-            <h3 className="text-2xl font-bold text-red-700">
+            <p className="text-1xl text-gray-1000">Won't Fix</p>
+            <h3 className="text-2xl font-bold text-gray-600">
                 {errors.filter((e) => e.severity === "critical" && e.status !== "fixed").length}
             </h3>
+             <p className="text-sm text-gray-500">Knowing the mistake but not correcting it (accepting it).</p>
         </Card>
       </div>
 

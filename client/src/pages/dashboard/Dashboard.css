@@ -1,20 +1,20 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 #dashboard-page {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    background-color: #e9e6e5;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #e9e6e5;
 }
 
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0, 0, 0, 0.45);
   z-index: 1200;
 }
 
@@ -35,4 +35,94 @@
 /* ensure modal content inner elements are interactive */
 .contact-overlay * {
   pointer-events: auto;
+}
+
+.hamburger-menu-btn,
+.mobile-overlay-backdrop {
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+
+    /* 1. HIỆN NÚT HAMBURGER */
+    .hamburger-menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 8px;
+        margin-right: 10px;
+        border-radius: 8px;
+    }
+    .hamburger-menu-btn:active {
+        background-color: #ddd; /* Hiệu ứng bấm */
+    }
+
+    /* 2. BIẾN SIDEBAR THÀNH NGĂN KÉO (DRAWER) */
+    .sidebar-nav {
+        position: fixed;      /* Cố định để trượt trên nội dung */
+        top: 0;
+        left: -100%;          /* GIẤU HẲN sang trái màn hình */
+        width: 260px;         /* Độ rộng của menu khi mở ra */
+        height: 100vh;
+        z-index: 2000;        /* Nằm trên cùng */
+        transition: left 0.3s ease-in-out; /* Hiệu ứng trượt mượt mà */
+        box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+        /* Giữ nguyên các style flex/column cũ của bạn để các nút xếp dọc */
+    }
+
+    /* Khi có class .mobile-active (do React thêm vào) -> Trượt ra */
+    .sidebar-nav.mobile-active {
+        left: 0; 
+    }
+
+    /* 3. LỚP MÀN MỜ (BACKDROP) */
+    .mobile-overlay-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0; /* Full màn hình */
+        background-color: rgba(0, 0, 0, 0.5); /* Đen mờ */
+        z-index: 1500; /* Nằm dưới Sidebar nhưng trên nội dung web */
+        animation: fadeIn 0.3s;
+    }
+
+    /* 4. CHỈNH LẠI BỐ CỤC NỘI DUNG CHÍNH (QUAN TRỌNG) */
+    /* Phải reset margin và grid của desktop, nếu không sẽ bị vỡ */
+    .parent {
+        margin-left: 0 !important; /* Bỏ khoảng trống bên trái */
+        padding: 15px;
+        display: flex;
+        flex-direction: column; /* Xếp dọc tất cả widget */
+        gap: 20px;
+        width: 100%;
+    }
+
+    /* Reset tất cả widget để full chiều ngang điện thoại */
+    .parent > div {
+        grid-column: unset !important;
+        grid-row: unset !important;
+        width: 100% !important;
+        margin-bottom: 10px;
+    }
+
+    /* Ẩn các nút không cần thiết trên header mobile cho gọn */
+    .search-everything, 
+    .btn-contract, 
+    .btn-aboutme {
+        display: none !important;
+    }
+    
+    /* Chỉnh lại header cho cân đối */
+    .container-navbar-header {
+        justify-content: flex-start;
+    }
+    .container-btn-header {
+        margin-left: auto; /* Đẩy các nút user sang phải */
+    }
+}
+
+/* Hiệu ứng hiện màn mờ */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }

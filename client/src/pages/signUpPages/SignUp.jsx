@@ -16,6 +16,7 @@ const SignUp = () => {
     inputPassword: "",
     confirmPassword: "",
     gender: "",
+    role: ""
   });
 
   // State lưu lỗi validation
@@ -94,6 +95,12 @@ const SignUp = () => {
       valid = false;
     }
 
+    if (!formData.role) {
+      newErrors.role = "Please select a role.";
+      triggerShake("role"); // Sẽ rung thẻ div.radioBox
+      valid = false;
+    }
+
     setErrors(newErrors);
 
     // Nếu tất cả đều OK -> Gửi API
@@ -104,6 +111,7 @@ const SignUp = () => {
         dataToSend.append("inputEmail", formData.inputEmail);
         dataToSend.append("inputPassword", formData.inputPassword);
         dataToSend.append("gender", formData.gender);
+        dataToSend.append("role", formData.role);
 
         // Gửi request đến server Laragon
         const response = await fetch("/api/signUpApi.php", {
@@ -280,9 +288,43 @@ const SignUp = () => {
                 <div className="input-error gender-error">{errors.gender}</div>
               )}
 
+              {/* Role Radio */}
+              <div className={`radioBox ${shaking.role ? "shakeError" : ""}`}>
+                <i class="fa-solid fa-crown"></i>
+                <label htmlFor="" id="role">
+                  Role
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="role"
+                    value="user"
+                    checked={formData.role === "user"}
+                    onChange={handleChange}
+                  />{" "}
+                  User
+                  <i className="fa-solid fa-user"></i>
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="role"
+                    value="admin"
+                    checked={formData.role === "admin"}
+                    onChange={handleChange}
+                  />{" "}
+                  Admin
+                  <i className="fa-solid fa-user-shield"></i>
+                </label>
+              </div>
+              {/* Nơi hiển thị lỗi Gender */}
+              {errors.role && (
+                <div className="input-error role-error">{errors.role}</div>
+              )}
+
               <div className="button-create">
                 <button type="submit" id="buttonCreate">
-                  Create Account
+                  SIGN UP
                   <i className="fa-solid fa-user-plus" id="userPlus"></i>
                 </button>
               </div>

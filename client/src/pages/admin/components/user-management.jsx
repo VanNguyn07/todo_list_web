@@ -1,61 +1,8 @@
 import React, { useState } from "react"
 // Cần cài đặt: npm install lucide-react
 import { Mail, Shield, MoreHorizontal, UserX, UserCheck, Camera, CheckCircle2, Activity, Search, Filter, X, RotateCcw } from "lucide-react"
-
-// --- Dữ liệu giả lập ---
-const initialUsers = [
-  {
-    id: "U001",
-    name: "John Doe",
-    email: "john@example.com",
-    avatar: "/placeholder.svg",
-    role: "user",
-    status: "active",
-    joinedAt: new Date("2024-06-15"),
-    lastActive: new Date("2025-01-06T14:30:00"),
-    activities: [],
-    adminActions: [],
-  },
-  {
-    id: "U002",
-    name: "Jane Smith",
-    email: "jane@example.com",
-    avatar: "/placeholder.svg",
-    role: "moderator",
-    status: "active",
-    joinedAt: new Date("2024-03-20"),
-    lastActive: new Date("2025-01-06T12:15:00"),
-    activities: [],
-    adminActions: [],
-  },
-  {
-    id: "U003",
-    name: "Robert Fox",
-    email: "robert@example.com",
-    avatar: "/placeholder.svg",
-    role: "admin",
-    status: "active",
-    joinedAt: new Date("2023-11-10"),
-    lastActive: new Date("2025-01-05T09:00:00"),
-    activities: [],
-    adminActions: [],
-  },
-  {
-    id: "U004",
-    name: "Emily Davis",
-    email: "emily@example.com",
-    avatar: "/placeholder.svg",
-    role: "user",
-    status: "deactivated",
-    joinedAt: new Date("2024-01-05"),
-    lastActive: new Date("2024-12-20T10:00:00"),
-    activities: [],
-    adminActions: [],
-  },
-]
-
-// --- Helper Components ---
-
+import { useFetchUsers } from "../../../hooks/useFetchUsers"
+import { useUsersManager } from "../../../hooks/useUsersManager"
 const Button = ({ children, className, variant = "default", size = "default", ...props }) => {
   const baseStyles = "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
   const variants = {
@@ -200,15 +147,16 @@ const ActivityModal = ({ isOpen, user, onClose }) => {
 // --- Main Component ---
 
 export default function UserManagement() {
-  const [users, setUsers] = useState(initialUsers)
+  const {users, setUsers} = useFetchUsers();
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [selectedUserForActivity, setSelectedUserForActivity] = useState(null)
   const [isActivityModalOpen, setIsActivityModalOpen] = useState(false)
 
+  const {handleToggleStatus} = useUsersManager(setUsers)
   // Simple filtering logic
   const filteredUsers = users.filter((user) => {
-    const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase()) || user.email.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesSearch = user.username.toLowerCase().includes(searchQuery.toLowerCase()) || user.email.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesStatus = statusFilter === "all" || user.status === statusFilter
     return matchesSearch && matchesStatus
   })
@@ -242,15 +190,6 @@ export default function UserManagement() {
   const handleResetFilters = () => {
     setSearchQuery("")
     setStatusFilter("all")
-  }
-
-  const handleToggleStatus = (userId) => {
-    setUsers(prev => prev.map(u => {
-        if (u.id === userId) {
-            return { ...u, status: u.status === 'active' ? 'deactivated' : 'active' }
-        }
-        return u
-    }))
   }
 
   return (
@@ -326,9 +265,9 @@ export default function UserManagement() {
                   <tr key={user.id} className="border-b transition-colors hover:bg-gray-50/50">
                     <td className="p-4 align-middle">
                       <div className="flex items-center gap-3">
-                        <Avatar src={user.avatar} fallback={user.name.charAt(0)} alt={user.name} />
+                        <Avatar src={user.avatar} fallback={user.username.charAt(0)} alt={user.username} />
                         <div>
-                          <p className="font-medium text-gray-900">{user.name}</p>
+                          <p className="font-medium text-gray-900">{user.username}</p>
                           <div className="flex items-center gap-1 text-sm text-gray-600">
                             <Mail className="size-3" />
                             {user.email}
@@ -349,8 +288,8 @@ export default function UserManagement() {
                       </Badge>
                     </td>
                     <td className="p-4 align-middle text-gray-600 text-sm">
-                      <div>{user.lastActive.toLocaleDateString()}</div>
-                      <div className="text-xs text-gray-500">{user.lastActive.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                      <div>{user.last_login ? new Date(user.last_login).toLocaleDateString() : "N/A"}</div>
+                      <div className="text-xs text-gray-500">{user.last_login ? new Date(user.last_login).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ""}</div>
                     </td>
                     <td className="p-4 align-middle">
                       <div className="flex justify-end gap-2">
@@ -367,7 +306,7 @@ export default function UserManagement() {
                             size="sm" 
                             variant="ghost"
                             title={user.status === 'active' ? "Deactivate User" : "Activate User"}
-                            onClick={() => handleToggleStatus(user.id)}
+                            onClick={() => handleToggleStatus(user.id, user.status)}
                             className={user.status === 'active' ? "text-red-600 hover:text-red-700 hover:bg-red-50" : "text-green-600 hover:text-green-700 hover:bg-green-50"}
                         >
                           {user.status === 'active' ? <UserX className="size-4" /> : <UserCheck className="size-4" />}

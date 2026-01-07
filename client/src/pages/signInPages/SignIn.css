@@ -230,7 +230,6 @@
     width: 16px;
     height: 16px;
     cursor: pointer;
-
   }
 
   input[type="radio"] {
@@ -241,26 +240,40 @@
     color: #6f74dd;
   }
 
-  .gende-groupAndError {
+  .user-admin {
+    margin-right: 10px;
+  }
+  
+  .role-groupAndError {
+    margin-bottom: 10px;
+  }
+  .gende-groupAndError,
+  .role-groupAndError {
     display: flex;
-    flex-direction: column; /* Xếp dọc để lỗi nằm dưới */
+    flex-direction: column;
     align-items: center;
-    margin-bottom: 15px;
     width: 100%;
   }
-
-  #gender-group {
+  #errorRole {
+    margin-right: 125px;
+    color: red;
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: 5px;
+  }
+  #gender-group,
+  #role-group {
     font-size: 16px;
     display: flex;
     align-items: center;
     gap: 10px;
     color: #828282;
     margin-top: 15px;
-    /* margin-right: 5px; */
   }
 
   /* Lỗi của gender */
-  #gender-group.shakeError {
+  #gender-group.shakeError,
+  #role-group.shakeError {
     animation: shake 0.3s ease;
     color: #ff4d4d;
   }
@@ -292,10 +305,10 @@
     color: #00227b;
   }
 
-    #forgot-password a:hover {
-      color: blue;
-      text-decoration: underline;
-    }
+  #forgot-password a:hover {
+    color: blue;
+    text-decoration: underline;
+  }
 
   .button-stack {
     display: flex;

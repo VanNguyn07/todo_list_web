@@ -3,13 +3,14 @@ const form = document.getElementById("form");
 const inputUserNameElement = document.getElementById("inputUserName");
 const inputPasswordElement = document.getElementById("inputPassword");
 const gender = document.getElementById('gender-group');
+const role = document.getElementById('role-group');
 
 // Lấy ra elements error của trang
 const userNameErrorElement = document.getElementById("userNameError");
 const errorPasswordElement = document.getElementById("passwordError");
 const errorPasswordIncorrectElement = document.getElementById("passwordErrorIncorrect");
 const errorGender = document.getElementById("errorGender");
-
+const errorRole = document.getElementById("errorRole");
 // Lấy ra button GG và GitHub
 const buttonGGElement = document.getElementById("button-Google");
 const buttonGitHubElement = document.getElementById("button-GitHub");
@@ -65,6 +66,15 @@ form.addEventListener("submit", function(event){
         errorGender.style.display = "none";
     }
 
+    const roleSelected = document.querySelector('input[name="role"]:checked');
+    if(!roleSelected.value){
+        errorRole.style.display = "block";
+        shakeInput(role);
+        valid = false;
+    }else {
+        errorRole.style.display = "none";
+    }
+
     // nếu không có lỗi thì thực hiện đăng nhập
     if(valid){
         errorPasswordIncorrectElement.style.display = "none";
@@ -107,7 +117,12 @@ form.addEventListener("submit", function(event){
                     errorGender.style.display = "block";
                     shakeInput(gender);
                     
-                } else {
+                } else if(data.field === "role"){
+                    errorRole.textContent = data.message;
+                    errorRole.style.display = "block";
+                    shakeInput(role);
+                }
+                else {
                     // Nếu PHP không trả về 'field' cụ thể, rung 2 cái chính
                     shakeInput(inputUserNameElement);
                     shakeInput(inputPasswordElement);

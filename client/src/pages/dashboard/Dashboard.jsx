@@ -33,7 +33,7 @@ import { HabitTrackerPages } from "../habitTracker/HabitTrackerPages";
 import { CalendarPages } from "../calendarPages/CalendarPages";
 import "./Dashboard.css";
 import AboutUs from "../aboutUs/aboutUs";
-import { X } from "lucide-react";
+import { X, Menu } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ProfileModal } from "../profile/ProfileModal";
 import { UpdateAndCreateTask } from "../modalPopup/updateAndCreateTaskModal";
@@ -42,6 +42,12 @@ import { parseISO } from "date-fns";
 function Dashboard() {
   const currentStreakCount = 10;
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const handleMobileTransition = (page) => {
+    handleTransitionPage(page);
+    setIsSidebarOpen(false);
+  }
   const { activeView, activeTaskId, activeTitleTask, handleTransitionPage } =
     useButtonActive("home");
 
@@ -112,7 +118,7 @@ function Dashboard() {
     <>
       <div id="dashboard-page">
         <Header>
-          <nav className="sidebar-nav">
+          <nav className={`sidebar-nav ${isSidebarOpen ? "mobile-active" : ""}`}>
             <div className="logo-header-page">
               <img src={Logo} alt="Logo" />
               <h1>Todo List</h1>
@@ -123,7 +129,7 @@ function Dashboard() {
                 activeView === "home" ? "active" : ""
               }`}
               id="homeButton"
-              onClick={() => handleTransitionPage("home")}
+              onClick={() => handleMobileTransition("home")}
             >
               <i className="fa-solid fa-house"></i>
               <span>Home</span>
@@ -134,7 +140,7 @@ function Dashboard() {
                 activeView === "task" ? "active" : ""
               }`}
               id="taskButton"
-              onClick={() => handleTransitionPage("task")}
+              onClick={() => handleMobileTransition("task")}
             >
               <i className="fa-solid fa-list-check"></i>
               <span>Tasks</span>
@@ -145,7 +151,7 @@ function Dashboard() {
                 activeView === "pomodoro" ? "active" : ""
               }`}
               id="pomodoroButton"
-              onClick={() => handleTransitionPage("pomodoro")}
+              onClick={() => handleMobileTransition("pomodoro")}
             >
               <i className="fa-solid fa-hourglass-half"></i>
               <span>Pomodoro</span>
@@ -156,7 +162,7 @@ function Dashboard() {
                 activeView === "analytics" ? "active" : ""
               }`}
               id="analyticsButton"
-              onClick={() => handleTransitionPage("analytics")}
+              onClick={() => handleMobileTransition("analytics")}
             >
               <i className="fa-solid fa-chart-pie"></i>
               <span>Analytics</span>
@@ -167,7 +173,7 @@ function Dashboard() {
                 activeView === "quick-notes" ? "active" : ""
               }`}
               id="quickNotesButton"
-              onClick={() => handleTransitionPage("quick-notes")}
+              onClick={() => handleMobileTransition("quick-notes")}
             >
               <i className="fa-solid fa-note-sticky"></i>
               <span>Quick Notes</span>
@@ -178,7 +184,7 @@ function Dashboard() {
                 activeView === "habit-tracker" ? "active" : ""
               }`}
               id="habitTrackerButton"
-              onClick={() => handleTransitionPage("habit-tracker")}
+              onClick={() => handleMobileTransition("habit-tracker")}
             >
               <i className="fa-solid fa-calendar-check"></i>
               <span>Habit Tracker</span>
@@ -189,7 +195,7 @@ function Dashboard() {
                 activeView === "calendar" ? "active" : ""
               }`}
               id="calendarButton"
-              onClick={() => handleTransitionPage("calendar")}
+              onClick={() => handleMobileTransition("calendar")}
             >
               <i className="fa-solid fa-calendar-days"></i>
               <span>Calendar</span>
@@ -200,9 +206,13 @@ function Dashboard() {
               <span>Log out</span>
             </Link>
           </nav>
+          {isSidebarOpen && <div className="mobile-overlay-backdrop" onClick={() => setIsSidebarOpen(false)}></div>}
           <div className="header-page">
             <div className="content-header">
               <div className="container-navbar-header">
+                <div className="hamburger-menu-btn" onClick={() => setIsSidebarOpen(true)}>
+                  <Menu size={24} />
+                </div>
                 <div className="container-btn-header">
                   <div className="search-and-button-evt">
                     <div className="search-everything">

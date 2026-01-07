@@ -26,10 +26,11 @@ class UserControllerSignUp
         $username = trim($_POST['inputUserName'] ?? '');
         $password = trim($_POST['inputPassword'] ?? '');
         $gender   = trim($_POST['gender'] ?? '');
+        $role   = trim($_POST['role'] ?? '');
         $email    = trim($_POST['inputEmail'] ?? '');
 
         // 1. Validation: Kiểm tra rỗng
-        if (empty($username) || empty($password) || empty($email)) {
+        if (empty($username) || empty($password) || empty($email) || empty($role)) {
             $response['message'] = 'Please enter full field!';
             return $response;
         }
@@ -54,7 +55,7 @@ class UserControllerSignUp
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
             // Gọi model insert
-            $isSuccess = $this->userModel->insertDataIntoDatabase($username, $hashed_password, $gender, $email);
+            $isSuccess = $this->userModel->insertDataIntoDatabase($username, $hashed_password, $gender, $role, $email);
 
             if ($isSuccess) {
                 $response['success'] = true;

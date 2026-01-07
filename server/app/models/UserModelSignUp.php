@@ -37,14 +37,14 @@ class UserModelSignUp
     }
 
 
-    function insertDataIntoDatabase($username, $hashed_password, $gender, $email)
+    function insertDataIntoDatabase($username, $hashed_password, $gender, $role, $email)
     {
-        $sql = "INSERT INTO " . $this->table_name . " (username, password, gender, email) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO " . $this->table_name . " (username, password, gender, role, email) VALUES (?, ?, ?, ?, ?)";
 
         try {
             $prepareStmt = $this->pdo->prepare($sql);
 
-            $result = $prepareStmt->execute([$username, $hashed_password, $gender, $email]);
+            $result = $prepareStmt->execute([$username, $hashed_password, $gender, $role, $email]);
 
             if($result){
                 return ['success' => true];

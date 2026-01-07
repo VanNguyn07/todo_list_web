@@ -218,17 +218,17 @@ export default function Notifications({ onNotificationSent }) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Notifications</h2>
-          <p className="text-sm text-gray-500">Create and send system notifications to users</p>
+          <h2 className="text-3xl font-bold text-gray-900">Notifications</h2>
+          <p className="text-1xl text-gray-500">Create and send system notifications to users</p>
         </div>
         
-        <Button variant="outline" className="gap-2" onClick={() => setHistoryModalOpen(true)}>
+        {/* <Button variant="outline" className="gap-2" onClick={() => setHistoryModalOpen(true)}>
           <History className="size-4" />
           View History
           <Badge variant="secondary" className="ml-1 bg-blue-100 text-blue-700">
             {history.length}
           </Badge>
-        </Button>
+        </Button> */}
       </div>
 
       {/* History Modal */}

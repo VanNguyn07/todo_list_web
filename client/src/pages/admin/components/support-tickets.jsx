@@ -7,8 +7,8 @@ const initialTickets = [
   {
     id: "TKT001",
     user: {
-      name: "John Doe",
-      email: "john@example.com",
+      name: "Van Nguyen",
+      email: "vannguyen@gmail.com",
       avatar: "/placeholder.svg?height=40&width=40",
     },
     subject: "Cannot access my account",
@@ -30,8 +30,8 @@ const initialTickets = [
   {
     id: "TKT002",
     user: {
-      name: "Jane Smith",
-      email: "jane@example.com",
+      name: "Lan Anh",
+      email: "lananh@gmail.com",
       avatar: "/placeholder.svg?height=40&width=40",
     },
     subject: "Billing discrepancy",
@@ -59,8 +59,8 @@ const initialTickets = [
   {
     id: "TKT003",
     user: {
-      name: "Mike Johnson",
-      email: "mike@example.com",
+      name: "Thanh Trung",
+      email: "thanhtrung.com",
       avatar: "/placeholder.svg?height=40&width=40",
     },
     subject: "Feature suggestion",
@@ -88,8 +88,8 @@ const initialTickets = [
   {
     id: "TKT004",
     user: {
-      name: "Sarah Wilson",
-      email: "sarah@example.com",
+      name: "Shiron",
+      email: "shiron@gmail.com",
       avatar: "/placeholder.svg?height=40&width=40",
     },
     subject: "Data export issue",
@@ -324,8 +324,8 @@ export default function SupportTickets() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Support Tickets</h2>
-          <p className="text-sm text-gray-500">Manage and respond to user support requests</p>
+          <h2 className="text-3xl font-bold text-gray-900">Support Tickets</h2>
+          <p className="text-1xl text-gray-500">Manage and respond to user support requests</p>
         </div>
 
         <SimpleDropdown 
@@ -353,28 +353,32 @@ export default function SupportTickets() {
       {/* Stats */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
         <Card className="p-6 border shadow-sm">
-            <p className="text-sm text-gray-500">Open Tickets</p>
+            <p className="text-1xl text-gray-1000">Open Tickets</p>
             <h3 className="text-2xl font-bold text-amber-600">
               {tickets.filter((t) => t.status === "open").length}
             </h3>
+            <p className="text-sm text-gray-500">Newly created, no one has processed it yet.</p>
         </Card>
         <Card className="p-6 border shadow-sm">
-            <p className="text-sm text-gray-500">In Progress</p>
+            <p className="text-1xl text-gray-1000">In Progress</p>
             <h3 className="text-2xl font-bold text-blue-600">
               {tickets.filter((t) => t.status === "in-progress").length}
             </h3>
+            <p className="text-sm text-gray-500">Processing</p>
         </Card>
         <Card className="p-6 border shadow-sm">
-            <p className="text-sm text-gray-500">Resolved</p>
+            <p className="text-1xl text-gray-1000">Resolved</p>
             <h3 className="text-2xl font-bold text-green-600">
               {tickets.filter((t) => t.status === "resolved").length}
             </h3>
+            <p className="text-sm text-gray-500">Resolved</p>
         </Card>
         <Card className="p-6 border shadow-sm">
-            <p className="text-sm text-gray-500">Urgent</p>
-            <h3 className="text-2xl font-bold text-red-600">
+            <p className="text-1xl text-gray-1000">Archived</p>
+            <h3 className="text-2xl font-bold text-gray-600">
               {tickets.filter((t) => t.priority === "urgent").length}
             </h3>
+            <p className="text-sm text-gray-500">Closed, archived</p>
         </Card>
       </div>
 

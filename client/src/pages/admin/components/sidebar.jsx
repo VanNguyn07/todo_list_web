@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import {
   LayoutDashboard,
   Users,
@@ -7,141 +7,135 @@ import {
   Bell,
   HeadphonesIcon,
   Shield,
-  ChevronDown,
   LogOut,
-  Menu,
-  X,
-} from "lucide-react"
+  Menu, // Icon hamburger cho mobile
+  X,    // Icon đóng menu
+} from "lucide-react";
 
 const navItems = [
   { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard size={18} /> },
   { id: "users", label: "Users", icon: <Users size={18} /> },
-  { id: "feedback", label: "Feedback", icon: <MessageSquare size={18} />, badge: 3 },
-  { id: "support", label: "Support", icon: <HeadphonesIcon size={18} />, badge: 5 },
-  { id: "errors", label: "Errors", icon: <AlertTriangle size={18} />, badge: 2 },
+  { id: "feedback", label: "Feedback", icon: <MessageSquare size={18} />},
+  { id: "support", label: "Support", icon: <HeadphonesIcon size={18} />},
+  { id: "errors", label: "Errors", icon: <AlertTriangle size={18} />},
   { id: "notifications", label: "Notifications", icon: <Bell size={18} /> },
-]
+];
 
 export default function Sidebar({ activeSection, onSectionChange, notificationCount = 0 }) {
-  const [isMobileOpen, setIsMobileOpen] = React.useState(false)
-
+  // State quản lý đóng mở menu trên màn hình điện thoại
+  const [isMobileOpen, setIsMobileOpen] = React.useState(false);
+  const handleLogout = () => {
+    console.log("Đã bấm logout!");
+    localStorage.removeItem("my_username");
+    window.location.href = "/signin";
+  }
   return (
-    <>
-      {/* Top Navigation Bar */}
-      <nav className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 flex-center  px-4 z-50 shadow-sm">
-        {/* Logo Section */}
-        <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity mr-8 flex-shrink-0">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-md">
-            <Shield size={18} />
-          </div>
-          <div className="hidden md:flex flex-col mr-20">
-            <h1 className="text-sm font-bold text-gray-900 leading-tight">Admin Panel</h1>
-            <span className="text-[11px] text-gray-500 font-semibold tracking-wide">MANAGEMENT</span>
-          </div>
-        </div>
-
-        {/* Desktop Navigation Items */}
-        <div className="hidden md:flex flex-1 items-center gap-10">
-          {navItems.map((item) => {
-            const isActive = activeSection === item.id
-            // const showBadge = item.id === "notifications" ? notificationCount > 0 : item.badge
-            // const badgeCount = item.id === "notifications" ? notificationCount : item.badge
-
-            return (
-              <button
-                key={item.id}
-                onClick={() => onSectionChange(item.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 relative ${
-                  isActive
-                    ? "text-blue-700 bg-blue-50 border-b-2 border-b-blue-600"
-                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                }`}
-              >
-                <span className={`transition-colors ${isActive ? "text-blue-600" : "text-gray-500 group-hover:text-gray-700"}`}>
-                  {item.icon}
-                </span>
-                <span>{item.label}</span>
-                {/* {showBadge && (
-                  <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white shadow-sm ml-1">
-                    {badgeCount}
-                  </span>
-                )} */}
-              </button>
-            )
-          })}
-        </div>
-
-        {/* User Profile and Mobile Menu */}
-        <div className="ml-auto flex items-center gap-4">
-          {/* User Profile */}
-          <div className="hidden sm:flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer group">
-            <div className="h-8 w-8 overflow-hidden rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-sm">
-              A
+    // Thanh điều hướng chính
+    <nav className="w-full border-b border-gray-200 bg-white">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          
+          {/* 1. LOGO (Bên trái) */}
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white shadow-md">
+              <Shield size={18} />
             </div>
-            <div className="hidden lg:flex flex-col items-start">
-              <span className="text-xs font-bold text-gray-900">Admin User</span>
-              <span className="text-xs text-gray-600 font-medium">Super Admin</span>
+            <div className="hidden md:flex flex-col">
+              <h1 className="text-sm font-bold leading-tight text-gray-900">Admin Panel</h1>
+              <span className="text-[10px] font-semibold tracking-wide text-gray-500">MANAGEMENT</span>
             </div>
-            <ChevronDown size={16} className="text-gray-500 group-hover:text-gray-700 transition-colors" />
           </div>
 
-          {/* Mobile Menu Button */}
-          <button 
-            onClick={() => setIsMobileOpen(!isMobileOpen)}
-            className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </div>
-      </nav>
-
-      {/* Mobile Dropdown Menu */}
-      {isMobileOpen && (
-        <div className="fixed top-16 left-0 right-0 bg-white border-b border-gray-200 md:hidden z-40 max-h-[calc(100vh-64px)] overflow-y-auto">
-          <nav className="flex flex-col divide-y divide-gray-200">
+          {/* 2. MENU ITEMS (Ở giữa - Chỉ hiện trên màn hình lớn > md) */}
+          <div className="hidden md:flex items-center space-x-2">
             {navItems.map((item) => {
-              const isActive = activeSection === item.id
-              const showBadge = item.id === "notifications" ? notificationCount > 0 : item.badge
-              const badgeCount = item.id === "notifications" ? notificationCount : item.badge
+              const isActive = activeSection === item.id;
+              const badgeCount = item.id === "notifications" ? notificationCount : item.badge;
 
               return (
                 <button
                   key={item.id}
-                  onClick={() => {
-                    onSectionChange(item.id)
-                    setIsMobileOpen(false)
-                  }}
-                  className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium transition-all duration-200 ${
+                  onClick={() => onSectionChange(item.id)}
+                  className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                     isActive
-                      ? "bg-blue-50 text-blue-700 border-l-4 border-l-blue-600"
-                      : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                      ? "bg-blue-50 text-blue-700"
+                      : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <span className={`transition-colors ${isActive ? "text-blue-600" : "text-gray-500 group-hover:text-gray-700"}`}>
-                      {item.icon}
-                    </span>
-                    <span>{item.label}</span>
-                  </div>
-                  {showBadge && (
-                    <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-xs font-bold text-white shadow-sm">
+                  <span className={isActive ? "text-blue-600" : "text-gray-400"}>
+                    {item.icon}
+                  </span>
+                  <span>{item.label}</span>
+                  
+                  {/* Badge số lượng */}
+                  {badgeCount > 0 && (
+                    <span className={`ml-1 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[10px] font-bold ${
+                        isActive ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-600"
+                    }`}>
                       {badgeCount}
                     </span>
                   )}
                 </button>
-              )
+              );
             })}
-          </nav>
+          </div>
 
-          {/* Mobile Logout Button */}
-          <div className="p-4 border-t border-gray-200">
-            <button className="w-full flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors border border-transparent hover:border-red-200">
-              <LogOut size={16} />
-              Logout
+          {/* 3. USER INFO & ACTIONS (Bên phải) */}
+          <div className="flex items-center gap-4">
+            {/* User Profile */}
+            <div className="hidden sm:flex items-center gap-3 border-l border-gray-200 pl-4">
+               <div className="text-right hidden lg:block">
+                  <p className="text-sm font-bold text-gray-900">Admin</p>
+                  <p className="text-xs text-gray-500">{localStorage.getItem("my_username")}</p>
+               </div>
+               <div className="h-8 w-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm shadow-sm">
+                  AD
+               </div>
+            </div>
+
+            {/* Logout Button (Desktop) */}
+            <button className="hidden sm:flex p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Sign out"
+            onClick={handleLogout}>
+               <LogOut size={20} />
+            </button>
+
+            {/* Nút mở menu Mobile (Chỉ hiện khi màn hình nhỏ) */}
+            <button 
+              className="md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+              onClick={() => setIsMobileOpen(!isMobileOpen)}
+            >
+              {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
+      </div>
+
+      {isMobileOpen && (
+        <div className="md:hidden border-t border-gray-200 bg-white px-2 py-3 space-y-1 shadow-lg absolute w-full left-0 z-50">
+           {navItems.map((item) => {
+              const isActive = activeSection === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                      onSectionChange(item.id);
+                      setIsMobileOpen(false);
+                  }}
+                  className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium ${
+                    isActive
+                      ? "bg-blue-50 text-blue-700"
+                      : "text-gray-600 hover:bg-gray-100"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                      {item.icon}
+                      <span>{item.label}</span>
+                  </div>
+                </button>
+              );
+           })}
+        </div>
       )}
-    </>
-  )
+    </nav>
+  );
 }

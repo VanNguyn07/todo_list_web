@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  important: '#admin-app',
   content: [
     "./index.html",
     "./client/src/**/*.{js,ts,jsx,tsx}",
@@ -17,6 +18,9 @@ export default {
         playfair: ['Playfair Display', 'serif'],
       },
     },
+  },
+  corePlugins: {
+    preflight: false, // Vẫn tắt preflight 
   },
   plugins: [],
 }

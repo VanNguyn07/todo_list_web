@@ -7,20 +7,22 @@ import astronautImg from "../../assets/images/astronaut.png";
 import googleIcon from "../../assets/images/google.png";
 import githubIcon from "../../assets/images/github.png";
 
-const SignIn = ({ onLoginSuccess}) => {
+const SignIn = ({ onLoginSuccess }) => {
   // Khai báo hook chuyển trang
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     inputUserName: "",
     inputPassword: "",
-    gender: "", 
+    gender: "",
+    role: "",
   });
 
   const [errors, setErrors] = useState({
     username: "",
     password: "",
     gender: "",
+    role: "",
     general: "",
   });
 
@@ -29,6 +31,7 @@ const SignIn = ({ onLoginSuccess}) => {
     username: false,
     password: false,
     gender: false,
+    role: false,
   });
 
   const handleChange = (e) => {
@@ -47,7 +50,13 @@ const SignIn = ({ onLoginSuccess}) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let valid = true;
-    let newErrors = { username: "", password: "", gender: "", general: "" };
+    let newErrors = {
+      username: "",
+      password: "",
+      gender: "",
+      role: "",
+      general: "",
+    };
 
     // --- VALIDATION ---
     if (!formData.inputUserName) {
@@ -68,6 +77,12 @@ const SignIn = ({ onLoginSuccess}) => {
       valid = false;
     }
 
+    if (!formData.role) {
+      newErrors.role = "Incorrect role selection!";
+      triggerShake("role");
+      valid = false;
+    }
+
     setErrors(newErrors);
 
     if (valid) {
@@ -76,6 +91,7 @@ const SignIn = ({ onLoginSuccess}) => {
         dataToSend.append("inputUserName", formData.inputUserName);
         dataToSend.append("inputPassword", formData.inputPassword);
         dataToSend.append("gender", formData.gender);
+        dataToSend.append("role", formData.role);
 
         const response = await fetch("/api/signInApi.php", {
           method: "POST",
@@ -85,10 +101,14 @@ const SignIn = ({ onLoginSuccess}) => {
 
         if (data.success) {
           if (onLoginSuccess) {
-            localStorage.setItem('my_username', data.username)
+            localStorage.setItem("my_username", data.username);
+            localStorage.setItem("role_admin", data.role);
             onLoginSuccess();
-            //Lái xe sang trang Dashboard ngay lập tức
-            navigate("/dashboard");
+            if (data.role === "admin") {
+              navigate("/admin");
+            } else {
+              navigate("/dashboard");
+            }
           }
         } else {
           // Xử lý lỗi từ Server trả về
@@ -101,6 +121,9 @@ const SignIn = ({ onLoginSuccess}) => {
           } else if (data.field === "gender") {
             setErrors((prev) => ({ ...prev, gender: data.message }));
             triggerShake("gender");
+          } else if (data.field === "role") {
+            setErrors((prev) => ({ ...prev, role: data.message }));
+            triggerShake("role");
           } else {
             setErrors((prev) => ({
               ...prev,
@@ -124,7 +147,7 @@ const SignIn = ({ onLoginSuccess}) => {
     // Thêm class wrapper để căn giữa màn hình
     <div className="SCOPE_SIGN_IN_PAGE">
       <div className="signInPageWrapper animate__animated animate__fadeIn">
-        <h1 id="titleSignIn">Simple Sign Up Screen</h1>
+        <h1 id="titleSignIn">Simple Sign In Screen</h1>
         <div id="form">
           <div className="formInterface">
             <div className="specLogoNew">
@@ -251,6 +274,40 @@ const SignIn = ({ onLoginSuccess}) => {
               {errors.gender && <div id="errorGender">{errors.gender}</div>}
             </div>
 
+            {/* ROLE INPUT */}
+            <div className="role-groupAndError">
+              <div id="role-group" className={shaking.role ? "shakeError" : ""}>
+                <i class="fa-solid fa-crown"></i>
+                <label id="role">Role</label>
+                <label>
+                  <input
+                    type="radio"
+                    name="role"
+                    value="user"
+                    className="user-admin"
+                    onChange={handleChange}
+                    checked={formData.role === "user"}
+                  />
+                  User
+                  <i className="fa-solid fa-user"></i>
+                </label>
+
+                <label>
+                  <input
+                    type="radio"
+                    name="role"
+                    value="admin"
+                    className="user-admin"
+                    onChange={handleChange}
+                    checked={formData.role === "admin"}
+                  />{" "}
+                  Admin
+                  <i className="fa-solid fa-user-shield"></i>
+                </label>
+              </div>
+              {errors.role && <div id="errorRole">{errors.role}</div>}
+            </div>
+
             <div id="forgot-password">
               <Link to="/forgotpassword">Forgot password?</Link>
             </div>
@@ -276,8 +333,9 @@ const SignIn = ({ onLoginSuccess}) => {
                 </div>
               </div>
               <div className="registration">
-                <div id="accountYet">Have no account yet?</div>
-                <Link to="/signup" id="button-SignUp" >Registration</Link>
+                <Link to="/signup" id="button-SignUp">
+                  Registration
+                </Link>
               </div>
             </div>
           </form>
